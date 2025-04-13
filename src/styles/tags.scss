@@ -1,0 +1,22 @@
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+button {
+    cursor: pointer;
+
+    border: none;
+    background-color: none;
+    border-radius: 0;
+
+    font-weight: 600;
+
+    &:active {
+      transform: var(--small-shrink);
+  }
+}
+
+ul {
+    list-style-type: disc;
+}

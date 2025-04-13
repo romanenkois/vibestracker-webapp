@@ -3,6 +3,24 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@api": ["src/app/core/api/index.ts"],
+      "@commands": ["src/app/core/commands/index.ts"],
+      "@guards": ["src/app/core/guards/index.ts"],
+      "@services": ["src/app/core/services/index.ts"],
+      "@storage": ["src/app/core/storage/index.ts"],
+
+      "@features": ["src/app/interface/features/index.ts"],
+      "@pages/*": ["src/app/interface/pages/*"], // index.ts is not used, couse the pages are being decalred as default export
+      "@widgets": ["src/app/interface/widgets/index.ts"],
+
+      "@mappers": ["src/app/shared/mappers/index.ts"],
+      "@pipes": ["src/app/shared/pipes/index.ts"],
+      "@types": ["src/app/shared/types/index.d.ts"],
+
+      "@environments": ["src/environments/index.ts"]
+    },
     "outDir": "./dist/out-tsc",
     "strict": true,
     "noImplicitOverride": true,

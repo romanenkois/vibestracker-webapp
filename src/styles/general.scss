@@ -1,0 +1,27 @@
+@use "mixins" as mixins;
+
+::selection {
+    background: var(--primary-color);
+    color: var(--white-color);
+}
+
+* {
+    // outline: 1px red solid !important;
+
+    color: var(--white-color);
+    font-family: var(--standard-font);
+
+    margin: 0;
+    padding: 0;
+    // font-size: var(--medium-font-size);
+
+    transition: var(--quick-transition);
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--black-color);
+
+    @include mixins.custom-scrollbar;
+}

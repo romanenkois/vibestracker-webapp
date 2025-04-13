@@ -1,2 +1,13 @@
-/* You can add global styles to this file, and also import other style files */
 @use "tailwindcss";
+
+@use 'styles/variables.scss';
+@use 'styles/mixins.scss';
+
+@use 'styles/general.scss';
+
+@use 'styles/tags.scss';
+@use 'styles/classes.scss';
+@use 'styles/animations.scss';
+
+// by now only used for google icons
+@use 'styles/third-party.scss';

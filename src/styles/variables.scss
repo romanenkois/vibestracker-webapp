@@ -1,0 +1,36 @@
+:root {
+    --pure-black-color: #000000;
+
+    --black-color: #080a0f;
+    --black-light-color: #090b11;
+
+    --dark-color: #0c0e14;
+    --dark-light-color: #10131b;
+
+    --gray-color: #545a64;
+    --gray-light-color: #8c94a5;
+
+    --white-color: #fcfcfc;
+    --white-light-color: #e6e6e6;
+
+    --pure-white-color: #ffffff;
+
+    --primary-dark-color: #2d65b9;
+    --primary-color: #3375d8;
+    --primary-light-color: #3481f5;
+
+    --small-font-size: 1rem;
+    --medium-font-size: 16px;
+    --medium-large-font-size: 18px;
+    --large-font-size: 24px;
+
+    --very-quick-transition: 0.05s ease-in-out;
+    --quick-transition: 0.1s ease-in-out;
+    --standard-transition: 0.25s ease-in-out;
+    --slow-transition: 0.5s ease-in-out;
+
+    --small-shrink: scale(0.95);
+
+    --standard-font: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    --code-font: 'Cascadia Code', 'Fira Code', 'Consolas', 'Monaco', 'Andale Mono', 'Ubuntu Mono', Courier, monospace;
+}
