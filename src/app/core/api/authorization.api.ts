@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { $appConfig } from '@environments';
 @Injectable({
@@ -12,7 +12,7 @@ export class AuthorizationApi {
   public codeLogIn(code: string): Observable<string> {
     return this.http.get<string>(`${this.baseUrl}/authorization/code?code=${code}`);
   }
-  public verifyToken(token: string): Observable<HttpResponse<any>> {
+  public verifyToken(token: string): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/authorization/verify?token=${token}`);
   }
 }

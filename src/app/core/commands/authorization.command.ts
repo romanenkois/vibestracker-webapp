@@ -34,10 +34,10 @@ export class AuthorizationCommand {
   public verifyToken(token: string): Observable<LoadingState> {
     return new Observable<LoadingState>((observer) => {
       observer.next('loading');
-
       this.authorizationApi.verifyToken(token).subscribe({
-        next: (response: HttpResponse<any>) => {
-          if (response.status === 200) {
+        next: (response: any) => {
+          if (response.message === 'Token is valid') {
+            // console.log('Token is valid:', response);
             observer.next('resolved');
             observer.complete();
           } else {
