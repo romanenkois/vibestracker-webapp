@@ -1,3 +1,5 @@
+import { UserSettings } from "./user-settings.type";
+
 export type AppConfig = {
   api: {
     BASE_API_URL: string;
@@ -10,5 +12,6 @@ export type AppConfig = {
       scopes: string[];
       showDialog: 'true' | 'false';
     };
-  }
+  },
+  defaultUserSettings: UserSettings;
 };

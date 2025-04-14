@@ -21,4 +21,8 @@ export const $appConfig: AppConfig = {
       showDialog: 'true',
     }
   },
+  defaultUserSettings: {
+    theme: 'dark',
+    saveToken: true,
+  }
 };

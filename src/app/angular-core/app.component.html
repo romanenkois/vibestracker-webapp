@@ -1,8 +1,10 @@
 <main class="main">
-  <div class="header">
-      руфвук
-  </div>
+  @if (this.showHeader) {
+    <div class="header">руфвук</div>
+  }
+
+
   <div class="router">
-      <router-outlet />
+    <router-outlet />
   </div>
 </main>

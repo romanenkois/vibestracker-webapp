@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { $appConfig } from '@environments';
-import { AuthorizationService } from '@services';
+import { AuthorizationCommand } from '@commands';
 import { LoadingState } from '@types';
 
 @Component({
@@ -14,7 +14,7 @@ export default class LoginComponent implements OnInit {
   activatedRoute: ActivatedRoute = inject(ActivatedRoute);
   router: Router = inject(Router);
 
-  authorizationService: AuthorizationService = inject(AuthorizationService);
+  authorizationCommand: AuthorizationCommand = inject(AuthorizationCommand);
 
   loadingState: LoadingState = 'idle';
 
@@ -31,7 +31,7 @@ export default class LoginComponent implements OnInit {
       const error = params['error'];
 
       if (code && state) {
-        this.authorizationService
+        this.authorizationCommand
           .codeLogIn(code)
           .subscribe((loadingState: LoadingState) => {
             this.loadingState = loadingState;
