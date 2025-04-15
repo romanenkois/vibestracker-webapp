@@ -32,16 +32,20 @@ export class PreloadService {
       token = null;
     }
 
+    // we set the token in advance, so guard doesnt trigger redirecting to login
+    this.tokenStorage.setToken(token);
+
     if (token) {
       this.authorizationCommand
         .verifyToken(token)
         .subscribe((status: LoadingState) => {
           if (status === 'resolved') {
-            this.tokenStorage.setToken(token);
-            this.router.navigate(['/']);
+            // nothing is happening if everything is ok
+            // token is loaded, guard wouldnt retrigger
           }
           if (status === 'error') {
-            // this should trigger the guard to redirect to login page
+            // if token is not valid, we set it to null
+            // this would trigger the guard to redirect to login page
             this.tokenStorage.setToken(null);
           }
         });

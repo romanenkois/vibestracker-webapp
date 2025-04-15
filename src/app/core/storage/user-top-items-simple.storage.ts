@@ -175,7 +175,6 @@ export class UserTopItemsSimpleStorage {
       ...this.userTopGenres(),
       [term]: data,
     });
-    console.log(this.userTopGenres());
   }
   public getUserTopGenres(term: SimpleTimeFrame): Array<any> {
     if ((this.userTopGenres()[term] || []).length > 0) {

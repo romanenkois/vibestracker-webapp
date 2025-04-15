@@ -74,7 +74,7 @@ export class UserTopItemsSimpleCommand {
     timeFrame: SimpleTimeFrame;
   }): Observable<LoadingState> {
     return new Observable<LoadingState>((observer: any) => {
-      observer.next('loading');
+      observer.next('appending');
 
       const token = this.tokenStorage.getToken();
       if (!token) {

@@ -36,7 +36,6 @@ export class AuthorizationCommand {
       this.authorizationApi.verifyToken(token).subscribe({
         next: (response: any) => {
           if (response.message === 'Token is valid') {
-            // console.log('Token is valid:', response);
             observer.next('resolved');
             observer.complete();
           } else {

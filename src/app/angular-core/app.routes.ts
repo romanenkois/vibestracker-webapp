@@ -8,6 +8,11 @@ export const routes: Routes = [
     canActivate: [authorizationGuard]
   },
   {
+    path: 'top',
+    loadComponent: () => import('@pages/user-top-items/user-top-items.component'),
+    canActivate: [authorizationGuard]
+  },
+  {
     path: 'login',
     loadComponent: () => import('@pages/login/login.component'),
     canActivate: []
