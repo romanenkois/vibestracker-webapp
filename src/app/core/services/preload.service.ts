@@ -17,12 +17,20 @@ export class PreloadService {
 
   // this service always triggers on app load, so we send request to api to check if token is still valid
   constructor() {
-    // we try to get token, at first from apprun time memmory, then from local storage
-    const token =
-      this.tokenStorage.getToken() ||
-      this.userSettings.getUserSettings().saveToken
-        ? JSON.parse(localStorage.getItem('userToken') || '')
+    let token = this.tokenStorage.getToken();
+
+    try {
+      // we try to get token, at first from apprun time memory, then from local storage
+      let _token = this.userSettings.getUserSettings().saveToken
+        ? JSON.parse(localStorage.getItem('userToken') || 'null')
         : null;
+      if (_token) {
+        token = _token;
+      }
+    } catch (error) {
+      console.error('Error parsing token from localStorage:', error);
+      token = null;
+    }
 
     if (token) {
       this.authorizationCommand
