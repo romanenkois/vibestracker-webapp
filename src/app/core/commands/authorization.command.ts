@@ -3,7 +3,6 @@ import { Observable } from 'rxjs';
 import { TokenStorage } from '@storage';
 import { LoadingState } from '@types';
 import { AuthorizationApi } from '@api';
-import { HttpResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
