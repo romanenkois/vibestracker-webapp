@@ -16,7 +16,7 @@ export class UserTopItemsSimpleStorage {
   // routing function, to simplify dependency code a little
   public getUserTopItems<T>(
     term: SimpleTimeFrame,
-    type: SimpleItemsSelection
+    type: SimpleItemsSelection,
   ): Array<T> {
     switch (type) {
       case 'albums':
@@ -35,7 +35,7 @@ export class UserTopItemsSimpleStorage {
   public setUserTopItems<T>(
     items: Array<T>,
     term: SimpleTimeFrame,
-    type: SimpleItemsSelection
+    type: SimpleItemsSelection,
   ): void {
     switch (type) {
       case 'albums':
@@ -58,7 +58,7 @@ export class UserTopItemsSimpleStorage {
   public appendUserTopItems<T>(
     items: Array<T>,
     term: SimpleTimeFrame,
-    type: 'artists' | 'tracks'
+    type: 'artists' | 'tracks',
   ): void {
     switch (type) {
       case 'artists':
@@ -73,7 +73,7 @@ export class UserTopItemsSimpleStorage {
   }
 
   /*
-    _    _  _____ ______ _____    _______ ____  _____    _______ _____            _____ _  __ _____
+  _    _  _____ ______ _____    _______ ____  _____    _______ _____            _____ _  __ _____
  | |  | |/ ____|  ____|  __ \  |__   __/ __ \|  __ \  |__   __|  __ \     /\   / ____| |/ // ____|
  | |  | | (___ | |__  | |__) |    | | | |  | | |__) |    | |  | |__) |   /  \ | |    | ' /| (___
  | |  | |\___ \|  __| |  _  /     | | | |  | |  ___/     | |  |  _  /   / /\ \| |    |  <  \___ \
@@ -82,7 +82,7 @@ export class UserTopItemsSimpleStorage {
 
   */
   private readonly userTopTracks: UserTopItemsSimpleStorageType<Track> = signal(
-    {}
+    {},
   );
   public setUserTopTracks(tracks: Array<Track>, term: SimpleTimeFrame): void {
     this.userTopTracks.set({
@@ -92,11 +92,11 @@ export class UserTopItemsSimpleStorage {
   }
   public appendUserTopTracks(
     tracks: Array<Track>,
-    term: SimpleTimeFrame
+    term: SimpleTimeFrame,
   ): void {
     this.userTopTracks.set({
       ...this.userTopTracks(),
-      [term]: [...(this.userTopTracks()[term] || []), ...tracks],
+      [term]: [...(this.getUserTopTracks(term) || []), ...tracks],
     });
   }
   public getUserTopTracks(term: SimpleTimeFrame): Array<Track> {
@@ -104,7 +104,7 @@ export class UserTopItemsSimpleStorage {
   }
 
   /*
-    _    _  _____ ______ _____    _______ ____  _____             _____ _______ _____  _____ _______ _____
+  _    _  _____ ______ _____    _______ ____  _____             _____ _______ _____  _____ _______ _____
  | |  | |/ ____|  ____|  __ \  |__   __/ __ \|  __ \      /\   |  __ \__   __|_   _|/ ____|__   __/ ____|
  | |  | | (___ | |__  | |__) |    | | | |  | | |__) |    /  \  | |__) | | |    | | | (___    | | | (___
  | |  | |\___ \|  __| |  _  /     | | | |  | |  ___/    / /\ \ |  _  /  | |    | |  \___ \   | |  \___ \
@@ -116,7 +116,7 @@ export class UserTopItemsSimpleStorage {
     signal({});
   public setUserTopArtists(
     artists: Array<Artist>,
-    term: SimpleTimeFrame
+    term: SimpleTimeFrame,
   ): void {
     this.userTopArtists.set({
       ...this.userTopArtists(),
@@ -125,11 +125,11 @@ export class UserTopItemsSimpleStorage {
   }
   public appendUserTopArtists(
     artists: Array<Artist>,
-    term: SimpleTimeFrame
+    term: SimpleTimeFrame,
   ): void {
     this.userTopArtists.set({
       ...this.userTopArtists(),
-      [term]: [...(this.userTopArtists()[term] || []), artists],
+      [term]: [...(this.getUserTopArtists(term) || []), ...artists],
     });
   }
   public getUserTopArtists(term: SimpleTimeFrame): Array<Artist> {
@@ -137,7 +137,7 @@ export class UserTopItemsSimpleStorage {
   }
 
   /*
-    _    _  _____ ______ _____    _______ ____  _____             _      __  __ _    _ __  __  _____
+  _    _  _____ ______ _____    _______ ____  _____             _      __  __ _    _ __  __  _____
  | |  | |/ ____|  ____|  __ \  |__   __/ __ \|  __ \      /\   | |    |  \/  | |  | |  \/  |/ ____|
  | |  | | (___ | |__  | |__) |    | | | |  | | |__) |    /  \  | |    | \  / | |  | | \  / | (___
  | |  | |\___ \|  __| |  _  /     | | | |  | |  ___/    / /\ \ | |    | |\/| | |  | | |\/| |\___ \
@@ -146,7 +146,7 @@ export class UserTopItemsSimpleStorage {
 
   */
   private readonly userTopAlbums: UserTopItemsSimpleStorageType<Album> = signal(
-    {}
+    {},
   );
   public setUserTopAlbums(albums: Array<Album>, term: SimpleTimeFrame): void {
     this.userTopAlbums.set({
@@ -159,7 +159,7 @@ export class UserTopItemsSimpleStorage {
   }
 
   /*
-    _    _  _____ ______ _____    _______ ____  _____     _____ ______ _   _ _____  ______  _____
+  _    _  _____ ______ _____    _______ ____  _____     _____ ______ _   _ _____  ______  _____
  | |  | |/ ____|  ____|  __ \  |__   __/ __ \|  __ \   / ____|  ____| \ | |  __ \|  ____|/ ____|
  | |  | | (___ | |__  | |__) |    | | | |  | | |__) | | |  __| |__  |  \| | |__) | |__  | (___
  | |  | |\___ \|  __| |  _  /     | | | |  | |  ___/  | | |_ |  __| | . ` |  _  /|  __|  \___ \
@@ -168,7 +168,7 @@ export class UserTopItemsSimpleStorage {
 
   */
   private readonly userTopGenres: UserTopItemsSimpleStorageType<Genre> = signal(
-    {}
+    {},
   );
   public setUserTopGenres(data: Array<any>, term: SimpleTimeFrame) {
     this.userTopGenres.set({

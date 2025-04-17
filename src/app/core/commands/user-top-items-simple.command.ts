@@ -52,6 +52,11 @@ export class UserTopItemsSimpleCommand {
         })
         .subscribe({
           next: (response: any) => {
+            if (response.items.length === 0) {
+              observer.next('all-resolved');
+              observer.complete();
+              return;
+            }
             this.userTopItemsStorage.setUserTopItems(
               response.items,
               params.timeFrame,
@@ -59,11 +64,16 @@ export class UserTopItemsSimpleCommand {
             );
             observer.next('resolved');
             observer.complete();
+            return;
           },
           error: (error: any) => {
             console.error('Error during loading:', error);
+            window.alert(
+              `Error during loading items.\n${error}`
+            );
             observer.next('error');
             observer.complete();
+            return;
           },
         });
     });
@@ -96,6 +106,11 @@ export class UserTopItemsSimpleCommand {
         })
         .subscribe({
           next: (response: any) => {
+            if (response.items.length === 0) {
+              observer.next('all-resolved');
+              observer.complete();
+              return;
+            }
             this.userTopItemsStorage.appendUserTopItems(
               response.items,
               params.timeFrame,
@@ -103,11 +118,16 @@ export class UserTopItemsSimpleCommand {
             );
             observer.next('resolved');
             observer.complete();
+            return;
           },
           error: (error: any) => {
             console.error('Error during loading:', error);
+            window.alert(
+              `Error during loading more items.\n${error}`
+            );
             observer.next('error');
             observer.complete();
+            return;
           },
         });
     });

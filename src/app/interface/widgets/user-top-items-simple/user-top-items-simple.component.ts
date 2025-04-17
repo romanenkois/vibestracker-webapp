@@ -70,6 +70,7 @@ export class UserTopItemsSimpleComponent implements OnInit {
         type: this.itemsType(),
         timeFrame: this.periodOfTime(),
       }).subscribe((state: LoadingState) => {
+
         this.loadingState = state;
       });
     }
