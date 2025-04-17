@@ -7,12 +7,23 @@ import {
   OnInit,
 } from '@angular/core';
 import { UserTopItemsSimpleCommand } from '@commands';
+import {
+  CardSimpleAlbumComponent,
+  CardSimpleArtistComponent,
+  CardSimpleGenreComponent,
+  CardSimpleTrackComponent,
+} from '@features';
 import { UserTopItemsSimpleStorage } from '@storage';
-import { LoadingState, SimpleItemsSelection, SimpleTimeFrame } from '@types';
+import { Album, Artist, Genre, LoadingState, SimpleItemsSelection, SimpleTimeFrame, Track } from '@types';
 
 @Component({
   selector: 'app-user-top-items-simple',
-  imports: [],
+  imports: [
+    CardSimpleAlbumComponent,
+    CardSimpleArtistComponent,
+    CardSimpleGenreComponent,
+    CardSimpleTrackComponent,
+  ],
   templateUrl: './user-top-items-simple.component.html',
   styleUrl: './user-top-items-simple.component.scss',
 })
@@ -29,7 +40,7 @@ export class UserTopItemsSimpleComponent implements OnInit {
 
   loadingState: LoadingState = 'idle';
 
-  userTopItems = computed(() => {
+  userTopItems = computed<(Track | Artist | Album | Genre)[]>(() => {
     return this.userTopItemsStorage.getUserTopItems(
       this.periodOfTime(),
       this.itemsType()

@@ -1,1 +1,28 @@
-<div>top items simple</div>
+<div>
+  @if (this.userTopItems() && this.userTopItems().length > 0) {
+    <div class="grid grid-cols-2 gap-4">
+      @switch (this.itemsType()) {
+        @case ('albums') {
+          @for (item of this.userTopItems(); track $index) {
+            <app-card-simple-album></app-card-simple-album>
+          }
+        }
+        @case ('artists') {
+          @for (item of this.userTopItems(); track $index) {
+            <app-card-simple-artist></app-card-simple-artist>
+          }
+        }
+        @case ('genres') {
+          @for (item of this.userTopItems(); track $index) {
+            <app-card-simple-genre></app-card-simple-genre>
+          }
+        }
+        @case ('tracks') {
+          @for (item of this.userTopItems(); track $index) {
+            <app-card-simple-track [track]="$any(item)"></app-card-simple-track>
+          }
+        }
+      }
+    </div>
+  }
+</div>
