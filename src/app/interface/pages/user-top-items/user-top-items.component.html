@@ -1,6 +1,6 @@
 <div>
   <app-user-top-items-simple
-  [itemsType]="'tracks'"
-  [periodOfTime]="'short_term'"
+  [itemsType]="this.itemsType()"
+  [periodOfTime]="this.periodOfTime()"
   ></app-user-top-items-simple>
 </div>

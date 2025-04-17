@@ -1,1 +1,50 @@
-<p>card-simple-album works!</p>
+<div class="w-[180px] flex flex-row items-center gap-3 sm:w-[240px] md:w-[300px]">
+  @if (this.album() && this.album().type) {
+    <!-- IMAGE -->
+    <div class="flex-1">
+      <div class="w-[90px] h-[90px] sm:w-[120px] sm:h-[120px] md:w-[150px] md:h-[150px]">
+        <a routerLink="/album/{{ this.album().id }}">
+          <img
+            class="w-full h-full overflow-hidden object-cover"
+            loading="lazy"
+            [src]="this.album().images[0].url"
+          />
+        </a>
+      </div>
+    </div>
+
+    <!-- ALBUM DATA -->
+    <div class="flex-2 overflow-hidden">
+      <!-- ALBUM NAME -->
+      <div class="">
+        <a class="w-min" routerLink="/album/{{ this.album().id }}">
+          <p class="font-bold truncate-1 w-max">{{ this.album().name }}</p>
+        </a>
+      </div>
+
+      <!-- ARTIST NAMES LIST -->
+      <div>
+        <p class="truncate-2 text-sm">
+          @for (artist of album().artists; track $index) {
+            @if ($index < album().artists.length - 1) {
+              <a routerLink="/artist/{{ artist.id }}">
+                <span>{{ artist.name }}, </span>
+              </a>
+            } @else {
+              <a routerLink="/artist/{{ artist.id }}">
+                <span>{{ artist.name }}</span>
+              </a>
+            }
+          }
+        </p>
+      </div>
+
+      <!-- RELEASE YEAR -->
+      <div>
+        <p class="truncate-1 text-sm">
+          {{ this.album().release_date | date:'yyyy' }}
+        </p>
+      </div>
+    </div>
+  }
+</div>

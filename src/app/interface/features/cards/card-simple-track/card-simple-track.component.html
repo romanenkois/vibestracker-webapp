@@ -1,23 +1,58 @@
-<div class="w-[300px] flex flex-row items-center gap-3">
+<div
+  class="w-[180px] flex flex-row items-center gap-3 sm:w-[240px] md:w-[300px]"
+>
   @if (this.track() && this.track().type) {
+    <!-- IMAGE -->
     <div class="flex-1">
-      <div class="w-[150px] h-[150px]">
-        <img class="w-full h-full" [src]="this.track().album.images[0].url" />
+      <div
+        class="w-[90px] h-[90px] sm:w-[120px] sm:h-[120px] md:w-[150px] md:h-[150px]"
+      >
+        <a routerLink="/track/{{ this.track().id }}">
+          <img
+            class="w-full h-full overflow-hidden object-cover"
+            loading="lazy"
+            [src]="this.track().album.images[0].url"
+          />
+        </a>
       </div>
     </div>
-    <div class="flex-2">
-      <div class="text-sm font-bold">
-        {{ this.track().name }}
+
+    <!-- TRACK DATA -->
+    <div class="flex-2 overflow-hidden">
+
+
+
+      <!-- TRACK NAME -->
+      <div class="">
+        <a class="w-min" routerLink="/track/{{ this.track().id }}">
+          <p class="font-bold truncate-1 w-max">{{ this.track().name }}</p>
+        </a>
       </div>
-      <div class="text-xs text-gray-500">
-        <p class="truncate-lines2 overflow-hidden">
-          @for (artist of this.track().artists; track $index) {
-            <span> {{ artist.name }}, </span>
+
+      <!-- ARTIST NAMES LIST -->
+      <div>
+        <p class="truncate-2 text-sm">
+          @for (artist of track().artists; track $index) {
+            @if ($index < track().artists.length - 1) {
+              <a routerLink="/artist/{{ artist.id }}">
+                <span>{{ artist.name }}, </span>
+              </a>
+            } @else {
+              <a routerLink="/artist/{{ artist.id }}">
+                <span>{{ artist.name }} </span>
+              </a>
+            }
           }
         </p>
       </div>
-      <div class="text-xs text-gray-500">
-        {{ this.track().album.name }}
+
+      <!-- ALBUM NAME -->
+      <div>
+        <p class="truncate-1 text-sm">
+          <a routerLink="/album/{{ this.track().album.id }}">
+            <span>{{ this.track().album.name }}</span>
+          </a>
+        </p>
       </div>
     </div>
   }

@@ -46,6 +46,7 @@ export default class LoginComponent implements OnInit {
             }
           });
       } else if (error) {
+        window.alert(`error: \n${error}`);
         this.router.navigate([], {
           relativeTo: this.activatedRoute,
           queryParams: {},

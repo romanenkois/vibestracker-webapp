@@ -1,27 +1,34 @@
 <div>
   @if (this.userTopItems() && this.userTopItems().length > 0) {
-    <div class="grid grid-cols-2 gap-4">
-      @switch (this.itemsType()) {
-        @case ('albums') {
-          @for (item of this.userTopItems(); track $index) {
-            <app-card-simple-album></app-card-simple-album>
+    <div
+      class="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4 sm:grid-cols-[repeat(auto-fill,minmax(240px,1fr))] md:grid-cols-[repeat(auto-fill,minmax(300px,1fr))]"
+    >
+      @for (item of this.userTopItems(); track $index) {
+        <div class="w-full flex justify-center align-center">
+          @switch (this.itemsType()) {
+            @case ('albums') {
+              <app-card-simple-album
+                [album]="$any(item)"
+                [index]="$index + 1"
+              ></app-card-simple-album>
+            }
+            @case ('artists') {
+              <app-card-simple-artist
+                [artist]="$any(item)"
+                [index]="$index + 1"
+              ></app-card-simple-artist>
+            }
+            @case ('genres') {
+              <app-card-simple-genre></app-card-simple-genre>
+            }
+            @case ('tracks') {
+              <app-card-simple-track
+                [track]="$any(item)"
+                [index]="$index + 1"
+              ></app-card-simple-track>
+            }
           }
-        }
-        @case ('artists') {
-          @for (item of this.userTopItems(); track $index) {
-            <app-card-simple-artist></app-card-simple-artist>
-          }
-        }
-        @case ('genres') {
-          @for (item of this.userTopItems(); track $index) {
-            <app-card-simple-genre></app-card-simple-genre>
-          }
-        }
-        @case ('tracks') {
-          @for (item of this.userTopItems(); track $index) {
-            <app-card-simple-track [track]="$any(item)"></app-card-simple-track>
-          }
-        }
+        </div>
       }
     </div>
   }
