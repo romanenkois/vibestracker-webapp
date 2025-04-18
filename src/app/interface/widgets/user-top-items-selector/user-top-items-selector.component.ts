@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SimpleItemsSelection, SimpleTimeFrame } from '@types';
 
@@ -6,29 +6,48 @@ import { SimpleItemsSelection, SimpleTimeFrame } from '@types';
   selector: 'app-user-top-items-selector',
   imports: [],
   templateUrl: './user-top-items-selector.component.html',
-  styleUrl: './user-top-items-selector.component.scss'
+  styleUrl: './user-top-items-selector.component.scss',
 })
-export class UserTopItemsSelectorComponent {
+export class UserTopItemsSelectorComponent implements OnInit {
   private router: Router = inject(Router);
   private activeRoute: ActivatedRoute = inject(ActivatedRoute);
+
+  itemsType: SimpleItemsSelection = 'tracks';
+  periodOfTime: SimpleTimeFrame = 'short_term';
 
   changeItemsType(itemsType: SimpleItemsSelection) {
     this.router.navigate([], {
       relativeTo: this.activeRoute,
       queryParams: {
-        'items-type': itemsType
+        'items-type': itemsType,
       },
-      queryParamsHandling: 'merge'
+      queryParamsHandling: 'merge',
     });
+    this.itemsType = itemsType;
   }
 
   changePeriodOfTime(periodOfTime: SimpleTimeFrame) {
     this.router.navigate([], {
       relativeTo: this.activeRoute,
       queryParams: {
-        'period-of-time': periodOfTime
+        'period-of-time': periodOfTime,
       },
-      queryParamsHandling: 'merge'
+      queryParamsHandling: 'merge',
+    });
+    this.periodOfTime = periodOfTime;
+  }
+
+  ngOnInit() {
+    this.activeRoute.queryParams.subscribe((params) => {
+      const itemsType = params['items-type'];
+      const periodOfTime = params['period-of-time'];
+
+      if (itemsType) {
+        this.itemsType = itemsType;
+      }
+      if (periodOfTime) {
+        this.periodOfTime = periodOfTime;
+      }
     });
   }
 }

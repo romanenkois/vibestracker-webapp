@@ -1,13 +1,15 @@
 <div class="p-2">
   <div class="flex justify-between align-center">
     <button
-      class="p-2 w-full flex justify-between align-center"
+      class="p-2 w-full flex justify-between align-center text-gray"
+      [class]="this.itemsType === 'artists' ? 'text-primary' : ''"
       (click)="this.changeItemsType('artists')"
     >
       <p class="font-black w-full text-center">artists</p>
     </button>
     <button
-      class="p-2 w-full flex justify-between align-center"
+      class="p-2 w-full flex justify-between align-center text-gray"
+      [class]="this.itemsType === 'albums' ? 'text-primary' : ''"
       (click)="this.changeItemsType('albums')"
     >
       <p class="w-full text-center">albums</p>
@@ -19,7 +21,8 @@
       <p class="w-full text-center">genres</p>
     </button> -->
     <button
-      class="p-2 w-full flex justify-between align-center"
+      class="p-2 w-full flex justify-between align-center text-gray"
+      [class]="this.itemsType === 'tracks' ? 'text-primary' : ''"
       (click)="this.changeItemsType('tracks')"
     >
       <p class="w-full text-center">tracks</p>
@@ -28,19 +31,22 @@
 
   <div class="flex justify-between align-center">
     <button
-      class="p-2 w-full flex justify-between align-center"
+      class="p-2 w-full flex justify-between align-center text-gray"
+      [class]="this.periodOfTime === 'short_term' ? 'text-primary' : ''"
       (click)="this.changePeriodOfTime('short_term')"
     >
       <p class="w-full text-center">4 weeks</p>
     </button>
     <button
-      class="p-2 w-full flex justify-between align-center"
+      class="p-2 w-full flex justify-between align-center text-gray"
+      [class]="this.periodOfTime === 'medium_term' ? 'text-primary' : ''"
       (click)="this.changePeriodOfTime('medium_term')"
     >
       <p class="w-full text-center">6 months</p>
     </button>
     <button
-      class="p-2 w-full flex justify-between align-center"
+      class="p-2 w-full flex justify-between align-center text-gray"
+      [class]="this.periodOfTime === 'long_term' ? 'text-primary' : ''"
       (click)="this.changePeriodOfTime('long_term')"
     >
       <p class="w-full text-center">12 months</p>

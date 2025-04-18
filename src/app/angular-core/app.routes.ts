@@ -18,6 +18,10 @@ export const routes: Routes = [
         loadComponent: () =>
           import('@pages/user-top-items/user-top-items.component'),
       },
+      {
+        path: 'settings',
+        loadComponent: () => import('@pages/settings/settings.component'),
+      }
     ],
   },
   {

@@ -51,4 +51,9 @@ export class AuthorizationCommand {
       });
     });
   }
+
+  public logOut(): void {
+    this.tokenStorage.setToken(null);
+    window.location.reload();
+  }
 }
