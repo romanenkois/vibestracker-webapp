@@ -9,7 +9,9 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        loadComponent: () => import('@pages/home/home.component'),
+        redirectTo: '/top',
+        pathMatch: 'full',
+        // loadComponent: () => import('@pages/home/home.component'),
       },
       {
         path: 'top',

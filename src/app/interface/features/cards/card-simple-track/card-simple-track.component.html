@@ -1,15 +1,13 @@
 <div
-  class="w-[180px] flex flex-row items-center gap-3 sm:w-[240px] md:w-[300px]"
+  class="w-full h-full flex items-center gap-3 box-border p-2 rounded-md bg-dark shadow-sm hover:shadow-md transition-all duration-200 ease-in-out"
 >
   @if (this.track() && this.track().type) {
     <!-- IMAGE -->
     <div class="flex-1">
-      <div
-        class="w-[90px] h-[90px] sm:w-[120px] sm:h-[120px] md:w-[150px] md:h-[150px]"
-      >
+      <div class="w-full h-full aspect-square block bg-gray">
         <a routerLink="/track/{{ this.track().id }}">
           <img
-            class="w-full h-full overflow-hidden object-cover"
+            class="w-full h-full overflow-hidden object-cover rounded-sm"
             loading="lazy"
             [src]="this.track().album.images[0].url"
           />
@@ -18,41 +16,46 @@
     </div>
 
     <!-- TRACK DATA -->
-    <div class="flex-2 overflow-hidden">
-
-
-
-      <!-- TRACK NAME -->
-      <div class="">
-        <a class="w-min" routerLink="/track/{{ this.track().id }}">
-          <p class="font-bold truncate-1 w-max">{{ this.track().name }}</p>
-        </a>
+    <div class="flex-1 overflow-hidden">
+      <div>
+        <div>
+          <p class="text-xl font-black text-gray">{{ this.index() }}#</p>
+        </div>
       </div>
 
-      <!-- ARTIST NAMES LIST -->
       <div>
-        <p class="truncate-2 text-sm">
-          @for (artist of track().artists; track $index) {
-            @if ($index < track().artists.length - 1) {
-              <a routerLink="/artist/{{ artist.id }}">
-                <span>{{ artist.name }}, </span>
-              </a>
-            } @else {
-              <a routerLink="/artist/{{ artist.id }}">
-                <span>{{ artist.name }} </span>
-              </a>
-            }
-          }
-        </p>
-      </div>
-
-      <!-- ALBUM NAME -->
-      <div>
-        <p class="truncate-1 text-sm">
-          <a routerLink="/album/{{ this.track().album.id }}">
-            <span>{{ this.track().album.name }}</span>
+        <!-- TRACK NAME -->
+        <div>
+          <a class="w-min" routerLink="/track/{{ this.track().id }}">
+            <p class="font-bold truncate-1">{{ this.track().name }}</p>
           </a>
-        </p>
+        </div>
+
+        <!-- ARTIST NAMES LIST -->
+        <div>
+          <p class="truncate-2 text-xs text-gray">
+            @for (artist of track().artists; track $index) {
+              @if ($index < track().artists.length - 1) {
+                <a routerLink="/artist/{{ artist.id }}">
+                  <span>{{ artist.name }}, </span>
+                </a>
+              } @else {
+                <a routerLink="/artist/{{ artist.id }}">
+                  <span>{{ artist.name }} </span>
+                </a>
+              }
+            }
+          </p>
+        </div>
+
+        <!-- ALBUM NAME -->
+        <div>
+          <p class="truncate-1 text-xs text-gray">
+            <a routerLink="/album/{{ this.track().album.id }}">
+              <span>{{ this.track().album.name }}</span>
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   }

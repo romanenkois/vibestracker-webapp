@@ -1,10 +1,10 @@
-<div>
+<div class="p-2">
   @if (this.userTopItems() && this.userTopItems().length > 0) {
     <div
-      class="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4 sm:grid-cols-[repeat(auto-fill,minmax(240px,1fr))] md:grid-cols-[repeat(auto-fill,minmax(300px,1fr))]"
+      class="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4 sm:grid-cols-[repeat(auto-fill,minmax(240px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(300px,1fr))]"
     >
       @for (item of this.userTopItems(); track $index) {
-        <div class="w-full flex justify-center align-center">
+        <div class="w-full h-full">
           @switch (this.itemsType()) {
             @case ('albums') {
               <app-card-simple-album

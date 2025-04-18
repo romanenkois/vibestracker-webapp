@@ -1,15 +1,13 @@
 <div
-  class="w-[180px] flex flex-row items-center gap-3 sm:w-[240px] md:w-[300px]"
+  class="w-full h-full flex items-center gap-3 box-border p-2 rounded-md bg-dark shadow-sm hover:shadow-md transition-all duration-200 ease-in-out"
 >
   @if (this.artist() && this.artist().type) {
     <!-- IMAGE -->
     <div class="flex-1">
-      <div
-        class="wm-[90px] h-[90px] sm:w-[120px] sm:h-[120px] md:w-[150px] md:h-[150px]"
-      >
+      <div class="w-full h-full aspect-square block bg-gray">
         <a routerLink="/artist/{{ this.artist().id }}">
           <img
-            class="w-full h-full overflow-hidden object-cover"
+            class="w-full h-full overflow-hidden object-cover rounded-sm"
             loading="lazy"
             [src]="this.artist().images[0].url"
           />
@@ -19,36 +17,37 @@
 
     <!-- ARTIST DATA -->
     <div class="flex-1 overflow-hidden">
-      <!-- ARTIST NAME -->
-      <div class="">
-        <a class="w-min" routerLink="/artist/{{ this.artist().id }}">
-          <p class="font-bold truncate-1 w-max">{{ this.artist().name }}</p>
-        </a>
-      </div>
-
-      <!-- GENRES -->
       <div>
-        <p class="truncate-2 text-sm">
-          @for (genre of artist().genres; track $index) {
-            @if ($index < artist().genres.length - 1) {
-              <a routerLink="/genre/{{ genre }}">
-                <span>{{ genre }}, </span>
-              </a>
-            } @else {
-              <a routerLink="/genre/{{ genre }}">
-                <span>{{ genre }}</span>
-              </a>
-            }
-          }
-        </p>
+        <div>
+          <p class="text-xl font-black text-gray">{{ this.index() }}#</p>
+        </div>
       </div>
 
-      <!-- FOLLOWERS -->
-      <!-- <div>
-        <p class="truncate-1 text-sm">
-          {{ this.artist().popularity }}
-        </p>
-      </div> -->
+      <div>
+        <!-- ARTIST NAME -->
+        <div class="">
+          <a class="w-min" routerLink="/artist/{{ this.artist().id }}">
+            <p class="font-bold truncate-1">{{ this.artist().name }}</p>
+          </a>
+        </div>
+
+        <!-- GENRES -->
+        <div>
+          <p class="truncate-3 text-xs text-gray">
+            @for (genre of artist().genres; track $index) {
+              @if ($index < artist().genres.length - 1) {
+                <a routerLink="/genre/{{ genre }}">
+                  <span>{{ genre }}, </span>
+                </a>
+              } @else {
+                <a routerLink="/genre/{{ genre }}">
+                  <span>{{ genre }}</span>
+                </a>
+              }
+            }
+          </p>
+        </div>
+      </div>
     </div>
   }
 </div>
