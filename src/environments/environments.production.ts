@@ -2,12 +2,12 @@ import { AppConfig } from '@types';
 
 export const $appConfig: AppConfig = {
   api: {
-    BASE_API_URL: 'http://localhost:3000',
-    BASE_CLIENT_URL: 'http://localhost:4200',
+    BASE_API_URL: 'https://vibestracker-server.vercel.app/',
+    BASE_CLIENT_URL: 'https://vibestracker-webapp.vercel.app',
   },
   spotify: {
     clientId: 'a31fa8a78acd482692cdac91675babff',
-    redirectUri: 'http://localhost:4200/login',
+    redirectUri: 'https://vibestracker-webapp.vercel.app/login',
     authorization: {
       scopes: [
         'user-read-email',
