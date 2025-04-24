@@ -2,7 +2,7 @@ import { AppConfig } from '@types';
 
 export const $appConfig: AppConfig = {
   api: {
-    BASE_API_URL: 'https://vibestracker-server.vercel.app/',
+    BASE_API_URL: 'https://vibestracker-server.vercel.app',
     BASE_CLIENT_URL: 'https://vibestracker-webapp.vercel.app',
   },
   spotify: {
