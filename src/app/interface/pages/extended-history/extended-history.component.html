@@ -1,16 +1,3 @@
-<div class="p-4">
-  <form class="flex flex-col gap-4">
-    <div class="bg-dark flex items-center justify-center">
-      <input
-        type="file"
-        id="file"
-        (change)="this.onFileSelected($event)"
-        accept=".zip"
-        class="cursor-pointer"
-      />
-    </div>
-  </form>
-  <div>
-    <p>{{this.status}}</p>
-  </div>
+<div>
+  <app-extended-history-upload-form></app-extended-history-upload-form>
 </div>

@@ -1,58 +1,14 @@
 import { Injectable } from '@angular/core';
 import JSZip from 'jszip';
 import { Observable } from 'rxjs';
-
-export type ExtendedStreamingHistoryDTO = {
-  ts: number;
-
-  // is not actually present
-  username?: string;
-
-  platform: string;
-  ms_played: number;
-  conn_country: string;
-
-  // it should be one of those
-  ip_addr_decrypted?: string;
-  ip_addr?: string;
-
-  // should be present, but actually is not
-  user_agent_decrypted?: string;
-
-  master_metadata_track_name: string;
-  master_metadata_album_artist_name: string;
-  master_metadata_album_album_name: string;
-
-  spotify_track_uri: string; // goes like "spotify:track:__string_id__"
-
-  episode_name: string | null;
-  episode_show_name: string | null;
-  episode_show_uri: string | null;
-
-  // those are not documented, but are present
-  audiobook_title?: string | null;
-  audiobook_uri?: string | null;
-  audiobook_chapter_uri?: string | null;
-  audiobook_chapter_title?: string | null;
-
-  reason_start: string;
-  reason_end: string;
-
-  shuffle: null | true | false;
-  skipped: null | true | false;
-  offline: null | true | false;
-
-  offline_timestamp: number | null;
-
-  incognito_mode: null | true | false;
-};
+import { ExtendedHistoryPreparingState, ExtendedStreamingHistoryDTO } from '@types';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ExtendedHistoryPreparerService {
-  public FullyProcessFile(zipFile: File): Observable<any> {
-    return new Observable<any>((observer) => {
+  public FullyProcessFile(zipFile: File): Observable<ExtendedHistoryPreparingState> {
+    return new Observable<ExtendedHistoryPreparingState>((observer) => {
       observer.next('started-preparing');
 
       // i am sorry for whoever will read this
@@ -84,19 +40,9 @@ export class ExtendedHistoryPreparerService {
           observer.next('sorted');
           const dataSizeMB = (JSON.stringify(sortedData).length / (1024 * 1024)).toFixed(2);
           console.log(`Sorted data: ${dataSizeMB} MB`);
-          // this.download(JSON.stringify(sortedData));
           observer.next('all-resolved');
           observer.complete();
-          // return this.transformDataToCSV(sortedData);
         })
-        // .then((csvData) => {
-        //   observer.next('csv');
-        //   const dataSizeMB = (JSON.stringify(csvData).length / (1024 * 1024)).toFixed(2);
-        //   console.log(`CSV data: ${dataSizeMB} MB`);
-        //   this.download(csvData);
-        //   observer.next('all-resolved');
-        //   observer.complete();
-        // })
 
         .catch((error) => observer.error(error));
 
