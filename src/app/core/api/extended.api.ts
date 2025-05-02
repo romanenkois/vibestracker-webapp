@@ -7,7 +7,7 @@ import { SimpleItemsSelection, SimpleTimeFrame } from '@types';
 @Injectable({
   providedIn: 'root',
 })
-export class ExtendedApi {
+export class ExtendedHistoryApi {
   private http: HttpClient = inject(HttpClient);
   private baseUrl = $appConfig.api.BASE_API_URL;
 

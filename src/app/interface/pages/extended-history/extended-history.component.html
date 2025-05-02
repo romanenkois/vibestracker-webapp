@@ -1,19 +1,16 @@
 <div class="p-4">
   <form class="flex flex-col gap-4">
     <div class="bg-dark flex items-center justify-center">
-
       <input
         type="file"
         id="file"
-
+        (change)="this.onFileSelected($event)"
         accept=".zip"
         class="cursor-pointer"
       />
     </div>
-    <button
-      class="w-full bg-dark p-2 text-center text-xl font-black text-white"
-    >
-      Upload
-    </button>
   </form>
+  <div>
+    <p>{{this.status}}</p>
+  </div>
 </div>

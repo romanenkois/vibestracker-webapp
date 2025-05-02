@@ -9,14 +9,19 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: '/top',
-        pathMatch: 'full',
-        // loadComponent: () => import('@pages/home/home.component'),
+        // redirectTo: '/top',
+        // pathMatch: 'full',
+        loadComponent: () => import('@pages/home/home.component'),
       },
       {
         path: 'top',
         loadComponent: () =>
           import('@pages/user-top-items/user-top-items.component'),
+      },
+      {
+        path: 'extended-history',
+        loadComponent: () =>
+          import('@pages/extended-history/extended-history.component'),
       },
       {
         path: 'settings',
