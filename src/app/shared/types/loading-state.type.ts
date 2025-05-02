@@ -14,5 +14,7 @@ export type ExtendedHistoryPreparingState =
   | 'filtered'
   | 'transformed'
   | 'sorted'
+  | 'all-prepared'
+  | 'uploading'
   | 'all-resolved'
   | 'error';

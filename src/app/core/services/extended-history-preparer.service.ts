@@ -1,55 +1,77 @@
 import { Injectable } from '@angular/core';
 import JSZip from 'jszip';
 import { Observable } from 'rxjs';
-import { ExtendedHistoryPreparingState, ExtendedStreamingHistoryDTO } from '@types';
+import {
+  ExtendedHistoryPreparingState,
+  ExtendedStreamingHistoryDTO,
+} from '@types';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ExtendedHistoryPreparerService {
-  public FullyProcessFile(zipFile: File): Observable<ExtendedHistoryPreparingState> {
-    return new Observable<ExtendedHistoryPreparingState>((observer) => {
-      observer.next('started-preparing');
+  public FullyProcessFile(
+    zipFile: File,
+  ): Observable<{ status: ExtendedHistoryPreparingState; data?: any }> {
+    return new Observable<{
+      status: ExtendedHistoryPreparingState;
+      data?: any;
+    }>((observer) => {
+      observer.next({ status: 'started-preparing' });
 
-      // i am sorry for whoever will read this
+      // i am sorry, for whoever will read this
 
       this.extractStreamingHistory(zipFile)
         .then((unzippedFiles) => {
-          observer.next('unzipped');
+          if (unzippedFiles.length === 0) {
+            observer.next({ status: 'error' });
+            observer.complete();
+            throw new Error('No valid json files found in the zip archive');
+          }
+          observer.next({ status: 'unzipped' });
           return this.mergeJsonFiles(unzippedFiles);
         })
         .then((mergedData) => {
-          observer.next('merged');
-          const dataSizeMB = (JSON.stringify(mergedData).length / (1024 * 1024)).toFixed(2);
-          console.log('Merged data:', mergedData.length, 'items,', dataSizeMB, 'MB');
+          if (mergedData.length === 0) {
+            observer.next({ status: 'error' });
+            observer.complete();
+            throw new Error('No data in merged json files');
+          }
+          observer.next({ status: 'merged' });
           return this.filterData(mergedData);
         })
         .then((filteredData) => {
-          observer.next('filtered');
-          const dataSizeMB = (JSON.stringify(filteredData).length / (1024 * 1024)).toFixed(2);
-          console.log('Filtered data:', filteredData.length, 'items,', dataSizeMB, 'MB');
+          if (filteredData.length === 0) {
+            observer.next({ status: 'error' });
+            observer.complete();
+            throw new Error('All data has been discarded');
+          }
+          observer.next({ status: 'filtered' });
           return this.transformData(filteredData);
         })
         .then((transformedData) => {
-          observer.next('transformed');
-          const dataSizeMB = (JSON.stringify(transformedData).length / (1024 * 1024)).toFixed(2);
-          console.log(`Transformed data: ${dataSizeMB}, MB`);
+          observer.next({ status: 'transformed' });
           return this.sortData(transformedData);
         })
-        .then((sortedData)=>{
-          observer.next('sorted');
-          const dataSizeMB = (JSON.stringify(sortedData).length / (1024 * 1024)).toFixed(2);
-          console.log(`Sorted data: ${dataSizeMB} MB`);
-          observer.next('all-resolved');
+        .then((sortedData) => {
+          observer.next({ status: 'sorted' });
+          observer.next({
+            status: 'all-prepared',
+            data: { sortedData: sortedData },
+          });
           observer.complete();
         })
 
-        .catch((error) => observer.error(error));
+        .catch((error) => {
+          observer.next(error);
+          observer.complete();
+        });
 
       return () => {}; // Cleanup function
     });
   }
 
+  // unzips archive, and take sonly streaming history files
   private async extractStreamingHistory(zipFile: File): Promise<any[]> {
     const zip = await JSZip.loadAsync(zipFile);
     const jsonFiles: any[] = [];
@@ -76,6 +98,7 @@ export class ExtendedHistoryPreparerService {
     return jsonFiles;
   }
 
+  // just merges all the json files into one
   private async mergeJsonFiles(jsonFiles: any[]): Promise<any> {
     const mergedData = jsonFiles.reduce((acc, file) => {
       if (Array.isArray(file)) {
@@ -88,6 +111,7 @@ export class ExtendedHistoryPreparerService {
     return mergedData;
   }
 
+  // filters the data in different ways
   private async filterData(data: any[]): Promise<any[]> {
     // Define minimum timestamp (January 1, 2008)
     const minTimestamp = new Date('2008-01-01T00:00:00Z').getTime();
@@ -141,6 +165,7 @@ export class ExtendedHistoryPreparerService {
     return filteredData;
   }
 
+  // trasforms the columns
   private async transformData(data: any[]): Promise<any[]> {
     return data.map((item: ExtendedStreamingHistoryDTO) => {
       return {
@@ -160,12 +185,15 @@ export class ExtendedHistoryPreparerService {
     });
   }
 
+  // sorts by the timestamp, older go first
   private async sortData(data: any[]): Promise<any[]> {
-    return data.sort((a: ExtendedStreamingHistoryDTO, b: ExtendedStreamingHistoryDTO) => {
-      const dateA = new Date(a.ts).getTime();
-      const dateB = new Date(b.ts).getTime();
-      return dateA - dateB;
-    });
+    return data.sort(
+      (a: ExtendedStreamingHistoryDTO, b: ExtendedStreamingHistoryDTO) => {
+        const dateA = new Date(a.ts).getTime();
+        const dateB = new Date(b.ts).getTime();
+        return dateA - dateB;
+      },
+    );
   }
 
   // TODO: remove
