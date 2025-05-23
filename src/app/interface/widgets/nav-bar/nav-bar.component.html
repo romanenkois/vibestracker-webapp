@@ -1,42 +1,33 @@
-<!-- <nav
-  class="selection-none h-20 flex justify-between align-center gap-4 bg-dark/75 backdrop-blur-sm"
->
-  <div class="w-max h-full flex justify-center gap-4 align-center">
-    <a routerLink="/"><h1 class="font-black text-xl">vibes tracker</h1></a>
-    <a routerLink="/top"><p>top tracks</p></a>
-  </div>
-
-  <div class="flex justify-center align-center">
-    <a routerLink="/settings"><p>settings</p></a>
-  </div>
-</nav> -->
-
 <nav
   class="select-none flex min-h-12 w-full justify-between bg-dark/75 backdrop-blur-sm"
 >
-  <div class="box-border flex">
-    <div class="box-border flex p-4">
+  <div class="box-border flex gap-4 lg:gap-12 p-4">
+    <div class="box-border flex">
       <a routerLink="/">
         <h1
-          class="w-full text-2xl font-black text-primary hover:text-primary-light"
+          class="w-full text-center text-lg md:text-2xl font-black text-primary hover:text-primary-light"
         >
           vibes tracker
         </h1>
       </a>
     </div>
-    <div class="courses-list box-border flex items-center gap-4 p-4">
+    <div class="courses-list box-border flex items-center gap-4">
       <div>
         <a routerLink="/top">
-          <p class="w-max text-lg font-black text-gray hover:text-white">
+          <p
+            class="w-max text-center text-base md:text-lg font-black text-gray hover:text-white"
+          >
             simple top
           </p>
         </a>
       </div>
     </div>
-    <div class="courses-list box-border flex items-center gap-4 p-4">
+    <div class="courses-list box-border flex items-center gap-4">
       <div>
         <a routerLink="/extended-history">
-          <p class="w-max text-lg font-black text-gray hover:text-white">
+          <p
+            class="w-max text-center text-base md:text-lg font-black text-gray hover:text-white"
+          >
             extended top
           </p>
         </a>

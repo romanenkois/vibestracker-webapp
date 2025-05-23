@@ -1,149 +1,148 @@
 <div class="p-6 max-w mx-auto flex flex-col gap-6 justify-center items-center">
-  <div class="w-full">
-    <!-- @if (status == 'idle' || status == 'error') { -->
-    <form class="w-full flex flex-col gap-6">
-      <div class="rounded-md w-full p-8 bg-dark cursor-pointer">
-        <div class="flex flex-col items-center justify-center gap-4">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-12 w-12"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-            />
-          </svg>
-          <div class="text-center">
-            <p class="text-lg font-black">Drop your ZIP file here</p>
-            <p class="text-sm">or</p>
+  <div class="w-full h-full min-h-[500px] flex justify-center items-center">
+    @if (status == 'idle' || status == 'error') {
+      <form class="w-full flex flex-col gap-6">
+        <div class="rounded-md w-full p-8 bg-dark cursor-pointer">
+          <div class="flex flex-col items-center justify-center gap-4">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-12 w-12"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+              />
+            </svg>
+            <div class="text-center">
+              <p class="text-lg font-black">Drop your ZIP file here</p>
+              <p class="text-sm">or</p>
+            </div>
+            <label
+              class="relative cursor-pointer bg-primary font-black py-2 px-4 rounded-sm"
+            >
+              Select a file
+              <input
+                type="file"
+                id="file"
+                (change)="this.onFileSelected($event)"
+                accept=".zip"
+                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
+            </label>
           </div>
-          <label
-            class="relative cursor-pointer bg-primary font-black py-2 px-4 rounded-sm"
-          >
-            Select a file
-            <input
-              type="file"
-              id="file"
-              (change)="this.onFileSelected($event)"
-              accept=".zip"
-              class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-            />
-          </label>
         </div>
-      </div>
-    </form>
-    <!-- } -->
-  </div>
-  <div class="w-full flex justify-center items-center">
-    <div class="w-[200px] bg-dark shadow rounded-md p-4">
-      <div class="flex items-center gap-3">
-        <div class="flex-shrink-0">
-          <div
-            [class]="
-              'h-8 w-8 rounded-full flex items-center justify-center ' +
-              (this.status.includes('Error')
-                ? 'bg-red-100 text-red-500'
-                : this.status.includes('Success')
-                  ? 'bg-green-100 text-green-500'
-                  : 'bg-blue-100 text-blue-500')
-            "
-          >
-            @switch (this.status) {
-              @case ('idle') {}
-              @case ('error') {
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              }
-              @case ('all-prepared') {
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              }
-              @case ('all-resolved') {
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              }
-
-              @case ('merged') {
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              }
-
-              @default {
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 animate-spin"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                >
-                  <circle
-                    class="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    stroke-width="4"
-                  ></circle>
-                  <path
-                    class="opacity-75"
+      </form>
+    } @else {
+      <div class="w-full h-full bg-dark shadow rounded-md p-4">
+        <div class="flex items-center gap-3">
+          <div class="flex-shrink-0">
+            <div
+              [class]="
+                'h-8 w-8 rounded-full flex items-center justify-center ' +
+                (this.status.includes('Error')
+                  ? 'bg-red-100 text-red-500'
+                  : this.status.includes('Success')
+                    ? 'bg-green-100 text-green-500'
+                    : 'bg-blue-100 text-blue-500')
+              "
+            >
+              @switch (this.status) {
+                @case ('all-prepared') {
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    viewBox="0 0 20 20"
                     fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                }
+                @case ('all-resolved') {
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                }
+
+                @case ('merged') {
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                }
+
+                @default {
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 animate-spin"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <circle
+                      class="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      stroke-width="4"
+                    ></circle>
+                    <path
+                      class="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                }
               }
+            </div>
+          </div>
+          <div class="flex-1 min-w-0">
+            @if (this.status !== 'all-prepared') {
+              <p class="text-sm w-full text-gray truncate">
+                {{ this.status }}
+              </p>
+            } @else if (this.canUpload) {
+              <button
+              >upload</button>
+            } @else {
+              <p>
+                waiting readyness to upload...
+              </p>
+            }
+            @if (this.startingDate && this.endingDate) {
+              <p class="text-sm text-gray">
+                {{ this.startingDate | date: 'dd/MM/yyyy' }} -
+                {{ this.endingDate | date: 'dd/MM/yyyy' }}
+              </p>
             }
           </div>
         </div>
-        <div class="flex-1 min-w-0">
-          <p class="text-sm w-full text-gray truncate text-center">
-            {{ this.status }}
-          </p>
-        </div>
       </div>
-    </div>
+    }
   </div>
 </div>
