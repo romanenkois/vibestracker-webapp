@@ -1,4 +1,9 @@
-@use "tailwindcss";
+// @use "tailwindcss";
+
+@use "tailwindcss/base";
+@use "tailwindcss/components";
+@use "tailwindcss/utilities";
+
 
 @use 'styles/variables.scss';
 @use 'styles/mixins.scss';

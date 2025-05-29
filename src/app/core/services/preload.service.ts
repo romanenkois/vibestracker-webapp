@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthorizationCommand } from '@commands';
-import { TokenStorage, UserSettingsStorage } from '@storage';
+import { UserStorage, UserSettingsStorage } from '@storage';
 import { LoadingState } from '@types';
 
 @Injectable({
@@ -13,11 +13,11 @@ export class PreloadService {
   private userSettings: UserSettingsStorage = inject(UserSettingsStorage);
   private authorizationCommand: AuthorizationCommand =
     inject(AuthorizationCommand);
-  private tokenStorage: TokenStorage = inject(TokenStorage);
+  private userStorage: UserStorage = inject(UserStorage);
 
   // this service always triggers on app load, so we send request to api to check if token is still valid
   constructor() {
-    let token = this.tokenStorage.getToken();
+    let token = this.userStorage.getToken();
 
     try {
       // we try to get token, at first from apprun time memory, then from local storage
@@ -33,7 +33,7 @@ export class PreloadService {
     }
 
     // we set the token in advance, so guard doesnt trigger redirecting to login
-    this.tokenStorage.setToken(token);
+    this.userStorage.setToken(token);
 
     if (token) {
       this.authorizationCommand
@@ -46,7 +46,7 @@ export class PreloadService {
           if (status === 'error') {
             // if token is not valid, we set it to null
             // this would trigger the guard to redirect to login page
-            this.tokenStorage.setToken(null);
+            this.userStorage.setToken(null);
           }
         });
     }

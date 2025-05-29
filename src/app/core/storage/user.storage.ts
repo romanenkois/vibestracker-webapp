@@ -1,14 +1,17 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
-import { UserSettingsStorage } from './user-settings.storage';
+import { UserSettingsStorage } from '@storage';
+import { UserPrivate } from '@types';
 
 @Injectable({
   providedIn: 'root',
 })
-export class TokenStorage {
+export class UserStorage {
   private userSettings: UserSettingsStorage = inject(UserSettingsStorage);
 
   private readonly userToken: WritableSignal<string | null> = signal(null);
+  private readonly user: WritableSignal<UserPrivate | null> = signal(null);
 
+  // token
   public setToken(token: string | null): void {
     this.userToken.set(token);
     // TODO: dangerously unsafe
@@ -22,5 +25,13 @@ export class TokenStorage {
   }
   public getToken(): string | null {
     return this.userToken();
+  }
+
+  // user
+  public setUser(user: UserPrivate) {
+    this.user.set(user);
+  }
+  public getUser(): UserPrivate | null {
+    return this.user();
   }
 }

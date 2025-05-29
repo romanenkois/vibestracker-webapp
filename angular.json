@@ -21,6 +21,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
+            "allowedCommonJsDependencies": ["jszip"],
             "outputPath": "dist/vibestracker-webapp",
             "index": "src/index.html",
             "browser": "src/main.ts",

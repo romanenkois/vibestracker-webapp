@@ -1,10 +1,16 @@
 export type LoadingState =
   | 'idle'
   | 'loading'
-  | 'resolved'
-  | 'appending'
-  | 'all-resolved' /* is used when there is no more to append */
+  | 'resolved' // used when the loading is finished, but could be loaded again
+  | 'appending' // used, when we have loaded something, and now loading more
+  | 'all-resolved' // used when there is no more to append
   | 'error';
+
+export type UploadingStatus =
+  | 'idle'
+  | 'uploading'
+  | 'resolved'
+  | 'error'
 
 export type ExtendedHistoryPreparingState =
   | 'idle'
@@ -15,6 +21,4 @@ export type ExtendedHistoryPreparingState =
   | 'transformed'
   | 'sorted'
   | 'all-prepared'
-  | 'uploading'
-  | 'all-resolved'
   | 'error';

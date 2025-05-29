@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authorizationGuard } from '@guards';
+import { authorizationGuard, extendedHistoryGuard } from '@guards';
 
 export const routes: Routes = [
   {
@@ -22,11 +22,19 @@ export const routes: Routes = [
         path: 'extended-history',
         loadComponent: () =>
           import('@pages/extended-history/extended-history.component'),
+        canActivate: [extendedHistoryGuard],
+      },
+      {
+        path: 'extended-history/upload',
+        loadComponent: () =>
+          import(
+            '@pages/extended-history-upload/extended-history-upload.component'
+          ),
       },
       {
         path: 'settings',
         loadComponent: () => import('@pages/settings/settings.component'),
-      }
+      },
     ],
   },
   {

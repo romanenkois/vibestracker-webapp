@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { TokenStorage } from '@storage';
+import { UserStorage } from '@storage';
 import { LoadingState } from '@types';
 import { AuthorizationApi } from '@api';
 
@@ -9,7 +9,7 @@ import { AuthorizationApi } from '@api';
 })
 export class AuthorizationCommand {
   authorizationApi: AuthorizationApi = inject(AuthorizationApi);
-  tokenStorage: TokenStorage = inject(TokenStorage);
+  userStorage: UserStorage = inject(UserStorage);
 
   public codeLogIn(code: string): Observable<LoadingState> {
     return new Observable<LoadingState>((observer) => {
@@ -17,7 +17,7 @@ export class AuthorizationCommand {
 
       this.authorizationApi.codeLogIn(code).subscribe({
         next: (response: any) => {
-          this.tokenStorage.setToken(response.token);
+          this.userStorage.setToken(response.token);
           observer.next('resolved');
           observer.complete();
         },
@@ -53,7 +53,7 @@ export class AuthorizationCommand {
   }
 
   public logOut(): void {
-    this.tokenStorage.setToken(null);
+    this.userStorage.setToken(null);
     window.location.reload();
   }
 }

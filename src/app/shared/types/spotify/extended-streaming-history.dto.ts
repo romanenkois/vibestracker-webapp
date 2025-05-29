@@ -42,3 +42,22 @@ export type ExtendedStreamingHistoryDTO = {
 
   incognito_mode: null | true | false;
 };
+
+export type ExtendedStreamingHistory = {
+  ts: string;
+  platform: string;
+  ms_played: number;
+  conn_country: string;
+
+  track_name: string;
+  track_artist: string;
+  track_album: string;
+
+  uri: string;
+
+  reason_start: string;
+  reason_end: string;
+
+  shuffle: null | true | false;
+  skipped: null | true | false;
+};

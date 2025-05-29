@@ -1,4 +1,7 @@
-export { ExtendedStreamingHistoryDTO } from './spotify/extended-streaming-history.dto';
+export {
+  ExtendedStreamingHistoryDTO,
+  ExtendedStreamingHistory,
+} from './spotify/extended-streaming-history.dto';
 
 export { Album } from './spotify.album.type';
 export { Artist } from './spotify.artist.type';

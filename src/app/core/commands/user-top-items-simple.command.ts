@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { TokenStorage, UserTopItemsSimpleStorage } from '@storage';
+import { UserTopItemsSimpleStorage } from '@storage';
 import { LoadingState, SimpleItemsSelection, SimpleTimeFrame } from '@types';
 import { UserItemsApi } from '@api';
 
@@ -9,7 +9,6 @@ import { UserItemsApi } from '@api';
 })
 export class UserTopItemsSimpleCommand {
   private readonly userItemsApi: UserItemsApi = inject(UserItemsApi);
-  private readonly tokenStorage: TokenStorage = inject(TokenStorage);
   private readonly userTopItemsStorage: UserTopItemsSimpleStorage = inject(
     UserTopItemsSimpleStorage
   );
@@ -33,14 +32,6 @@ export class UserTopItemsSimpleCommand {
         return;
       }
 
-      // check the token
-      const token = this.tokenStorage.getToken();
-      if (!token) {
-        observer.next('error');
-        observer.complete();
-        return;
-      }
-
       // load the data
       this.userItemsApi
         .getUserTopItemsSimple({
@@ -48,7 +39,6 @@ export class UserTopItemsSimpleCommand {
           timeFrame: params.timeFrame,
           limit: this.itemsPerLoad,
           offset: 0,
-          token: token,
         })
         .subscribe({
           next: (response: any) => {
@@ -86,13 +76,6 @@ export class UserTopItemsSimpleCommand {
     return new Observable<LoadingState>((observer: any) => {
       observer.next('appending');
 
-      const token = this.tokenStorage.getToken();
-      if (!token) {
-        observer.next('error');
-        observer.complete();
-        return;
-      }
-
       this.userItemsApi
         .getUserTopItemsSimple({
           type: params.type,
@@ -102,7 +85,6 @@ export class UserTopItemsSimpleCommand {
             params.timeFrame,
             params.type
           ).length,
-          token: token,
         })
         .subscribe({
           next: (response: any) => {

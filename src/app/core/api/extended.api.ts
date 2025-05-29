@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { $appConfig } from '@environments';
-import { SimpleItemsSelection, SimpleTimeFrame } from '@types';
+import { ExtendedStreamingHistoryDTO } from '@types';
 
 @Injectable({
   providedIn: 'root',
@@ -12,18 +12,13 @@ export class ExtendedHistoryApi {
   private baseUrl = $appConfig.api.BASE_API_URL;
 
   public uploadUserExtendedHistory(params: {
-    files: any[];
-    token: string;
+    history: ExtendedStreamingHistoryDTO[];
   }): Observable<any> {
     const endpoint = `${this.baseUrl}/user/upload/extended-history`;
-
-    const headers = {
-      Authorization: `${params.token}`,
-    };
     const body = {
-      extendedhistrory: '1'
+      extendedHistrory: params.history,
     };
 
-    return this.http.post(endpoint, body, { headers: headers, });
+    return this.http.post(endpoint, body);
   }
 }

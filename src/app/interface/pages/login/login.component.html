@@ -1,16 +1,13 @@
-<div>
+<div
+  class="bg-dark p-8 m-8 rounded-sm flex flex-col items-center justify-center gap-4"
+>
   <div>
-    <div>
-      <p>vibes tracker</p>
-      <p>{{this.loadingState}}</p>
-    </div>
+    <h1 class="text-3xl font-black">vibes tracker</h1>
+    <p>{{this.loadingState}}</p>
   </div>
-  <div>
-
-    <a [href]="this.getAuthorizationUrl()">
-      <button class="p-2">
-        <p class="p-2">Login with spotify</p>
-      </button>
-    </a>
-  </div>
+  <a [href]="this.getAuthorizationUrl()" class="w-full">
+    <button class="w-full py-2 bg-primary rounded-sm">
+      <p class="">Login with spotify</p>
+    </button>
+  </a>
 </div>
