@@ -1,3 +1,2 @@
 export { AuthorizationApi } from './authorization.api';
-export { UserItemsApi } from './user-items.api';
-export { ExtendedHistoryApi } from './extended.api';
+export { UserApi } from './user.api';

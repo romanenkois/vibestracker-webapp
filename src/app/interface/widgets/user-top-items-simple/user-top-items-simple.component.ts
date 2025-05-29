@@ -2,8 +2,6 @@ import {
   Component,
   computed,
   inject,
-  input,
-  InputSignal,
   OnInit,
   signal,
   WritableSignal,

@@ -1,15 +1,13 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-// import { TokenStorage } from '@storage';
-import { LoadingState, UploadingStatus } from '@types';
-import { ExtendedHistoryApi } from '@api';
-import { ExtendedStreamingHistoryDTO } from 'src/app/shared/types/spotify/extended-streaming-history.dto';
+import { UploadingStatus, ExtendedStreamingHistoryDTO } from '@types';
+import { UserApi } from '@api';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ExtendedHistoryCommand {
-  private extendedHistoryApi: ExtendedHistoryApi = inject(ExtendedHistoryApi);
+  private userApi: UserApi = inject(UserApi);
 
   public uploadExtendedHistory(params: {
     history: ExtendedStreamingHistoryDTO[];
@@ -21,13 +19,12 @@ export class ExtendedHistoryCommand {
     return new Observable<UploadingStatus>((observer) => {
       observer.next('uploading');
 
-      this.extendedHistoryApi
+      this.userApi
         .uploadUserExtendedHistory({
           history: params.history,
         })
         .subscribe({
           next: (response: any) => {
-
             console.log('Upload successful:', response);
             observer.next('resolved');
             observer.complete();

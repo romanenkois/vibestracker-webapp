@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserStorage } from '@storage';
-import { LoadingState } from '@types';
+import { LoadingState, UserPrivate } from '@types';
 import { AuthorizationApi } from '@api';
 
 @Injectable({
@@ -17,9 +17,17 @@ export class AuthorizationCommand {
 
       this.authorizationApi.codeLogIn(code).subscribe({
         next: (response: any) => {
-          this.userStorage.setToken(response.token);
-          observer.next('resolved');
-          observer.complete();
+          if (response.token && response.user) {
+            this.userStorage.setToken(response.token);
+            this.userStorage.setUser(response.user);
+
+            observer.next('resolved');
+            observer.complete();
+          } else {
+            console.error('Invalid response from login:', response);
+            observer.next('error');
+            observer.complete();
+          }
         },
         error: (error: any) => {
           console.error('Error during login:', error);

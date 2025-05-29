@@ -2,13 +2,13 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserTopItemsSimpleStorage } from '@storage';
 import { LoadingState, SimpleItemsSelection, SimpleTimeFrame } from '@types';
-import { UserItemsApi } from '@api';
+import { UserApi } from '@api';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserTopItemsSimpleCommand {
-  private readonly userItemsApi: UserItemsApi = inject(UserItemsApi);
+  private readonly userApi: UserApi = inject(UserApi);
   private readonly userTopItemsStorage: UserTopItemsSimpleStorage = inject(
     UserTopItemsSimpleStorage
   );
@@ -33,7 +33,7 @@ export class UserTopItemsSimpleCommand {
       }
 
       // load the data
-      this.userItemsApi
+      this.userApi
         .getUserTopItemsSimple({
           type: params.type,
           timeFrame: params.timeFrame,
@@ -76,7 +76,7 @@ export class UserTopItemsSimpleCommand {
     return new Observable<LoadingState>((observer: any) => {
       observer.next('appending');
 
-      this.userItemsApi
+      this.userApi
         .getUserTopItemsSimple({
           type: params.type,
           timeFrame: params.timeFrame,
