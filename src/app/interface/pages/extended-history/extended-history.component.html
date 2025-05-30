@@ -1,3 +1,23 @@
-<div>
-  <a routerLink="/extended-history/upload">Upload</a>
-</div>
+@if (this.listeningData()) {
+  <div>
+    <div
+      class="py-4 px-8 gap-4 flex flex-col md:flex-row justify-between items-center"
+    >
+      <p class="text-gray">
+        <span>You have uploaded data from</span>
+        <span class="text-xl font-black text-pure-white">
+          {{ this.listeningData()?.startingDate | date: 'dd.MM.yyyy' }}
+        </span>
+        <span>to</span>
+        <span class="text-xl font-black text-pure-white">
+          {{ this.listeningData()?.endingDate | date: 'dd.MM.yyyy' }}
+        </span>
+      </p>
+      <a
+        routerLink="/extended-history/upload"
+        class="py-2 px-8 w-full sm:w-max font-black text-lg sm:text-base text-center bg-primary rounded-sm"
+        >Upload more</a
+      >
+    </div>
+  </div>
+}

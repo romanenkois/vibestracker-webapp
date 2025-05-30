@@ -28,7 +28,7 @@ export class UserStorage {
   }
 
   // user
-  public setUser(user: UserPrivate) {
+  public setUser(user: UserPrivate | null) {
     this.user.set(user);
   }
   public getUser(): UserPrivate | null {

@@ -6,7 +6,6 @@ export const extendedHistoryGuard: CanActivateFn = (route, state) => {
   const userStorage: UserStorage = inject(UserStorage);
   const router: Router = inject(Router);
 
-  console.log('Authorization guard triggered');
   if (
     !userStorage.getUser() ||
 

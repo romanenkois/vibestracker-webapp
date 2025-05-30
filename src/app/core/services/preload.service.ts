@@ -1,5 +1,4 @@
 import { inject, Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { AuthorizationCommand } from '@commands';
 import { UserStorage, UserSettingsStorage } from '@storage';
 import { LoadingState } from '@types';
@@ -8,8 +7,6 @@ import { LoadingState } from '@types';
   providedIn: 'root',
 })
 export class PreloadService {
-  private router: Router = inject(Router);
-
   private userSettings: UserSettingsStorage = inject(UserSettingsStorage);
   private authorizationCommand: AuthorizationCommand =
     inject(AuthorizationCommand);
@@ -32,8 +29,23 @@ export class PreloadService {
       token = null;
     }
 
-    // we set the token in advance, so guard doesnt trigger redirecting to login
+    // we set it in advace, so the guard doesnt freak out
     this.userStorage.setToken(token);
+
+    // this monstosity is there, so the expanded top doesnt freak out too even more
+    this.userStorage.setUser({
+      id: '',
+      username: '',
+      profilePicture: null,
+      email: '',
+      listeningData: [
+        {
+          type: 'expanded-history',
+          startingDate: new Date(0),
+          endingDate: new Date(0),
+        },
+      ],
+    });
 
     if (token) {
       this.authorizationCommand
@@ -46,6 +58,7 @@ export class PreloadService {
           if (status === 'error') {
             // if token is not valid, we set it to null
             // this would trigger the guard to redirect to login page
+            this.userStorage.setUser(null);
             this.userStorage.setToken(null);
           }
         });
