@@ -19,5 +19,10 @@
         >Upload more</a
       >
     </div>
+    <div>
+      @if (this.extendedDataIsLoaded()) {
+        <app-user-top-extended />
+      }
+    </div>
   </div>
 }

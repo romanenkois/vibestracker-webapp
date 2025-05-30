@@ -40,4 +40,13 @@ export class UserApi {
 
     return this.http.post(endpoint, body);
   }
+
+  public getUserExtendedHistory(
+    startingDate: Date,
+    endingDate: Date,
+  ): Observable<any> {
+    const endpoint = `${this.baseUrl}/extended-history?startingDate=${startingDate.toISOString()}&endingDate=${endingDate.toISOString()}`;
+
+    return this.http.get<any>(endpoint);
+  }
 }

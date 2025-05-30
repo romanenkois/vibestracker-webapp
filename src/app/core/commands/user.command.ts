@@ -7,7 +7,7 @@ import { UserApi } from '@api';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthorizationCommand {
+export class UserCommand {
   userApi: UserApi = inject(UserApi);
   userStorage: UserStorage = inject(UserStorage);
 
