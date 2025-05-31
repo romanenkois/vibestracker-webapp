@@ -1,7 +1,7 @@
 @if (this.listeningData()) {
   <div>
     <div
-      class="py-4 px-8 gap-4 flex flex-col md:flex-row justify-between items-center"
+      class="p-2 sm:py-4 sm:px-8 gap-4 flex flex-col md:flex-row justify-between items-center"
     >
       <p class="text-gray">
         <span>You have uploaded data from</span>
@@ -15,13 +15,13 @@
       </p>
       <a
         routerLink="/extended-history/upload"
-        class="py-2 px-8 w-full sm:w-max font-black text-lg sm:text-base text-center bg-primary rounded-sm"
+        class="py-2 px-2 sm:px-8 w-full sm:w-max font-black text-lg sm:text-base text-center bg-primary rounded-sm"
         >Upload more</a
       >
     </div>
     <div>
       @if (this.extendedDataIsLoaded()) {
-        <app-user-top-extended [listeningData]="this.listeningData()" />
+        <app-user-top-extended [listeningData]="this.listeningData()!" />
       } @else {
         <div class="w-full flex justify-center align-center h-">
           <div class="flex flex-row items-center justify-center gap-2">

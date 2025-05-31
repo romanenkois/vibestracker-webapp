@@ -30,13 +30,14 @@ export class UserTopExtended implements OnInit {
   private readonly spotifyItemsCommand: SpotifyItemsCommand =
     inject(SpotifyItemsCommand);
 
-  listeningData: InputSignal<UserPrivate['listeningData'][0]> = input.required();
+  listeningData: InputSignal<UserPrivate['listeningData'][0]> =
+    input.required();
 
   loadingState: LoadingState = 'idle';
   tracksToShow: WritableSignal<number> = signal(20);
 
-  startingDate: WritableSignal<Date> = signal(this.listeningData().startingDate || new Date(0));
-  endingDate: WritableSignal<Date> = signal(this.listeningData().endingDate || new Date());
+  startingDate: WritableSignal<Date> = signal(new Date(0));
+  endingDate: WritableSignal<Date> = signal(new Date());
 
   protected tracksIds = computed(() => {
     return this.extendedHistoryService
@@ -69,9 +70,11 @@ export class UserTopExtended implements OnInit {
     const track = this.extendedHistoryService
       .topTracks()
       .find((track: Track) => track.id === id);
-    console.log('getTimeListened', id, track);
     return track ? track.ms_played : 0;
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.startingDate.set(this.listeningData().startingDate || new Date(0));
+    this.endingDate.set(this.listeningData().endingDate || new Date());
+  }
 }
