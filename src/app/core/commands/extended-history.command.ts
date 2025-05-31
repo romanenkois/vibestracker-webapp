@@ -51,6 +51,12 @@ export class ExtendedHistoryCommand {
     return new Observable<LoadingState>((observer) => {
       observer.next('loading');
 
+      if (this.userExtendedDataStorage.getUserExtendedData().length > 0) {
+        observer.next('resolved');
+        observer.complete();
+        return;
+      }
+
       const startingDate: Date = new Date(
         this.userStorage
           .getUser()

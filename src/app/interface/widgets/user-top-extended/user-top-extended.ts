@@ -63,6 +63,7 @@ export class UserTopExtended implements OnInit {
   });
 
   loadMoreItems() {
+    this.loadingState = 'appending';
     this.tracksToShow.set(this.tracksToShow() + 20);
   }
 
