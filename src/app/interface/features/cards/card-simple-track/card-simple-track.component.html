@@ -19,7 +19,26 @@
     <div class="flex-1 overflow-hidden">
       <div>
         <div>
-          <p class="text-xl font-black text-gray">{{ this.index() }}#</p>
+          <p class="font-black text-gray flex flex-col sm:flex-row items-center justify-start gap-1">
+
+            @if (this.timeListened() !== 0) {
+              <span class="text-base w-full sm:w-max">{{ this.index() }}#</span>
+              <span class="text-base w-full sm:w-max">
+                <span class="hidden sm:inline">
+                  -
+                </span>
+                <span>
+                  {{ this.timeListened() | timeSimple }}
+                </span>
+              </span>
+            } @else {
+              <span class="text-xl w-full">
+                <span class="hidden sm:inline">
+                  {{ this.index() }}#
+                </span>
+              </span>
+            }
+          </p>
         </div>
       </div>
 
