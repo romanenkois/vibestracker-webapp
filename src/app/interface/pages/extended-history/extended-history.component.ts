@@ -1,14 +1,15 @@
 import { DatePipe } from '@angular/common';
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit, Signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { UserStorage } from '@storage';
 import { UserTopExtended } from '../../widgets/user-top-extended/user-top-extended';
-import { LoadingState } from '@types';
+import { LoadingState, UserPrivate } from '@types';
 import { ExtendedHistoryCommand } from '@commands';
 import { ExtendedHistoryService } from '@services';
+import { LoadingSpinner } from "../../features/loading-spinner/loading-spinner";
 @Component({
   selector: 'app-extended-history',
-  imports: [RouterLink, DatePipe, UserTopExtended],
+  imports: [RouterLink, DatePipe, UserTopExtended, LoadingSpinner],
   templateUrl: './extended-history.component.html',
   styleUrl: './extended-history.component.scss',
 })
@@ -21,7 +22,7 @@ export default class ExtendedHistoryComponent implements OnInit {
     ExtendedHistoryCommand,
   );
 
-  listeningData = computed(() => {
+  listeningData: Signal<UserPrivate['listeningData'][0] | null> = computed(() => {
     console.log('Fetching listening data...');
 
     const user = this.userStorage.getUser();

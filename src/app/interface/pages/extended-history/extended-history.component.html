@@ -21,7 +21,16 @@
     </div>
     <div>
       @if (this.extendedDataIsLoaded()) {
-        <app-user-top-extended />
+        <app-user-top-extended [listeningData]="this.listeningData()" />
+      } @else {
+        <div class="w-full flex justify-center align-center h-">
+          <div class="flex flex-row items-center justify-center gap-2">
+            <p>loading your extended history...</p>
+            <div class="h-[32px] w-[32px]">
+              <app-loading-spinner />
+            </div>
+          </div>
+        </div>
       }
     </div>
   </div>

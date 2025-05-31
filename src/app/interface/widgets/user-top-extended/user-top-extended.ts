@@ -1,9 +1,18 @@
-import { Component, computed, inject, OnInit, signal, WritableSignal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  input,
+  InputSignal,
+  OnInit,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { SpotifyItemsCommand } from '@commands';
 import { ExtendedHistoryService } from '@services';
-import { SpotifyItemsStorage } from '@storage';
-import { LoadingState, Track } from '@types';
-import { CardSimpleTrackComponent } from "../../features/cards/card-simple-track/card-simple-track.component";
+import { SpotifyItemsStorage, UserStorage } from '@storage';
+import { LoadingState, Track, UserPrivate } from '@types';
+import { CardSimpleTrackComponent } from '../../features/cards/card-simple-track/card-simple-track.component';
 
 @Component({
   selector: 'app-user-top-extended',
@@ -15,17 +24,26 @@ export class UserTopExtended implements OnInit {
   private extendedHistoryService: ExtendedHistoryService = inject(
     ExtendedHistoryService,
   );
+  private readonly userStorage = inject(UserStorage);
   private readonly spotifyItemsStorage: SpotifyItemsStorage =
     inject(SpotifyItemsStorage);
   private readonly spotifyItemsCommand: SpotifyItemsCommand =
     inject(SpotifyItemsCommand);
 
+  listeningData: InputSignal<UserPrivate['listeningData'][0]> = input.required();
+
   loadingState: LoadingState = 'idle';
   tracksToShow: WritableSignal<number> = signal(20);
 
+  startingDate: WritableSignal<Date> = signal(this.listeningData().startingDate || new Date(0));
+  endingDate: WritableSignal<Date> = signal(this.listeningData().endingDate || new Date());
+
   protected tracksIds = computed(() => {
     return this.extendedHistoryService
-      .topTracks()
+      .getTopTracks({
+        startingDate: this.startingDate(),
+        endingDate: this.endingDate(),
+      })
       .slice(0, this.tracksToShow())
       .map((track: any) => track.id);
   });
@@ -48,12 +66,11 @@ export class UserTopExtended implements OnInit {
   }
 
   getTimeListened(id: Track['id']): number {
-    const track = this.extendedHistoryService.topTracks().find(
-      (track: Track) => track.id === id,
-    );
+    const track = this.extendedHistoryService
+      .topTracks()
+      .find((track: Track) => track.id === id);
     console.log('getTimeListened', id, track);
     return track ? track.ms_played : 0;
-
   }
 
   ngOnInit() {}
