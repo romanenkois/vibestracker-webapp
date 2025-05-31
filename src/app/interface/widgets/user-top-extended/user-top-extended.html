@@ -1,6 +1,6 @@
 <div>
   <div>
-    @for (track of this.topTracks; track $index) {
+    @for (track of this.topTracks(); track $index) {
       <div>
         <p>{{track.name}}</p>
       </div>

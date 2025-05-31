@@ -1,6 +1,8 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit } from '@angular/core';
+import { SpotifyItemsCommand } from '@commands';
 import { ExtendedHistoryService } from '@services';
-import { Track } from '@types';
+import { SpotifyItemsStorage } from '@storage';
+import { LoadingState, Track } from '@types';
 
 @Component({
   selector: 'app-user-top-extended',
@@ -12,16 +14,28 @@ export class UserTopExtended implements OnInit {
   private extendedHistoryService: ExtendedHistoryService = inject(
     ExtendedHistoryService,
   );
+  private readonly spotifyItemsStorage: SpotifyItemsStorage =
+    inject(SpotifyItemsStorage);
+  private readonly spotifyItemsCommand: SpotifyItemsCommand =
+    inject(SpotifyItemsCommand);
 
-  topTracks: Track[] = [];
+  state: LoadingState = 'idle';
 
-  ngOnInit() {
-    // if (this.extendedHistoryService.userExtendedData().length > 0) {
-    this.extendedHistoryService
-      .getUserTopTracks()
-      .subscribe((tracks: Track[]) => {
-        this.topTracks = tracks;
-      })
-    }
-  // }
+  protected tracksIds = computed(() => {
+    return this.extendedHistoryService
+      .topTracks()
+      .slice(0, 20)
+      .map((track: any) => track.id);
+  });
+
+  protected topTracks = computed(() => {
+    this.spotifyItemsCommand
+      .loadTracks(this.tracksIds())
+      .subscribe((status: LoadingState) => {
+        this.state = status;
+      });
+    return this.spotifyItemsStorage.getTracks([...this.tracksIds()]);
+  });
+
+  ngOnInit() {}
 }

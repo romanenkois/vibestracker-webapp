@@ -10,10 +10,16 @@ export class SpotifyItemsStorage {
   public getTrack(id: Track['id']): Track | null {
     return this.tracks().find((track) => track.id === id) || null;
   }
+  public getTracks(ids: Track['id'][]): Track[] {
+    return this.tracks().filter((track) => ids.includes(track.id));
+  }
   public appendTracks(newTracks: Track[]): void {
     const currentTracks = this.tracks();
-    const updatedTracks = [...currentTracks, ...newTracks];
-    this.tracks.set(updatedTracks);
+    const existingTrackIds = new Set(currentTracks.map((track) => track.id));
+    const newTracksFiltered = newTracks.filter(
+      (track) => !existingTrackIds.has(track.id)
+    );
+    this.tracks.set([...currentTracks, ...newTracksFiltered]);
   }
 
   private readonly artists: WritableSignal<Artist[]> = signal([]);
