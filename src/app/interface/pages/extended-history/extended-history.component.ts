@@ -39,6 +39,6 @@ export default class ExtendedHistoryComponent implements OnInit {
   ngOnInit() {
     this.extendedDataCommand
       .loadExtendedHistory()
-      .subscribe((loadingState: LoadingState) => {});
+      .subscribe((loadingState: LoadingState) => { console.log('Extended history loading state:', loadingState); });
   }
 }

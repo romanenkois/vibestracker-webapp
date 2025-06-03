@@ -52,9 +52,9 @@ export class ExtendedHistoryCommand {
       observer.next('loading');
 
       // TODO
-      observer.next('resolved');
-      observer.complete();
-      return;
+      // observer.next('resolved');
+      // observer.complete();
+      // return;
 
       if (this.userExtendedDataStorage.getUserExtendedData().length > 0) {
         observer.next('resolved');
