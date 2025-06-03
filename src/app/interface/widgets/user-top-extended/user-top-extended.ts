@@ -24,7 +24,6 @@ export class UserTopExtended implements OnInit {
   private extendedHistoryService: ExtendedHistoryService = inject(
     ExtendedHistoryService,
   );
-  private readonly userStorage = inject(UserStorage);
   private readonly spotifyItemsStorage: SpotifyItemsStorage =
     inject(SpotifyItemsStorage);
   private readonly spotifyItemsCommand: SpotifyItemsCommand =
@@ -34,7 +33,7 @@ export class UserTopExtended implements OnInit {
     input.required();
 
   loadingState: LoadingState = 'idle';
-  tracksToShow: WritableSignal<number> = signal(20);
+  tracksToShow: WritableSignal<number> = signal(50);
 
   startingDate: WritableSignal<Date> = signal(new Date(0));
   endingDate: WritableSignal<Date> = signal(new Date());
@@ -64,7 +63,7 @@ export class UserTopExtended implements OnInit {
 
   loadMoreItems() {
     this.loadingState = 'appending';
-    this.tracksToShow.set(this.tracksToShow() + 20);
+    this.tracksToShow.set(this.tracksToShow() + 50);
   }
 
   getTimeListened(id: Track['id']): number {

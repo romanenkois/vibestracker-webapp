@@ -51,6 +51,11 @@ export class ExtendedHistoryCommand {
     return new Observable<LoadingState>((observer) => {
       observer.next('loading');
 
+      // TODO
+      observer.next('resolved');
+      observer.complete();
+      return;
+
       if (this.userExtendedDataStorage.getUserExtendedData().length > 0) {
         observer.next('resolved');
         observer.complete();

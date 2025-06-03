@@ -19,10 +19,13 @@ export const $appConfig: AppConfig = {
         'user-read-playback-position',
       ],
       showDialog: 'true',
-    }
+    },
   },
   defaultUserSettings: {
     theme: 'dark',
     saveToken: true,
-  }
+    extendedHistrory: {
+      ignoredTracks: [],
+    },
+  },
 };
