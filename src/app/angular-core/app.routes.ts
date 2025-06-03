@@ -22,7 +22,7 @@ export const routes: Routes = [
         path: 'extended-history',
         loadComponent: () =>
           import('@pages/extended-history/extended-history.component'),
-        canActivate: [extendedHistoryGuard],
+        // canActivate: [extendedHistoryGuard],
       },
       {
         path: 'extended-history/upload',

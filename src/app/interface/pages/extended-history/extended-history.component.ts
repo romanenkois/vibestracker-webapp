@@ -27,7 +27,7 @@ export default class ExtendedHistoryComponent implements OnInit {
 
     const user = this.userStorage.getUser();
 
-    const listeningData = user?.listeningData.find(
+    const listeningData = user?.listeningData?.find(
       (data) => data.type === 'expanded-history',
     );
 
