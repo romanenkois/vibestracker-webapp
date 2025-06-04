@@ -16,7 +16,16 @@ export class SpotifyItemsCommand {
     return new Observable<LoadingState>((observer) => {
       observer.next('loading');
 
-      this.spotifyItemsApi.getAlbums(ids).subscribe({
+      const idsToLoad: string[] = ids.filter(
+        (id) => !this.spotifyItemsStorage.getAlbum(id),
+      );
+      if (idsToLoad.length === 0) {
+        observer.next('resolved');
+        observer.complete();
+        return;
+      }
+
+      this.spotifyItemsApi.getAlbums(idsToLoad).subscribe({
         next: (response) => {
           this.spotifyItemsStorage.appendAlbums(response.albums);
           observer.next('resolved');
@@ -34,7 +43,17 @@ export class SpotifyItemsCommand {
   loadArtists(ids: string[]): Observable<LoadingState> {
     return new Observable<LoadingState>((observer) => {
       observer.next('loading');
-      this.spotifyItemsApi.getArtists(ids).subscribe({
+
+      const idsToLoad: string[] = ids.filter(
+        (id) => !this.spotifyItemsStorage.getArtist(id),
+      );
+      if (idsToLoad.length === 0) {
+        observer.next('resolved');
+        observer.complete();
+        return;
+      }
+
+      this.spotifyItemsApi.getArtists(idsToLoad).subscribe({
         next: (response) => {
           this.spotifyItemsStorage.appendArtists(response.artists);
           observer.next('resolved');
@@ -53,7 +72,16 @@ export class SpotifyItemsCommand {
     return new Observable<LoadingState>((observer) => {
       observer.next('loading');
 
-      this.spotifyItemsApi.getTracks(ids).subscribe({
+      const idsToLoad: string[] = ids.filter(
+        (id) => !this.spotifyItemsStorage.getTrack(id),
+      );
+      if (idsToLoad.length === 0) {
+        observer.next('resolved');
+        observer.complete();
+        return;
+      }
+
+      this.spotifyItemsApi.getTracks(idsToLoad).subscribe({
         next: (response) => {
           this.spotifyItemsStorage.appendTracks(response.tracks);
           observer.next('resolved');
