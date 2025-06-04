@@ -63,7 +63,7 @@ export class UserTopExtended implements OnInit {
 
   loadMoreItems() {
     this.loadingState = 'appending';
-    this.tracksToShow.set(this.tracksToShow() + 50);
+    this.tracksToShow.set(this.tracksToShow() + 100);
   }
 
   getTimeListened(id: Track['id']): number {
