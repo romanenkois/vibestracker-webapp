@@ -1,81 +1,92 @@
-<div
-  class="w-full h-full flex items-center gap-3 box-border p-2 rounded-md bg-dark shadow-sm hover:shadow-md transition-all duration-200 ease-in-out"
->
-  @if (this.track() && this.track().type) {
-    <!-- IMAGE -->
-    <div class="flex-1">
-      <div class="w-full h-full aspect-square block">
-        <a routerLink="/track/{{ this.track().id }}">
-          <img
-            class="w-full h-full overflow-hidden object-cover rounded-sm"
-            loading="lazy"
-            [src]="this.track().album.images[0].url"
-          />
-        </a>
-      </div>
-    </div>
-
-    <!-- TRACK DATA -->
-    <div class="flex-1 overflow-hidden">
-      <div>
-        <div>
-          <p class="font-black text-gray flex flex-col sm:flex-row items-center justify-start gap-1">
-
-            @if (this.timeListened() !== 0) {
-              <span class="text-base w-full sm:w-max">{{ this.index() }}#</span>
-              <span class="text-base w-full sm:w-max">
-                <span class="hidden sm:inline">
-                  -
-                </span>
-                <span>
-                  {{ this.timeListened() | timeSimple }}
-                </span>
-              </span>
-            } @else {
-              <span class="text-xl w-full">
-                <span class="hidden sm:inline">
-                  {{ this.index() }}#
-                </span>
-              </span>
-            }
-          </p>
-        </div>
-      </div>
-
-      <div>
-        <!-- TRACK NAME -->
-        <div>
-          <a class="w-min" routerLink="/track/{{ this.track().id }}">
-            <p class="font-bold truncate-1">{{ this.track().name }}</p>
+@if (!this.ignoringThisTrack()) {
+  <div
+    class="w-full h-full flex items-center gap-3 box-border p-2 rounded-md bg-dark shadow-sm hover:shadow-md transition-all duration-200 ease-in-out relative"
+  >
+    @if (this.track() && this.track().type) {
+      <!-- IMAGE -->
+      <div class="flex-1">
+        <div class="w-full h-full aspect-square block">
+          <a routerLink="/track/{{ this.track().id }}">
+            <img
+              class="w-full h-full overflow-hidden object-cover rounded-sm"
+              loading="lazy"
+              [src]="this.track().album.images[0].url"
+            />
           </a>
         </div>
+      </div>
 
-        <!-- ARTIST NAMES LIST -->
+      <div
+        class="absolute top-2 right-2 p-2 w-max h-max bg-dark-light flex gap-[2px] rounded-md cursor-pointer"
+        (click)="this.ignoreTrack()"
+      >
+        <div class="w-[4px] h-[4px] rounded-full bg-gray"></div>
+        <div class="w-[4px] h-[4px] rounded-full bg-gray"></div>
+        <div class="w-[4px] h-[4px] rounded-full bg-gray"></div>
+      </div>
+
+      <!-- TRACK DATA -->
+      <div class="flex-1 overflow-hidden relative">
+        <!-- INDEX AND STUFF -->
         <div>
-          <p class="truncate-2 text-xs text-gray">
-            @for (artist of track().artists; track $index) {
-              @if ($index < track().artists.length - 1) {
-                <a routerLink="/artist/{{ artist.id }}">
-                  <span>{{ artist.name }}, </span>
-                </a>
+          <div>
+            <p
+              class="font-black text-gray flex flex-col sm:flex-row items-center justify-start gap-1"
+            >
+              @if (this.timeListened() !== 0) {
+                <span class="text-base w-full sm:w-max"
+                  >{{ this.index() }}#</span
+                >
+                <span class="text-base w-full sm:w-max">
+                  <span class="hidden sm:inline"> - </span>
+                  <span>
+                    {{ this.timeListened() | timeSimple }}
+                  </span>
+                </span>
               } @else {
-                <a routerLink="/artist/{{ artist.id }}">
-                  <span>{{ artist.name }} </span>
-                </a>
+                <span class="text-xl w-full">
+                  <span class="hidden sm:inline"> {{ this.index() }}# </span>
+                </span>
               }
-            }
-          </p>
+            </p>
+          </div>
         </div>
 
-        <!-- ALBUM NAME -->
         <div>
-          <p class="truncate-1 text-xs text-gray">
-            <a routerLink="/album/{{ this.track().album.id }}">
-              <span>{{ this.track().album.name }}</span>
+          <!-- TRACK NAME -->
+          <div>
+            <a class="w-min" routerLink="/track/{{ this.track().id }}">
+              <p class="font-bold truncate-1">{{ this.track().name }}</p>
             </a>
-          </p>
+          </div>
+
+          <!-- ARTIST NAMES LIST -->
+          <div>
+            <p class="truncate-2 text-xs text-gray">
+              @for (artist of track().artists; track $index) {
+                @if ($index < track().artists.length - 1) {
+                  <a routerLink="/artist/{{ artist.id }}">
+                    <span>{{ artist.name }}, </span>
+                  </a>
+                } @else {
+                  <a routerLink="/artist/{{ artist.id }}">
+                    <span>{{ artist.name }} </span>
+                  </a>
+                }
+              }
+            </p>
+          </div>
+
+          <!-- ALBUM NAME -->
+          <div>
+            <p class="truncate-1 text-xs text-gray">
+              <a routerLink="/album/{{ this.track().album.id }}">
+                <span>{{ this.track().album.name }}</span>
+              </a>
+            </p>
+          </div>
         </div>
       </div>
-    </div>
-  }
-</div>
+    }
+  </div>
+}

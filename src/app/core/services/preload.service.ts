@@ -33,19 +33,25 @@ export class PreloadService {
     this.userStorage.setToken(token);
 
     // this monstosity is there, so the expanded top doesnt freak out too even more
-    this.userStorage.setUser({
-      id: '',
-      username: '',
-      profilePicture: null,
-      email: '',
-      listeningData: [
-        {
-          type: 'expanded-history',
-          startingDate: new Date(0),
-          endingDate: new Date(0),
-        },
-      ],
-    });
+    // this.userStorage.setUser({
+    //   id: '',
+    //   username: '',
+    //   profilePicture: null,
+    //   email: '',
+    //   listeningData: [
+    //     {
+    //       type: 'expanded-history',
+
+    //       startingDate: new Date(0),
+    //       endingDate: new Date(0),
+
+    //       totalRecordsNumber: 0,
+    //       uniqueTracksNumber: 0,
+    //       totalMsPlayed: 0,
+    //     },
+    //   ],
+    //   ignoredTracks: [],
+    // });
 
     if (token) {
       this.authorizationCommand

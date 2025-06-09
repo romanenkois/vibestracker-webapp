@@ -1,6 +1,7 @@
 export {
   ExtendedStreamingHistoryDTO,
   ExtendedStreamingHistory,
+  RefinedExtendedStreamingHistory,
 } from './spotify/extended-streaming-history.dto';
 
 export { Album } from './spotify.album.type';

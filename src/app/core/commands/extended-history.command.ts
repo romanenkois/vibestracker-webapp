@@ -1,18 +1,15 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import {
-  UploadingStatus,
-  ExtendedStreamingHistory,
-  LoadingState,
-} from '@types';
-import { UserApi } from '@api';
+import { UploadingStatus, ExtendedStreamingHistory } from '@types';
 import { UserExtandedDataStorage, UserStorage } from '@storage';
+import { HttpClient } from '@angular/common/http';
+import { $appConfig } from '@environments';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ExtendedHistoryCommand {
-  private userApi: UserApi = inject(UserApi);
+  private http: HttpClient = inject(HttpClient);
   private userStorage: UserStorage = inject(UserStorage);
   private userExtendedDataStorage: UserExtandedDataStorage = inject(
     UserExtandedDataStorage,
@@ -28,9 +25,9 @@ export class ExtendedHistoryCommand {
     return new Observable<UploadingStatus>((observer) => {
       observer.next('uploading');
 
-      this.userApi
-        .uploadUserExtendedHistory({
-          history: params.history,
+      this.http
+        .post(`${$appConfig.api.BASE_API_URL}/extended-history`, {
+          extendedHistrory: params.history,
         })
         .subscribe({
           next: (response: any) => {
@@ -47,58 +44,100 @@ export class ExtendedHistoryCommand {
     });
   }
 
-  public loadExtendedHistory(): Observable<LoadingState> {
-    return new Observable<LoadingState>((observer) => {
-      observer.next('loading');
+  public loadExtendedHistory() {
+    this.userExtendedDataStorage.userExtendedDataLoadingState.set('loading');
 
-      // TODO
-      // observer.next('resolved');
-      // observer.complete();
-      // return;
+    if (this.userExtendedDataStorage.getUserExtendedData().length > 0) {
+      this.userExtendedDataStorage.userExtendedDataLoadingState.set('resolved');
+      return;
+    }
 
-      if (this.userExtendedDataStorage.getUserExtendedData().length > 0) {
-        observer.next('resolved');
-        observer.complete();
-        return;
-      }
-
-      const startingDate: Date = new Date(
-        this.userStorage
-          .getUser()
-          ?.listeningData.find((item) => item.type === 'expanded-history')
-          ?.startingDate || 0,
+    if (
+      this.userStorage
+        .getUser()
+        ?.listeningData.find((item) => item.type === 'expanded-history') ===
+      undefined
+    ) {
+      console.log('nothing to load');
+      this.userExtendedDataStorage.userExtendedDataLoadingState.set(
+        'nothing-to-load',
       );
+      return;
+    }
 
-      const endingDate: Date = new Date(
-        this.userStorage
-          .getUser()
-          ?.listeningData.find((item) => item.type === 'expanded-history')
-          ?.endingDate || Date.now(),
-      );
+    const startingDate: Date = new Date(
+      this.userStorage
+        .getUser()
+        ?.listeningData.find((item) => item.type === 'expanded-history')
+        ?.startingDate || 0,
+    );
 
-      this.userApi
-        .getUserExtendedHistory(startingDate, endingDate)
-        .subscribe({
-          next: (response: any) => {
-            console.log('Load:', response);
-            if (response && response.userExtendedHistory) {
-              this.userExtendedDataStorage.setUserExtendedData(
-                response.userExtendedHistory,
-              );
-              observer.next('resolved');
-              observer.complete();
-            } else {
-              console.warn(response);
-              observer.next('error');
-              observer.complete();
-            }
-          },
-          error: (error: any) => {
-            console.error('Error during load:', error);
-            observer.next('error');
-            observer.complete();
-          },
-        });
-    });
+    const endingDate: Date = new Date(
+      this.userStorage
+        .getUser()
+        ?.listeningData.find((item) => item.type === 'expanded-history')
+        ?.endingDate || Date.now(),
+    );
+
+    this.http
+      .get<any>(
+        `${$appConfig.api.BASE_API_URL}/extended-history?startingDate=${startingDate.toISOString()}&endingDate=${endingDate.toISOString()}`,
+      )
+      .subscribe({
+        next: (response: any) => {
+          if (response && response.userExtendedHistory) {
+            this.userExtendedDataStorage.setUserExtendedData(
+              response.userExtendedHistory,
+            );
+            this.userExtendedDataStorage.userExtendedDataLoadingState.set(
+              'all-resolved',
+            );
+          } else {
+            console.error(response);
+            this.userExtendedDataStorage.userExtendedDataLoadingState.set(
+              'error',
+            );
+          }
+        },
+        error: (error: any) => {
+          console.error('Error during load:', error);
+          this.userExtendedDataStorage.userExtendedDataLoadingState.set(
+            'error',
+          );
+        },
+      });
+  }
+
+  public deleteUserExtendedHistory() {
+    this.userExtendedDataStorage.deletingUserExtendedDataLoadingState.set(
+      'loading',
+    );
+
+    this.http
+      .delete(`${$appConfig.api.BASE_API_URL}/extended-history`)
+      .subscribe({
+        next: (response: any) => {
+          if (response.user) {
+            this.userStorage.setUser(response.user);
+            this.userExtendedDataStorage.deletingUserExtendedDataLoadingState.set(
+              'resolved',
+            );
+          } else {
+            console.error(
+              'Invalid response from delete extended history:',
+              response,
+            );
+            this.userExtendedDataStorage.deletingUserExtendedDataLoadingState.set(
+              'error',
+            );
+          }
+        },
+        error: (error: any) => {
+          console.error('Error during delete extended history:', error);
+          this.userExtendedDataStorage.deletingUserExtendedDataLoadingState.set(
+            'error',
+          );
+        },
+      });
   }
 }

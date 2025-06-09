@@ -1,44 +1,43 @@
 import { DatePipe } from '@angular/common';
 import { Component, computed, inject, OnInit, Signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { UserStorage } from '@storage';
+import { UserExtandedDataStorage, UserStorage } from '@storage';
 import { UserTopExtended } from '../../widgets/user-top-extended/user-top-extended';
-import { LoadingState, UserPrivate } from '@types';
+import { UserPrivate } from '@types';
 import { ExtendedHistoryCommand } from '@commands';
-import { ExtendedHistoryService } from '@services';
-import { LoadingSpinner } from "../../features/loading-spinner/loading-spinner";
+import { LoadingSpinner } from '../../features/loading-spinner/loading-spinner';
+import { TimeSimplePipe } from '@pipes';
 @Component({
   selector: 'app-extended-history',
-  imports: [RouterLink, DatePipe, UserTopExtended, LoadingSpinner],
+  imports: [RouterLink, DatePipe, UserTopExtended, LoadingSpinner, TimeSimplePipe],
   templateUrl: './extended-history.component.html',
   styleUrl: './extended-history.component.scss',
 })
 export default class ExtendedHistoryComponent implements OnInit {
   private readonly userStorage: UserStorage = inject(UserStorage);
-  private readonly extendedHistoryService: ExtendedHistoryService = inject(
-    ExtendedHistoryService,
-  );
   private extendedDataCommand: ExtendedHistoryCommand = inject(
     ExtendedHistoryCommand,
   );
+  private readonly userExtandedDataStorage: UserExtandedDataStorage = inject(
+    UserExtandedDataStorage,
+  );
 
-  listeningData: Signal<UserPrivate['listeningData'][0] | null> = computed(() => {
-    console.log('Fetching listening data...');
+  listeningData: Signal<UserPrivate['listeningData'][0] | null> = computed(
+    () => {
+      const listeningData = this.userStorage
+        .getUser()
+        ?.listeningData?.find((data) => data.type === 'expanded-history');
 
-    const user = this.userStorage.getUser();
+      return listeningData ? listeningData : null;
+    },
+  );
 
-    const listeningData = user?.listeningData?.find(
-      (data) => data.type === 'expanded-history',
-    );
-
-    return listeningData ? listeningData : null;
+  userExtendedDataLoadingState = computed(() => {
+    return this.userExtandedDataStorage.userExtendedDataLoadingState();
   });
 
-  extendedDataIsLoaded = computed(() => this.extendedHistoryService.userExtendedData().length > 0);
-
   ngOnInit() {
-    this.extendedDataCommand
-      .loadExtendedHistory()
-      .subscribe((loadingState: LoadingState) => { console.log('Extended history loading state:', loadingState); });
+    console.log('11', this.listeningData());
+    this.extendedDataCommand.loadExtendedHistory();
   }
 }

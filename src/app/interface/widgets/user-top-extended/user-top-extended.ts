@@ -5,6 +5,7 @@ import {
   input,
   InputSignal,
   OnInit,
+  Signal,
   signal,
   WritableSignal,
 } from '@angular/core';
@@ -28,9 +29,19 @@ export class UserTopExtended implements OnInit {
     inject(SpotifyItemsStorage);
   private readonly spotifyItemsCommand: SpotifyItemsCommand =
     inject(SpotifyItemsCommand);
+  private readonly userStorage: UserStorage = inject(UserStorage);
 
-  listeningData: InputSignal<UserPrivate['listeningData'][0]> =
-    input.required();
+  listeningData: Signal<UserPrivate['listeningData'][0] | null> = computed(
+    () => {
+      const user = this.userStorage.getUser();
+
+      const listeningData = user?.listeningData?.find(
+        (data) => data.type === 'expanded-history',
+      );
+
+      return listeningData ? listeningData : null;
+    },
+  );
 
   loadingState: LoadingState = 'idle';
   tracksToShow: WritableSignal<number> = signal(50);
@@ -38,11 +49,18 @@ export class UserTopExtended implements OnInit {
   startingDate: WritableSignal<Date> = signal(new Date(0));
   endingDate: WritableSignal<Date> = signal(new Date());
 
-  protected tracksIds = computed(() => {
+  // private user = computed(() => {
+  //   return this.userStorage.getUser();
+  // });
+
+  private tracksIds = computed(() => {
     return this.extendedHistoryService
       .getTopTracks({
         startingDate: this.startingDate(),
         endingDate: this.endingDate(),
+      })
+      .filter((track: any) => {
+        return this.userStorage.getUser()?.ignoredTracks.includes(track.id) === false;
       })
       .slice(0, this.tracksToShow())
       .map((track: any) => track.id);
@@ -74,7 +92,7 @@ export class UserTopExtended implements OnInit {
   }
 
   ngOnInit() {
-    this.startingDate.set(this.listeningData().startingDate || new Date(0));
-    this.endingDate.set(this.listeningData().endingDate || new Date());
+    this.startingDate.set(this.listeningData()?.startingDate || new Date(0));
+    this.endingDate.set(this.listeningData()?.endingDate || new Date());
   }
 }

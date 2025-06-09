@@ -7,9 +7,16 @@ export type UserPrivate = {
 
   listeningData: {
     type: 'expanded-history';
+
     startingDate: Date;
     endingDate: Date;
+
+    totalRecordsNumber: number;
+    uniqueTracksNumber: number;
+
+    totalMsPlayed: number;
   }[];
+  ignoredTracks: string[];
 };
 
 export type UserPublic = {

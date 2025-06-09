@@ -2,13 +2,14 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SpotifyItemsStorage } from '@storage';
 import { LoadingState } from '@types';
-import { SpotifyItemsApi } from '@api';
+import { HttpClient } from '@angular/common/http';
+import { $appConfig } from '@environments';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SpotifyItemsCommand {
-  private spotifyItemsApi: SpotifyItemsApi = inject(SpotifyItemsApi);
+  private http: HttpClient = inject(HttpClient);
   private spotifyItemsStorage: SpotifyItemsStorage =
     inject(SpotifyItemsStorage);
 
@@ -25,18 +26,22 @@ export class SpotifyItemsCommand {
         return;
       }
 
-      this.spotifyItemsApi.getAlbums(idsToLoad).subscribe({
-        next: (response) => {
-          this.spotifyItemsStorage.appendAlbums(response.albums);
-          observer.next('resolved');
-          observer.complete();
-        },
-        error: (error) => {
-          console.error('Error loading albums:', error);
-          observer.next('error');
-          observer.complete();
-        },
-      });
+      this.http
+        .get<any>(
+          `${$appConfig.api.BASE_API_URL}/spotify/albums?ids=${ids.join(',')}`,
+        )
+        .subscribe({
+          next: (response) => {
+            this.spotifyItemsStorage.appendAlbums(response.albums);
+            observer.next('resolved');
+            observer.complete();
+          },
+          error: (error) => {
+            console.error('Error loading albums:', error);
+            observer.next('error');
+            observer.complete();
+          },
+        });
     });
   }
 
@@ -53,18 +58,22 @@ export class SpotifyItemsCommand {
         return;
       }
 
-      this.spotifyItemsApi.getArtists(idsToLoad).subscribe({
-        next: (response) => {
-          this.spotifyItemsStorage.appendArtists(response.artists);
-          observer.next('resolved');
-          observer.complete();
-        },
-        error: (error) => {
-          console.error('Error loading artists:', error);
-          observer.next('error');
-          observer.complete();
-        },
-      });
+      this.http
+        .get<any>(
+          `${$appConfig.api.BASE_API_URL}/spotify/artists?ids=${ids.join(',')}`,
+        )
+        .subscribe({
+          next: (response) => {
+            this.spotifyItemsStorage.appendArtists(response.artists);
+            observer.next('resolved');
+            observer.complete();
+          },
+          error: (error) => {
+            console.error('Error loading artists:', error);
+            observer.next('error');
+            observer.complete();
+          },
+        });
     });
   }
 
@@ -81,18 +90,22 @@ export class SpotifyItemsCommand {
         return;
       }
 
-      this.spotifyItemsApi.getTracks(idsToLoad).subscribe({
-        next: (response) => {
-          this.spotifyItemsStorage.appendTracks(response.tracks);
-          observer.next('resolved');
-          observer.complete();
-        },
-        error: (error) => {
-          console.error('Error loading tracks:', error);
-          observer.next('error');
-          observer.complete();
-        },
-      });
+      this.http
+        .get<any>(
+          `${$appConfig.api.BASE_API_URL}/spotify/tracks?ids=${ids.join(',')}`,
+        )
+        .subscribe({
+          next: (response) => {
+            this.spotifyItemsStorage.appendTracks(response.tracks);
+            observer.next('resolved');
+            observer.complete();
+          },
+          error: (error) => {
+            console.error('Error loading tracks:', error);
+            observer.next('error');
+            observer.complete();
+          },
+        });
     });
   }
 }

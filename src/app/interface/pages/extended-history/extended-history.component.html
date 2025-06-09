@@ -1,18 +1,39 @@
-@if (this.listeningData()) {
+@if (this.userExtendedDataLoadingState() !== 'nothing-to-load') {
   <div>
     <div
       class="p-2 sm:py-4 sm:px-8 gap-4 flex flex-col md:flex-row justify-between items-center"
     >
-      <p class="text-gray">
-        <span>You have uploaded data from</span>
-        <span class="text-xl font-black text-pure-white">
-          {{ this.listeningData()?.startingDate | date: 'dd.MM.yyyy' }}
-        </span>
-        <span>to</span>
-        <span class="text-xl font-black text-pure-white">
-          {{ this.listeningData()?.endingDate | date: 'dd.MM.yyyy' }}
-        </span>
-      </p>
+      <div>
+        <p class="text-gray">
+          <span>Uploaded data from</span>
+          <span class="text-xl font-black text-pure-white">
+            {{ this.listeningData()?.startingDate | date: 'dd.MM.yyyy' }}
+          </span>
+          <span>to</span>
+          <span class="text-xl font-black text-pure-white">
+            {{ this.listeningData()?.endingDate | date: 'dd.MM.yyyy' }}
+          </span>
+        </p>
+        <p class="text-gray">
+          <span>Total listening time:&nbsp;</span>
+          <span class="text-xl font-black text-pure-white">
+            {{ this.listeningData()?.totalMsPlayed || 0 | timeSimple }}
+          </span>
+        </p>
+        <p class="text-gray">
+          <span>Number of records:</span>
+          <span class="text-xl font-black text-pure-white">
+            {{ this.listeningData()?.totalRecordsNumber }}
+          </span>
+        </p>
+        <p class="text-gray">
+          <span>Number of unique tracks:</span>
+          <span class="text-xl font-black text-pure-white">
+            {{ this.listeningData()?.uniqueTracksNumber }}
+          </span>
+        </p>
+      </div>
+
       <a
         routerLink="/extended-history/upload"
         class="py-2 px-2 sm:px-8 w-full sm:w-max font-black text-lg sm:text-base text-center bg-primary rounded-sm"
@@ -20,9 +41,9 @@
       >
     </div>
     <div>
-      @if (this.extendedDataIsLoaded()) {
-        <app-user-top-extended [listeningData]="this.listeningData()!" />
-      } @else {
+      @if (this.userExtendedDataLoadingState() === 'all-resolved') {
+        <app-user-top-extended />
+      } @else if (this.userExtendedDataLoadingState() === 'loading') {
         <div class="w-full flex justify-center align-center h-">
           <div class="flex flex-row items-center justify-center gap-2">
             <p>loading your extended history...</p>
@@ -31,13 +52,24 @@
             </div>
           </div>
         </div>
+      } @else if (this.userExtendedDataLoadingState() === 'error') {
+        <div class="w-full flex justify-center align-center h-">
+          <p class="text-red">
+            An error occurred while loading your extended history.
+          </p>
+        </div>
       }
+      <!-- {{ this.userExtendedDataLoadingState() }} -->
     </div>
   </div>
 } @else {
+  <div
+    class="w-full h-[50vh] flex flex-col items-center justify-center gap-4 p-4"
+  >
     <a
-        routerLink="/extended-history/upload"
-        class="py-2 px-2 sm:px-8 w-full sm:w-max font-black text-lg sm:text-base text-center bg-primary rounded-sm"
-        >Upload data</a
-      >
+      routerLink="/extended-history/upload"
+      class="py-2 px-2 sm:px-8 w-full sm:w-max font-black text-lg sm:text-base text-center bg-primary rounded-sm"
+      >Upload data</a
+    >
+  </div>
 }

@@ -13,21 +13,18 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ExtendedHistoryService {
-  private readonly userStorage: UserStorage = inject(UserStorage);
+  // private readonly userStorage: UserStorage = inject(UserStorage);
   private readonly userExtendedDataStorage: UserExtandedDataStorage = inject(
     UserExtandedDataStorage,
   );
-  private readonly spotifyItemsStorage: SpotifyItemsStorage =
-    inject(SpotifyItemsStorage);
-  private readonly spotifyItemsCommand: SpotifyItemsCommand =
-    inject(SpotifyItemsCommand);
 
   public userExtendedData = computed(() => {
     return this.userExtendedDataStorage.getUserExtendedData();
   });
 
   public topTracks = computed(() => {
-    return this.userExtendedData()
+    return this.userExtendedDataStorage
+      .getUserExtendedData()
       .reduce(
         (
           acc: { id: string; ms_played: number }[],
@@ -35,7 +32,6 @@ export class ExtendedHistoryService {
         ) => {
           const id = item.uri;
           const existingTrack = acc.find((track) => track.id === id);
-
 
           if (existingTrack) {
             existingTrack.ms_played += item.ms_played;
@@ -52,20 +48,16 @@ export class ExtendedHistoryService {
       );
   });
 
-  public getTopTracks(params: {
-    startingDate?: Date;
-    endingDate?: Date;
-  }): any {
-    const tracks =
-    this.userExtendedData()
+  public getTopTracks(params: { startingDate?: Date; endingDate?: Date }): any {
+    return this.userExtendedDataStorage
+      .getUserExtendedData()
       .reduce(
         (
-          acc: { id: string; ms_played: number, ts: string }[],
+          acc: { id: string; ms_played: number; ts: string }[],
           item: ExtendedStreamingHistory,
         ) => {
           const id = item.uri;
           const existingTrack = acc.find((track) => track.id === id);
-
 
           if (params.startingDate && new Date(item.ts) < params.startingDate) {
             return acc;
@@ -86,8 +78,7 @@ export class ExtendedHistoryService {
       .sort(
         (a: { ms_played: number }, b: { ms_played: number }) =>
           b.ms_played - a.ms_played,
-      );
-
-      return tracks;
+      )
+      .slice(0, 1000);
   }
 }

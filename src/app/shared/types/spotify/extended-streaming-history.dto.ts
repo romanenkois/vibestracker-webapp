@@ -61,3 +61,9 @@ export type ExtendedStreamingHistory = {
   shuffle: null | true | false;
   skipped: null | true | false;
 };
+
+export type RefinedExtendedStreamingHistory = {
+  ts: Date;
+  ms_played: number;
+  uri: string;
+}

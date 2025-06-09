@@ -1,6 +1,6 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { UserSettingsStorage } from '@storage';
-import { UserPrivate } from '@types';
+import { LoadingState, UserPrivate } from '@types';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +9,10 @@ export class UserStorage {
   private userSettings: UserSettingsStorage = inject(UserSettingsStorage);
 
   private readonly userToken: WritableSignal<string | null> = signal(null);
+  public readonly userTokenLoadingState: WritableSignal<LoadingState> = signal('idle');
+
   private readonly user: WritableSignal<UserPrivate | null> = signal(null);
+  public readonly userLoadingState: WritableSignal<LoadingState> = signal('idle');
 
   // token
   public setToken(token: string | null): void {
