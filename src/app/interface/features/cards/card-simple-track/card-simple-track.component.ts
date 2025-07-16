@@ -1,8 +1,8 @@
-import { Component, HostListener, inject, input, InputSignal, signal, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, inject, input, InputSignal, signal, WritableSignal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { UserCommand } from '@commands';
 import { TimeSimplePipe } from '@pipes';
-import { LoadingState, Track } from '@types';
+import { Track } from '@types';
 
 @Component({
   selector: 'app-card-simple-track',
@@ -10,6 +10,7 @@ import { LoadingState, Track } from '@types';
   imports: [RouterLink, TimeSimplePipe],
   templateUrl: './card-simple-track.component.html',
   styleUrl: './card-simple-track.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardSimpleTrackComponent {
   private userCommand: UserCommand = inject(UserCommand);

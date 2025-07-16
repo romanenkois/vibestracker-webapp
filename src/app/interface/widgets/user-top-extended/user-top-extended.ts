@@ -1,9 +1,8 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   computed,
   inject,
-  input,
-  InputSignal,
   OnInit,
   Signal,
   signal,
@@ -13,13 +12,14 @@ import { SpotifyItemsCommand } from '@commands';
 import { ExtendedHistoryService } from '@services';
 import { SpotifyItemsStorage, UserStorage } from '@storage';
 import { LoadingState, Track, UserPrivate } from '@types';
-import { CardSimpleTrackComponent } from '../../features/cards/card-simple-track/card-simple-track.component';
+import { CardSimpleTrackComponent } from '@features';
 
 @Component({
   selector: 'app-user-top-extended',
   imports: [CardSimpleTrackComponent],
   templateUrl: './user-top-extended.html',
   styleUrl: './user-top-extended.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserTopExtended implements OnInit {
   private extendedHistoryService: ExtendedHistoryService = inject(
@@ -60,7 +60,9 @@ export class UserTopExtended implements OnInit {
         endingDate: this.endingDate(),
       })
       .filter((track: any) => {
-        return this.userStorage.getUser()?.ignoredTracks.includes(track.id) === false;
+        return (
+          this.userStorage.getUser()?.ignoredTracks.includes(track.id) === false
+        );
       })
       .slice(0, this.tracksToShow())
       .map((track: any) => track.id);

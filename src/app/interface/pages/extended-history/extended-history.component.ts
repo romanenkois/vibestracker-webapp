@@ -1,17 +1,18 @@
 import { DatePipe } from '@angular/common';
-import { Component, computed, inject, OnInit, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, Signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { UserExtandedDataStorage, UserStorage } from '@storage';
-import { UserTopExtended } from '../../widgets/user-top-extended/user-top-extended';
+import { UserTopExtended } from '@widgets';
 import { UserPrivate } from '@types';
 import { ExtendedHistoryCommand } from '@commands';
-import { LoadingSpinner } from '../../features/loading-spinner/loading-spinner';
+import { LoadingSpinner } from '@features';
 import { TimeSimplePipe } from '@pipes';
 @Component({
   selector: 'app-extended-history',
   imports: [RouterLink, DatePipe, UserTopExtended, LoadingSpinner, TimeSimplePipe],
   templateUrl: './extended-history.component.html',
   styleUrl: './extended-history.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class ExtendedHistoryComponent implements OnInit {
   private readonly userStorage: UserStorage = inject(UserStorage);
