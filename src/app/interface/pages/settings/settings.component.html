@@ -1,3 +1,22 @@
-<div>
-  <button class="w-[200px] bg-primary" (click)="this.logOut()">log out</button>
+<div class="w-full h-full flex flex-col justify-center gap-4 p-4">
+  <button
+    class="text-lg w-full sm:w-max py-1 px-12 bg-primary"
+    (click)="this.logOut()"
+  >
+    log out
+  </button>
+
+  <button
+    class="text-lg w-full sm:w-max py-1 px-12 bg-primary"
+    (click)="this.deleteExtendedHistory()"
+  >
+    delete extended history
+  </button>
+
+  <button
+    class="text-lg w-full sm:w-max py-1 px-12 bg-primary"
+    (click)="this.clearIgnoredTracks()"
+  >
+    clear ignored tracks
+  </button>
 </div>

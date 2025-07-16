@@ -31,6 +31,9 @@ export class ExtendedHistoryCommand {
         })
         .subscribe({
           next: (response: any) => {
+            console.log('Response from upload:', response);
+            console.log('12', response.user);
+            this.userStorage.setUser(response.user);
             console.log('Upload successful:', response);
             observer.next('resolved');
             observer.complete();

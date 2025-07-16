@@ -24,6 +24,9 @@ export default class ExtendedHistoryComponent implements OnInit {
 
   listeningData: Signal<UserPrivate['listeningData'][0] | null> = computed(
     () => {
+      console.log('user', this.userStorage
+        .getUser())
+
       const listeningData = this.userStorage
         .getUser()
         ?.listeningData?.find((data) => data.type === 'expanded-history');

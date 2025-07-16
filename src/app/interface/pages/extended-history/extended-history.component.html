@@ -58,8 +58,9 @@
             An error occurred while loading your extended history.
           </p>
         </div>
+      } @else {
+        {{ this.userExtendedDataLoadingState() }}
       }
-      <!-- {{ this.userExtendedDataLoadingState() }} -->
     </div>
   </div>
 } @else {

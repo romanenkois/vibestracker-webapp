@@ -30,18 +30,8 @@ export class UserCommand {
     });
   }
 
-
-
   public addIgnoredTrack(trackId: Track['id']) {
     this.userStorage.userLoadingState.set('reloading');
-
-    const user = this.userStorage.getUser();
-    if (!user) return;
-
-    this.userStorage.setUser({
-      ...user,
-      ignoredTracks: [...(user.ignoredTracks || []), trackId],
-    });
 
     this.http
       .patch(`${$appConfig.api.BASE_API_URL}/user-ignore-track`, {
@@ -50,7 +40,7 @@ export class UserCommand {
       .subscribe({
         next: (response: any) => {
           if (response.user) {
-            // this.userStorage.setUser(response.user);
+            this.userStorage.setUser(response.user);
             this.userStorage.userLoadingState.set('resolved');
           } else {
             console.error('Invalid response from add ignored track:', response);
@@ -59,6 +49,31 @@ export class UserCommand {
         },
         error: (error: any) => {
           console.error('Error during add ignored track:', error);
+          this.userStorage.userLoadingState.set('resolved');
+        },
+      });
+  }
+
+  public clearIgnoredTracks() {
+    this.userStorage.userLoadingState.set('reloading');
+
+    this.http
+      .delete(`${$appConfig.api.BASE_API_URL}/user-ignored-tracks`)
+      .subscribe({
+        next: (response: any) => {
+          if (response.user) {
+            this.userStorage.setUser(response.user);
+            this.userStorage.userLoadingState.set('resolved');
+          } else {
+            console.error(
+              'Invalid response from clear ignored tracks:',
+              response,
+            );
+            this.userStorage.userLoadingState.set('resolved');
+          }
+        },
+        error: (error: any) => {
+          console.error('Error during clear ignored tracks:', error);
           this.userStorage.userLoadingState.set('resolved');
         },
       });
