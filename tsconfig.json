@@ -14,6 +14,8 @@
       "@pages/*": ["src/app/interface/pages/*"], // index.ts is not used, couse the pages are being decalred as default export
       "@widgets": ["src/app/interface/widgets/index.ts"],
 
+      "@modules/*": ["src/app/modules/*"],
+
       "@mappers": ["src/app/shared/mappers/index.ts"],
       "@pipes": ["src/app/shared/pipes/index.ts"],
       "@types": ["src/app/shared/types/index.d.ts"],

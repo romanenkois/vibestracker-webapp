@@ -4,7 +4,7 @@ import { authorizationGuard, extendedHistoryGuard } from '@guards';
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('@pages/main/main.component'),
+    loadComponent: () => import('@modules/main-app/main-page/main.component'),
     canActivate: [authorizationGuard],
     children: [
       {
@@ -16,30 +16,29 @@ export const routes: Routes = [
       {
         path: 'top',
         loadComponent: () =>
-          import('@pages/user-top-items/user-top-items.component'),
+          import('@modules/main-app/pages/user-top-items/user-top-items.component'),
       },
       {
         path: 'extended-history',
         loadComponent: () =>
-          import('@pages/extended-history/extended-history.component'),
-        // canActivate: [extendedHistoryGuard],
+          import('@modules/main-app/pages/extended-history/extended-history.component'),
       },
       {
         path: 'extended-history/upload',
         loadComponent: () =>
           import(
-            '@pages/extended-history-upload/extended-history-upload.component'
+            '@modules/main-app/pages/extended-history-upload/extended-history-upload.component'
           ),
       },
       {
         path: 'settings',
-        loadComponent: () => import('@pages/settings/settings.component'),
+        loadComponent: () => import('@modules/main-app/pages/settings/settings.component'),
       },
     ],
   },
   {
     path: 'login',
-    loadComponent: () => import('@pages/login/login.component'),
+    loadComponent: () => import('@modules/login/login-page/login.component'),
     canActivate: [],
   },
   {

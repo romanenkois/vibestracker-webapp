@@ -1,41 +1,37 @@
 <nav
-  class="select-none flex min-h-12 w-full justify-between bg-dark/75 backdrop-blur-sm"
+  class="select-none flex items-center px-4 gap-4 h-full w-full box-border justify-between bg-dark/75 backdrop-blur-sm"
 >
-  <div class="box-border flex gap-4 lg:gap-12 p-4">
-    <div class="box-border flex">
+  <div class="box-border flex gap-4 lg:gap-12">
+    <div class="box-border flex items-center">
       <a routerLink="/">
         <h1
-          class="w-full text-center text-lg md:text-2xl font-black text-primary hover:text-primary-light"
+          class="w-full justify-center text-center text-lg md:text-2xl font-black text-primary hover:text-primary-light"
         >
           vibes tracker
         </h1>
       </a>
     </div>
-    <div class="courses-list box-border flex items-center gap-4">
-      <div>
-        <a routerLink="/top">
-          <p
-            class="w-max text-center text-base md:text-lg font-black text-gray hover:text-white"
-          >
-            simple top
-          </p>
-        </a>
-      </div>
+    <div class="box-border flex items-center">
+      <a routerLink="/top">
+        <p
+          class="w-full text-center text-base md:text-lg font-black text-gray hover:text-white"
+        >
+          simple top
+        </p>
+      </a>
     </div>
-    <div class="courses-list box-border flex items-center gap-4">
-      <div>
-        <a routerLink="/extended-history">
-          <p
-            class="w-max text-center text-base md:text-lg font-black text-gray hover:text-white"
-          >
-            extended top
-          </p>
-        </a>
-      </div>
+    <div class="box-border flex items-center">
+      <a routerLink="/extended-history">
+        <p
+          class="w-full text-center text-base md:text-lg font-black text-gray hover:text-white"
+        >
+          extended top
+        </p>
+      </a>
     </div>
   </div>
-  <div class="box-border flex items-center gap-4 p-4">
-    <div class="box-border">
+  <div class="box-border flex gap-4 lg:gap-12">
+    <div class="box-border flex items-center">
       <a routerLink="/settings">
         <div class="medium-icon">
           <svg
