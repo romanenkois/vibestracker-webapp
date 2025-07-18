@@ -1,0 +1,20 @@
+// @use "tailwindcss";
+
+@use "tailwindcss/base";
+@use "tailwindcss/components";
+@use "tailwindcss/utilities";
+
+
+@use '../styles/variables.scss';
+@use '../styles/mixins.scss';
+
+
+
+@use '../styles/tags.scss';
+@use '../styles/classes.scss';
+@use '../styles/animations.scss';
+
+// by now only used for google icons
+@use '../styles/third-party.scss';
+
+@use '../styles/general.scss';
