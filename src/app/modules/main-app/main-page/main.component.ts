@@ -1,21 +1,35 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import { PreloadService } from '@services';
+import { PreloadUserLoginState } from '@types';
 import { NavBarComponent } from '@widgets';
+import { LoadingSpinner } from "../../../interface/features/loading-spinner/loading-spinner";
 
 @Component({
   selector: 'app-main',
-  imports: [RouterModule, NavBarComponent],
+  imports: [RouterModule, NavBarComponent, LoadingSpinner],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss',
 })
 export default class MainComponent implements OnInit {
-  router: Router = inject(Router);
+  private _router: Router = inject(Router);
+  private _preloadService: PreloadService = inject(PreloadService);
 
-  showHeader: boolean = true;
+  protected showHeader: boolean = true;
+  protected userIsLogedIn: WritableSignal<PreloadUserLoginState> = this._preloadService.preloadUserLoginStatus;
+
+  constructor() {
+    effect(() => {
+      if (this.userIsLogedIn() === 'rejected') {
+        this._router.navigate(['/login']);
+      }
+    })
+  }
 
   ngOnInit() {
-    this.router.events.subscribe(() => {
-      this.showHeader = this.router.url !== '/login';
-    });
+    // this._router.events.subscribe(() => {
+    //   this.showHeader = this._router.url !== '/login';
+    // });
+
   }
 }

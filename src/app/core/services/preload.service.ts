@@ -1,7 +1,7 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { AuthorizationCommand } from '@commands';
 import { UserStorage, UserSettingsStorage } from '@storage';
-import { LoadingState } from '@types';
+import { LoadingState, PreloadUserLoginState } from '@types';
 
 @Injectable({
   providedIn: 'root',
@@ -12,8 +12,12 @@ export class PreloadService {
     inject(AuthorizationCommand);
   private userStorage: UserStorage = inject(UserStorage);
 
+  public preloadUserLoginStatus: WritableSignal<PreloadUserLoginState> = signal('idle')
+
   // this service always triggers on app load, so we send request to api to check if token is still valid
   constructor() {
+    this.preloadUserLoginStatus.set('loading');
+    console.log('PreloadService initialized');
     let token = this.userStorage.getToken();
 
     try {
@@ -32,36 +36,17 @@ export class PreloadService {
     // we set it in advace, so the guard doesnt freak out
     this.userStorage.setToken(token);
 
-    // this monstosity is there, so the expanded top doesnt freak out too even more
-    // this.userStorage.setUser({
-    //   id: '',
-    //   username: '',
-    //   profilePicture: null,
-    //   email: '',
-    //   listeningData: [
-    //     {
-    //       type: 'expanded-history',
-
-    //       startingDate: new Date(0),
-    //       endingDate: new Date(0),
-
-    //       totalRecordsNumber: 0,
-    //       uniqueTracksNumber: 0,
-    //       totalMsPlayed: 0,
-    //     },
-    //   ],
-    //   ignoredTracks: [],
-    // });
-
     if (token) {
       this.authorizationCommand
         .verifyToken(token)
         .subscribe((status: LoadingState) => {
           if (status === 'resolved') {
+            this.preloadUserLoginStatus.set('resolved');
             // nothing is happening if everything is ok
             // token is loaded, guard wouldnt retrigger
           }
           if (status === 'error') {
+            this.preloadUserLoginStatus.set('rejected');
             // if token is not valid, we set it to null
             // this would trigger the guard to redirect to login page
             this.userStorage.setUser(null);
