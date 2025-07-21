@@ -12,7 +12,7 @@ import { SpotifyItemsCommand } from '@commands';
 import { ExtendedHistoryService } from '@services';
 import { SpotifyItemsStorage, UserStorage } from '@storage';
 import { LoadingState, Track, UserPrivate } from '@types';
-import { CardSimpleTrackComponent } from '@features';
+import { CardSimpleTrackComponent } from '@widgets';
 
 @Component({
   selector: 'app-user-top-extended',
@@ -22,7 +22,7 @@ import { CardSimpleTrackComponent } from '@features';
   // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserTopExtended implements OnInit {
-  private extendedHistoryService: ExtendedHistoryService = inject(ExtendedHistoryService);
+  private readonly extendedHistoryService: ExtendedHistoryService = inject(ExtendedHistoryService);
   private readonly spotifyItemsStorage: SpotifyItemsStorage = inject(SpotifyItemsStorage);
   private readonly spotifyItemsCommand: SpotifyItemsCommand = inject(SpotifyItemsCommand);
   private readonly userStorage: UserStorage = inject(UserStorage);
@@ -40,10 +40,6 @@ export class UserTopExtended implements OnInit {
 
   protected startingDate: WritableSignal<Date> = signal(new Date(0));
   protected endingDate: WritableSignal<Date> = signal(new Date());
-
-  // private user = computed(() => {
-  //   return this.userStorage.getUser();
-  // });
 
   private tracksIds = computed(() => {
     return this.extendedHistoryService
