@@ -15,11 +15,8 @@
             @case ('artists') {
               <app-card-simple-artist
                 [artist]="$any(item)"
-                [index]="$index + 1"
+                [index]="$index + 1 || 0"
               ></app-card-simple-artist>
-            }
-            @case ('genres') {
-              <app-card-simple-genre></app-card-simple-genre>
             }
             @case ('tracks') {
               <app-card-simple-track

@@ -1,18 +1,13 @@
 import { Component, computed, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserTopItemsSimpleCommand } from '@commands';
-import {
-  CardSimpleAlbumComponent,
-  CardSimpleArtistComponent,
-  CardSimpleGenreComponent,
-  CardSimpleTrackComponent,
-} from '@features';
+import { CardSimpleAlbumComponent, CardSimpleArtistComponent, CardSimpleTrackComponent } from '@features';
 import { UserTopItemsSimpleStorage } from '@storage';
 import { Album, Artist, Genre, LoadingState, SimpleItemsSelection, SimpleTimeFrame, Track } from '@types';
 
 @Component({
   selector: 'app-user-top-items-simple',
-  imports: [CardSimpleAlbumComponent, CardSimpleArtistComponent, CardSimpleGenreComponent, CardSimpleTrackComponent],
+  imports: [CardSimpleAlbumComponent, CardSimpleArtistComponent, CardSimpleTrackComponent],
   templateUrl: './user-top-items-simple.component.html',
   styleUrl: './user-top-items-simple.component.scss',
 })
@@ -30,18 +25,6 @@ export class UserTopItemsSimpleComponent implements OnInit {
   protected userTopItems = computed<(Track | Artist | Album | Genre)[]>(() => {
     return this.userTopItemsStorage.getUserTopItems(this.periodOfTime(), this.itemsType());
   });
-
-  loadMoreItems() {
-    const itemType = this.itemsType();
-    if (itemType !== 'genres' && itemType !== 'albums') {
-      this.UserTopItemsCommand.loadInMoreUserTopItems({
-        type: itemType,
-        timeFrame: this.periodOfTime(),
-      }).subscribe((state: LoadingState) => {
-        this.loadingState.set(state);
-      });
-    }
-  }
 
   ngOnInit() {
     this.activeRoute.queryParams.subscribe((params) => {
@@ -77,5 +60,17 @@ export class UserTopItemsSimpleComponent implements OnInit {
         });
       }
     });
+  }
+
+  protected loadMoreItems() {
+    const itemType = this.itemsType();
+    if (itemType !== 'genres' && itemType !== 'albums') {
+      this.UserTopItemsCommand.loadInMoreUserTopItems({
+        type: itemType,
+        timeFrame: this.periodOfTime(),
+      }).subscribe((state: LoadingState) => {
+        this.loadingState.set(state);
+      });
+    }
   }
 }

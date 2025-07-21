@@ -8,16 +8,14 @@ import { LoadingState, PreloadUserLoginState } from '@types';
 })
 export class PreloadService {
   private userSettings: UserSettingsStorage = inject(UserSettingsStorage);
-  private authorizationCommand: AuthorizationCommand =
-    inject(AuthorizationCommand);
+  private authorizationCommand: AuthorizationCommand = inject(AuthorizationCommand);
   private userStorage: UserStorage = inject(UserStorage);
 
-  public preloadUserLoginStatus: WritableSignal<PreloadUserLoginState> = signal('idle')
+  public preloadUserLoginStatus: WritableSignal<PreloadUserLoginState> = signal('idle');
 
   // this service always triggers on app load, so we send request to api to check if token is still valid
   constructor() {
     this.preloadUserLoginStatus.set('loading');
-    console.log('PreloadService initialized');
     let token = this.userStorage.getToken();
 
     try {
@@ -37,22 +35,20 @@ export class PreloadService {
     this.userStorage.setToken(token);
 
     if (token) {
-      this.authorizationCommand
-        .verifyToken(token)
-        .subscribe((status: LoadingState) => {
-          if (status === 'resolved') {
-            this.preloadUserLoginStatus.set('resolved');
-            // nothing is happening if everything is ok
-            // token is loaded, guard wouldnt retrigger
-          }
-          if (status === 'error') {
-            this.preloadUserLoginStatus.set('rejected');
-            // if token is not valid, we set it to null
-            // this would trigger the guard to redirect to login page
-            this.userStorage.setUser(null);
-            this.userStorage.setToken(null);
-          }
-        });
+      this.authorizationCommand.verifyToken(token).subscribe((status: LoadingState) => {
+        if (status === 'resolved') {
+          this.preloadUserLoginStatus.set('resolved');
+          // nothing is happening if everything is ok
+          // token is loaded, guard wouldnt retrigger
+        }
+        if (status === 'error') {
+          this.preloadUserLoginStatus.set('rejected');
+          // if token is not valid, we set it to null
+          // this would trigger the guard to redirect to login page
+          this.userStorage.setUser(null);
+          this.userStorage.setToken(null);
+        }
+      });
     }
   }
 }

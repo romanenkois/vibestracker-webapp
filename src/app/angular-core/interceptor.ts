@@ -1,10 +1,4 @@
-import {
-  HttpErrorResponse,
-  HttpEvent,
-  HttpHandler,
-  HttpInterceptor,
-  HttpRequest,
-} from '@angular/common/http';
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { UserStorage } from '@storage';
 import { catchError, Observable, throwError } from 'rxjs';
@@ -15,10 +9,7 @@ import { catchError, Observable, throwError } from 'rxjs';
 export class AuthorizationInterceptor implements HttpInterceptor {
   private readonly userStorage: UserStorage = inject(UserStorage);
 
-  intercept(
-    req: HttpRequest<any>,
-    next: HttpHandler,
-  ): Observable<HttpEvent<any>> {
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const accessToken = this.userStorage.getToken();
 
     let authReq = req;
