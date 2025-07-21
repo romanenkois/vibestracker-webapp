@@ -1,8 +1,18 @@
 <div class="main">
-  <div class="header">
+  <div class="main__header">
     <app-nav-bar></app-nav-bar>
   </div>
-  <div class="router">
-    <router-outlet></router-outlet>
-  </div>
+
+  @if (this.userIsLogedIn() === 'resolved') {
+    <div class="main__router">
+      <router-outlet />
+    </div>
+  } @else if (this.userIsLogedIn() === 'loading') {
+    <div class="main__loading-screen">
+      <p>authorizing to vibes tracker...</p>
+      <div class="h-[32px] w-[32px]">
+        <app-loading-spinner />
+      </div>
+    </div>
+  }
 </div>
