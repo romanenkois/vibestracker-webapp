@@ -6,7 +6,9 @@ import { LoadingState, UserPrivate } from '@types';
   providedIn: 'root',
 })
 export class UserStorage {
-  private userSettings: UserSettingsStorage = inject(UserSettingsStorage);
+  private readonly userSettings: UserSettingsStorage = inject(UserSettingsStorage);
+
+  public readonly userExtendedDataLoaded: WritableSignal<boolean> = signal(false);
 
   private readonly userToken: WritableSignal<string | null> = signal(null);
   public readonly userTokenLoadingState: WritableSignal<LoadingState> = signal('idle');

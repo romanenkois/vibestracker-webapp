@@ -1,17 +1,13 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
-import { RefinedExtendedStreamingHistory, LoadingState } from '@types';
+import { RefinedExtendedStreamingHistory } from '@types';
 
 @Injectable({
   providedIn: 'root',
 })
-export class UserExtandedDataStorage {
-  private readonly userExtendedData: WritableSignal<RefinedExtendedStreamingHistory> =
-    signal([]);
+export class UserExtendedDataStorage {
+  private readonly userExtendedData: WritableSignal<RefinedExtendedStreamingHistory> = signal([]);
 
-  public readonly userExtendedDataLoadingState: WritableSignal<LoadingState> =
-    signal('idle');
-  public readonly deletingUserExtendedDataLoadingState: WritableSignal<LoadingState> =
-    signal('idle');
+  // public readonly deletingUserExtendedDataLoadingState: WritableSignal<LoadingState> = signal('idle');
 
   public getUserExtendedData(): RefinedExtendedStreamingHistory {
     return this.userExtendedData();
