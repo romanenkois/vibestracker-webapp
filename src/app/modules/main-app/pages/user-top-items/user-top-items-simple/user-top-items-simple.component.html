@@ -32,15 +32,15 @@
       }
     </div>
     <div class="w-full flex justify-center align-center mt-4">
-      @if (this.loadingState === 'idle' || this.loadingState === 'resolved') {
+      @if (this.loadingState() === 'idle' || this.loadingState() === 'resolved') {
         <button class="w-full p-4" (click)="this.loadMoreItems()">
           <p class="font-3xl">load more</p>
         </button>
       } @else if (
-        this.loadingState === 'loading' || this.loadingState === 'appending'
+        this.loadingState() === 'loading' || this.loadingState() === 'appending'
       ) {
         <p class="font-3xl p-4">loading...</p>
-      } @else if (this.loadingState === 'all-resolved') {
+      } @else if (this.loadingState() === 'all-resolved') {
         <p class="font-3xl p-4">all available data is loaded</p>
       } @else {
         <p class="font-3xl p-4">error loading data</p>

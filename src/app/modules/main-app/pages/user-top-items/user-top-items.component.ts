@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
-import {
-  UserTopItemsSelectorComponent,
-  UserTopItemsSimpleComponent,
-} from '@widgets';
+import { UserTopItemsSimpleComponent } from './user-top-items-simple/user-top-items-simple.component';
+import { UserTopItemsSelectorComponent } from './user-top-items-selector/user-top-items-selector.component';
 
 @Component({
   selector: 'app-user-top-items',

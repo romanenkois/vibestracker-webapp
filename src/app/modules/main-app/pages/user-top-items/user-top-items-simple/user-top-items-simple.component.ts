@@ -1,11 +1,4 @@
-import {
-  Component,
-  computed,
-  inject,
-  OnInit,
-  signal,
-  WritableSignal,
-} from '@angular/core';
+import { Component, computed, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserTopItemsSimpleCommand } from '@commands';
 import {
@@ -15,24 +8,11 @@ import {
   CardSimpleTrackComponent,
 } from '@features';
 import { UserTopItemsSimpleStorage } from '@storage';
-import {
-  Album,
-  Artist,
-  Genre,
-  LoadingState,
-  SimpleItemsSelection,
-  SimpleTimeFrame,
-  Track,
-} from '@types';
+import { Album, Artist, Genre, LoadingState, SimpleItemsSelection, SimpleTimeFrame, Track } from '@types';
 
 @Component({
   selector: 'app-user-top-items-simple',
-  imports: [
-    CardSimpleAlbumComponent,
-    CardSimpleArtistComponent,
-    CardSimpleGenreComponent,
-    CardSimpleTrackComponent,
-  ],
+  imports: [CardSimpleAlbumComponent, CardSimpleArtistComponent, CardSimpleGenreComponent, CardSimpleTrackComponent],
   templateUrl: './user-top-items-simple.component.html',
   styleUrl: './user-top-items-simple.component.scss',
 })
@@ -40,24 +20,15 @@ export class UserTopItemsSimpleComponent implements OnInit {
   private router: Router = inject(Router);
   private activeRoute: ActivatedRoute = inject(ActivatedRoute);
 
-  private userTopItemsStorage: UserTopItemsSimpleStorage = inject(
-    UserTopItemsSimpleStorage,
-  );
-  private UserTopItemsCommand: UserTopItemsSimpleCommand = inject(
-    UserTopItemsSimpleCommand,
-  );
+  private userTopItemsStorage: UserTopItemsSimpleStorage = inject(UserTopItemsSimpleStorage);
+  private UserTopItemsCommand: UserTopItemsSimpleCommand = inject(UserTopItemsSimpleCommand);
 
-  itemsType: WritableSignal<SimpleItemsSelection> =
-    signal<SimpleItemsSelection>('tracks');
-  periodOfTime: WritableSignal<SimpleTimeFrame> =
-    signal<SimpleTimeFrame>('short_term');
-  loadingState: LoadingState = 'idle';
+  protected itemsType: WritableSignal<SimpleItemsSelection> = signal<SimpleItemsSelection>('tracks');
+  protected periodOfTime: WritableSignal<SimpleTimeFrame> = signal<SimpleTimeFrame>('short_term');
+  protected loadingState: WritableSignal<LoadingState> = signal<LoadingState>('idle');
 
-  userTopItems = computed<(Track | Artist | Album | Genre)[]>(() => {
-    return this.userTopItemsStorage.getUserTopItems(
-      this.periodOfTime(),
-      this.itemsType(),
-    );
+  protected userTopItems = computed<(Track | Artist | Album | Genre)[]>(() => {
+    return this.userTopItemsStorage.getUserTopItems(this.periodOfTime(), this.itemsType());
   });
 
   loadMoreItems() {
@@ -67,7 +38,7 @@ export class UserTopItemsSimpleComponent implements OnInit {
         type: itemType,
         timeFrame: this.periodOfTime(),
       }).subscribe((state: LoadingState) => {
-        this.loadingState = state;
+        this.loadingState.set(state);
       });
     }
   }
@@ -94,10 +65,7 @@ export class UserTopItemsSimpleComponent implements OnInit {
       }
 
       if (
-        this.userTopItemsStorage.getUserTopItems(
-          this.periodOfTime(),
-          this.itemsType(),
-        ).length === 0 &&
+        this.userTopItemsStorage.getUserTopItems(this.periodOfTime(), this.itemsType()).length === 0 &&
         this.periodOfTime() !== undefined &&
         this.itemsType() !== undefined
       ) {
@@ -105,7 +73,7 @@ export class UserTopItemsSimpleComponent implements OnInit {
           type: this.itemsType(),
           timeFrame: this.periodOfTime(),
         }).subscribe((state: LoadingState) => {
-          this.loadingState = state;
+          this.loadingState.set(state);
         });
       }
     });
