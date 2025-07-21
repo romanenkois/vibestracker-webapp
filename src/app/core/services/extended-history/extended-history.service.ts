@@ -1,11 +1,7 @@
 import { literalMap } from '@angular/compiler';
 import { computed, inject, Injectable } from '@angular/core';
 import { SpotifyItemsCommand } from '@commands';
-import {
-  UserExtandedDataStorage,
-  UserStorage,
-  SpotifyItemsStorage,
-} from '@storage';
+import { UserExtendedDataStorage, UserStorage, SpotifyItemsStorage } from '@storage';
 import { Track, ExtendedStreamingHistory, LoadingState } from '@types';
 import { Observable } from 'rxjs';
 
@@ -14,22 +10,18 @@ import { Observable } from 'rxjs';
 })
 export class ExtendedHistoryService {
   // private readonly userStorage: UserStorage = inject(UserStorage);
-  private readonly userExtendedDataStorage: UserExtandedDataStorage = inject(
-    UserExtandedDataStorage,
-  );
+  private readonly userExtendedDataStorage: UserExtendedDataStorage = inject(UserExtendedDataStorage);
 
   public userExtendedData = computed(() => {
     return this.userExtendedDataStorage.getUserExtendedData();
   });
 
   public topTracks = computed(() => {
+    console.log('recalculating top tracks')
     return this.userExtendedDataStorage
       .getUserExtendedData()
       .reduce(
-        (
-          acc: { id: string; ms_played: number }[],
-          item: ExtendedStreamingHistory,
-        ) => {
+        (acc: { id: string; ms_played: number }[], item: ExtendedStreamingHistory) => {
           const id = item.uri;
           const existingTrack = acc.find((track) => track.id === id);
 
@@ -42,20 +34,14 @@ export class ExtendedHistoryService {
         },
         [] as { id: string; ms_played: number }[],
       )
-      .sort(
-        (a: { ms_played: number }, b: { ms_played: number }) =>
-          b.ms_played - a.ms_played,
-      );
+      .sort((a: { ms_played: number }, b: { ms_played: number }) => b.ms_played - a.ms_played);
   });
 
-  public getTopTracks(params: { startingDate?: Date; endingDate?: Date }): any {
+  public getTopTracks(params: { startingDate?: Date; endingDate?: Date }): { id: string; ms_played: number }[] {
     return this.userExtendedDataStorage
       .getUserExtendedData()
       .reduce(
-        (
-          acc: { id: string; ms_played: number; ts: string }[],
-          item: ExtendedStreamingHistory,
-        ) => {
+        (acc: { id: string; ms_played: number; ts: string }[], item: ExtendedStreamingHistory) => {
           const id = item.uri;
           const existingTrack = acc.find((track) => track.id === id);
 
@@ -75,10 +61,7 @@ export class ExtendedHistoryService {
         },
         [] as { id: string; ms_played: number }[],
       )
-      .sort(
-        (a: { ms_played: number }, b: { ms_played: number }) =>
-          b.ms_played - a.ms_played,
-      )
+      .sort((a: { id: string; ms_played: number }, b: { id: string; ms_played: number }) => b.ms_played - a.ms_played)
       .slice(0, 1000);
   }
 }

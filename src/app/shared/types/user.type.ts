@@ -6,16 +6,18 @@ export type UserPrivate = {
   email: string;
 
   listeningData: {
-    type: 'expanded-history';
+    expandedHistory: {
+      type: 'expanded-history';
 
-    startingDate: Date;
-    endingDate: Date;
+      startingDate: Date;
+      endingDate: Date;
 
-    totalRecordsNumber: number;
-    uniqueTracksNumber: number;
+      totalRecordsNumber: number;
+      uniqueTracksNumber: number;
 
-    totalMsPlayed: number;
-  }[];
+      totalMsPlayed: number;
+    };
+  };
   ignoredTracks: string[];
 };
 

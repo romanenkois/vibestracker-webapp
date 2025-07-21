@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { UploadingStatus, ExtendedStreamingHistory } from '@types';
-import { UserExtandedDataStorage, UserStorage } from '@storage';
+import { UploadingStatus, ExtendedStreamingHistory, LoadingState } from '@types';
+import { UserExtendedDataStorage, UserStorage } from '@storage';
 import { HttpClient } from '@angular/common/http';
 import { $appConfig } from '@environments';
 
@@ -11,13 +11,9 @@ import { $appConfig } from '@environments';
 export class ExtendedHistoryCommand {
   private http: HttpClient = inject(HttpClient);
   private userStorage: UserStorage = inject(UserStorage);
-  private userExtendedDataStorage: UserExtandedDataStorage = inject(
-    UserExtandedDataStorage,
-  );
+  private userExtendedDataStorage: UserExtendedDataStorage = inject(UserExtendedDataStorage);
 
-  public uploadExtendedHistory(params: {
-    history: ExtendedStreamingHistory[];
-  }): Observable<UploadingStatus> {
+  public uploadExtendedHistory(params: { history: ExtendedStreamingHistory[] }): Observable<UploadingStatus> {
     const jsonString = JSON.stringify(params.history);
     const sizeInMB = Number((jsonString.length / (1024 * 1024)).toFixed(2));
     console.log(`File size: ${sizeInMB} MB`);
@@ -27,16 +23,21 @@ export class ExtendedHistoryCommand {
 
       this.http
         .post(`${$appConfig.api.BASE_API_URL}/extended-history`, {
-          extendedHistrory: params.history,
+          extendedHistory: params.history,
         })
         .subscribe({
           next: (response: any) => {
-            console.log('Response from upload:', response);
-            console.log('12', response.user);
-            this.userStorage.setUser(response.user);
-            console.log('Upload successful:', response);
-            observer.next('resolved');
-            observer.complete();
+            if (response && response.user) {
+              this.userStorage.setUser(response.user);
+              observer.next('resolved');
+              observer.complete();
+              return;
+            } else {
+              console.error('Invalid response from upload:', response);
+              observer.next('error');
+              observer.complete();
+              return;
+            }
           },
           error: (error: any) => {
             console.error('Error during upload:', error);
@@ -47,100 +48,61 @@ export class ExtendedHistoryCommand {
     });
   }
 
-  public loadExtendedHistory() {
-    this.userExtendedDataStorage.userExtendedDataLoadingState.set('loading');
+  public loadExtendedHistory(params: { startingDate: Date; endingDate: Date }): Observable<LoadingState> {
+    return new Observable<LoadingState>((observer) => {
+      observer.next('loading');
 
-    if (this.userExtendedDataStorage.getUserExtendedData().length > 0) {
-      this.userExtendedDataStorage.userExtendedDataLoadingState.set('resolved');
-      return;
-    }
-
-    if (
-      this.userStorage
-        .getUser()
-        ?.listeningData.find((item) => item.type === 'expanded-history') ===
-      undefined
-    ) {
-      console.log('nothing to load');
-      this.userExtendedDataStorage.userExtendedDataLoadingState.set(
-        'nothing-to-load',
-      );
-      return;
-    }
-
-    const startingDate: Date = new Date(
-      this.userStorage
-        .getUser()
-        ?.listeningData.find((item) => item.type === 'expanded-history')
-        ?.startingDate || 0,
-    );
-
-    const endingDate: Date = new Date(
-      this.userStorage
-        .getUser()
-        ?.listeningData.find((item) => item.type === 'expanded-history')
-        ?.endingDate || Date.now(),
-    );
-
-    this.http
-      .get<any>(
-        `${$appConfig.api.BASE_API_URL}/extended-history?startingDate=${startingDate.toISOString()}&endingDate=${endingDate.toISOString()}`,
-      )
-      .subscribe({
-        next: (response: any) => {
-          if (response && response.userExtendedHistory) {
-            this.userExtendedDataStorage.setUserExtendedData(
-              response.userExtendedHistory,
-            );
-            this.userExtendedDataStorage.userExtendedDataLoadingState.set(
-              'all-resolved',
-            );
-          } else {
-            console.error(response);
-            this.userExtendedDataStorage.userExtendedDataLoadingState.set(
-              'error',
-            );
-          }
-        },
-        error: (error: any) => {
-          console.error('Error during load:', error);
-          this.userExtendedDataStorage.userExtendedDataLoadingState.set(
-            'error',
-          );
-        },
-      });
+      this.http
+        .get<any>(
+          `${$appConfig.api.BASE_API_URL}/extended-history?startingDate=${params.startingDate.toISOString()}&endingDate=${params.endingDate.toISOString()}`,
+        )
+        .subscribe({
+          next: (response: any) => {
+            if (response && response.userExtendedHistory) {
+              this.userExtendedDataStorage.setUserExtendedData(response.userExtendedHistory);
+              this.userStorage.userExtendedDataLoaded.set(true);
+              observer.next('resolved');
+              observer.complete();
+              return;
+            } else {
+              this.userStorage.userExtendedDataLoaded.set(false);
+              console.error(response);
+              observer.next('error');
+              observer.complete();
+              return;
+            }
+          },
+          error: (error: any) => {
+            this.userStorage.userExtendedDataLoaded.set(false);
+            console.error('Error during load:', error);
+            observer.next('error');
+            observer.complete();
+            return;
+          },
+        });
+    });
   }
 
-  public deleteUserExtendedHistory() {
-    this.userExtendedDataStorage.deletingUserExtendedDataLoadingState.set(
-      'loading',
-    );
-
-    this.http
-      .delete(`${$appConfig.api.BASE_API_URL}/extended-history`)
-      .subscribe({
+  public deleteUserExtendedHistory(): Observable<UploadingStatus> {
+    return new Observable<UploadingStatus>((observer) => {
+      this.http.delete(`${$appConfig.api.BASE_API_URL}/extended-history`).subscribe({
         next: (response: any) => {
           if (response.user) {
             this.userStorage.setUser(response.user);
-            this.userExtendedDataStorage.deletingUserExtendedDataLoadingState.set(
-              'resolved',
-            );
+            observer.next('resolved');
+            observer.complete();
           } else {
-            console.error(
-              'Invalid response from delete extended history:',
-              response,
-            );
-            this.userExtendedDataStorage.deletingUserExtendedDataLoadingState.set(
-              'error',
-            );
+            console.error('Invalid response from delete extended history:', response);
+            observer.next('error');
+            observer.complete();
           }
         },
         error: (error: any) => {
           console.error('Error during delete extended history:', error);
-          this.userExtendedDataStorage.deletingUserExtendedDataLoadingState.set(
-            'error',
-          );
+          observer.next('error');
+          observer.complete();
         },
       });
+    });
   }
 }

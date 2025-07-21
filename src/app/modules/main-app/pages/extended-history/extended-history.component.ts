@@ -1,9 +1,18 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, Signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  OnInit,
+  signal,
+  Signal,
+  WritableSignal,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { UserExtandedDataStorage, UserStorage } from '@storage';
+import { UserStorage } from '@storage';
 import { UserTopExtended } from '@widgets';
-import { UserPrivate } from '@types';
+import { LoadingState, UserPrivate } from '@types';
 import { ExtendedHistoryCommand } from '@commands';
 import { LoadingSpinner } from '@features';
 import { TimeSimplePipe } from '@pipes';
@@ -16,32 +25,30 @@ import { TimeSimplePipe } from '@pipes';
 })
 export default class ExtendedHistoryComponent implements OnInit {
   private readonly userStorage: UserStorage = inject(UserStorage);
-  private extendedDataCommand: ExtendedHistoryCommand = inject(
-    ExtendedHistoryCommand,
-  );
-  private readonly userExtandedDataStorage: UserExtandedDataStorage = inject(
-    UserExtandedDataStorage,
-  );
+  private readonly extendedDataCommand: ExtendedHistoryCommand = inject(ExtendedHistoryCommand);
 
-  listeningData: Signal<UserPrivate['listeningData'][0] | null> = computed(
-    () => {
-      console.log('user', this.userStorage
-        .getUser())
-
-      const listeningData = this.userStorage
-        .getUser()
-        ?.listeningData?.find((data) => data.type === 'expanded-history');
-
-      return listeningData ? listeningData : null;
-    },
-  );
-
-  userExtendedDataLoadingState = computed(() => {
-    return this.userExtandedDataStorage.userExtendedDataLoadingState();
+  protected listeningDataRecord: Signal<UserPrivate['listeningData']['expandedHistory'] | null> = computed(() => {
+    console.log('user lisllasllalasda', this.userStorage.getUser());
+    const listeningData = this.userStorage.getUser()?.listeningData?.expandedHistory;
+    return listeningData ? listeningData : null;
   });
 
+  protected userExtendedDataLoaded: Signal<boolean> = computed(() => {
+    return this.userStorage.userExtendedDataLoaded();
+  });
+  protected loadingState: WritableSignal<LoadingState> = signal('idle');
+
   ngOnInit() {
-    console.log('11', this.listeningData());
-    this.extendedDataCommand.loadExtendedHistory();
+    if (!this.userExtendedDataLoaded()) {
+      const startingDate: Date = new Date(
+        this.userStorage.getUser()?.listeningData?.expandedHistory?.startingDate || 0,
+      );
+      const endingDate: Date = new Date(
+        this.userStorage.getUser()?.listeningData?.expandedHistory?.endingDate || Date.now(),
+      );
+      this.extendedDataCommand.loadExtendedHistory({ startingDate, endingDate }).subscribe((status: LoadingState) => {
+        this.loadingState.set(status);
+      });
+    }
   }
 }
