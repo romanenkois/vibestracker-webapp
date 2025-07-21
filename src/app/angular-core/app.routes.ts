@@ -15,20 +15,16 @@ export const routes: Routes = [
       },
       {
         path: 'top',
-        loadComponent: () =>
-          import('@modules/main-app/pages/user-top-items/user-top-items.component'),
+        loadComponent: () => import('@modules/main-app/pages/user-top-items/user-top-items.component'),
       },
       {
         path: 'extended-history',
-        loadComponent: () =>
-          import('@modules/main-app/pages/extended-history/extended-history.component'),
+        loadComponent: () => import('@modules/main-app/pages/extended-history/extended-history.component'),
       },
       {
         path: 'extended-history/upload',
         loadComponent: () =>
-          import(
-            '@modules/main-app/pages/extended-history-upload/extended-history-upload.component'
-          ),
+          import('@modules/main-app/pages/extended-history-upload/extended-history-upload.component'),
       },
       {
         path: 'settings',

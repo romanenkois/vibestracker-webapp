@@ -31,20 +31,18 @@ export default class LoginComponent implements OnInit {
       const error = params['error'];
 
       if (code && state) {
-        this.authorizationCommand
-          .codeLogIn(code)
-          .subscribe((loadingState: LoadingState) => {
-            this.loadingState = loadingState;
-            if (loadingState === 'resolved') {
-              this.router.navigate(['/']);
-            } else if (loadingState === 'error') {
-              this.router.navigate([], {
-                relativeTo: this.activatedRoute,
-                queryParams: {},
-                replaceUrl: true,
-              });
-            }
-          });
+        this.authorizationCommand.codeLogIn(code).subscribe((loadingState: LoadingState) => {
+          this.loadingState = loadingState;
+          if (loadingState === 'resolved') {
+            this.router.navigate(['/']);
+          } else if (loadingState === 'error') {
+            this.router.navigate([], {
+              relativeTo: this.activatedRoute,
+              queryParams: {},
+              replaceUrl: true,
+            });
+          }
+        });
       } else if (error) {
         window.alert(`error: \n${error}`);
         this.router.navigate([], {
