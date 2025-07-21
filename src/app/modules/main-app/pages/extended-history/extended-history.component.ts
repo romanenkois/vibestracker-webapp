@@ -11,11 +11,11 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { UserStorage } from '@storage';
-import { UserTopExtended } from '@widgets';
 import { LoadingState, UserPrivate } from '@types';
 import { ExtendedHistoryCommand } from '@commands';
 import { LoadingSpinner } from '@features';
 import { TimeSimplePipe } from '@pipes';
+import { UserTopExtended } from './user-top-extended/user-top-extended';
 @Component({
   selector: 'app-extended-history',
   imports: [RouterLink, DatePipe, UserTopExtended, LoadingSpinner, TimeSimplePipe],
