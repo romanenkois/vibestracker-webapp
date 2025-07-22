@@ -71,7 +71,7 @@ export class UserTopExtended implements OnInit {
   }
 
   protected getTimeListened(id: Track['id']): number {
-    const track = this.extendedHistoryService.topTracks().find((track: Track) => track.id === id);
+    const track = this.extendedHistoryService.topTracks().find((track: { id: string; ms_played: number }) => track.id === id);
     return track ? track.ms_played : 0;
   }
 

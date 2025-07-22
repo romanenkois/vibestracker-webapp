@@ -13,5 +13,8 @@ export type AppConfig = {
       showDialog: 'true' | 'false';
     };
   },
+  analyzer: {
+    maxTopTracksAnalyze: number;
+  },
   defaultUserSettings: UserSettings;
 };

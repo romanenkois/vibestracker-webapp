@@ -21,10 +21,13 @@ export const $appConfig: AppConfig = {
       showDialog: 'true',
     },
   },
+  analyzer: {
+    maxTopTracksAnalyze: 2000,
+  },
   defaultUserSettings: {
     theme: 'dark',
     saveToken: true,
-    extendedHistrory: {
+    extendedHistory: {
       ignoredTracks: [],
     },
   },

@@ -1,7 +1,7 @@
 export type UserSettings = {
   theme: string;
   saveToken: boolean;
-  extendedHistrory: {
+  extendedHistory: {
     ignoredTracks: string[];
   }
 }
