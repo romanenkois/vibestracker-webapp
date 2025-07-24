@@ -9,7 +9,8 @@
           <img
             class="w-full h-full overflow-hidden object-cover rounded-sm"
             loading="lazy"
-            [src]="this.artist().images[0].url"
+            alt="{{ this.artist().name || '' }} cover"
+            [src]="this.artist().images.length > 0 ? this.artist().images[0].url : ''"
           />
         </a>
       </div>

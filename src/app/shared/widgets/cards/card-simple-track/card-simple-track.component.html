@@ -10,7 +10,8 @@
             <img
               class="w-full h-full overflow-hidden object-cover rounded-sm"
               loading="lazy"
-              [src]="this.track().album.images[0].url"
+              alt="{{ this.track().name || '' }} cover"
+              [src]="this.track().album.images.length > 0 ? this.track().album.images[0].url : ''"
             />
           </a>
         </div>
@@ -30,13 +31,9 @@
         <!-- INDEX AND STUFF -->
         <div>
           <div>
-            <p
-              class="font-black text-gray flex flex-col sm:flex-row items-center justify-start gap-1"
-            >
+            <p class="font-black text-gray flex flex-col sm:flex-row items-center justify-start gap-1">
               @if (this.timeListened() !== 0) {
-                <span class="text-base w-full sm:w-max"
-                  >{{ this.index() }}#</span
-                >
+                <span class="text-base w-full sm:w-max">{{ this.index() }}#</span>
                 <span class="text-base w-full sm:w-max">
                   <span class="hidden sm:inline"> - </span>
                   <span>

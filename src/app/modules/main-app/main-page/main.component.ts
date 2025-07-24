@@ -19,6 +19,8 @@ export default class MainComponent {
   protected userIsLogedIn: WritableSignal<PreloadUserLoginState> = this._preloadService.preloadUserLoginStatus;
 
   constructor() {
+    this._preloadService.verifyUserByToken();
+
     effect(() => {
       if (this.userIsLogedIn() === 'rejected') {
         this._router.navigate(['/login']);

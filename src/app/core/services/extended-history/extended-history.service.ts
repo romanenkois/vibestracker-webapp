@@ -5,6 +5,49 @@ import { UserExtendedDataStorage, UserStorage, SpotifyItemsStorage } from '@stor
 import { Track, ExtendedStreamingHistory, LoadingState } from '@types';
 import { Observable } from 'rxjs';
 
+export function runInWorker<TArgs extends any[], TResult>(
+  fn: (...args: TArgs) => TResult,
+  ...args: TArgs
+): Promise<TResult> {
+  return new Promise((resolve, reject) => {
+    const fnString = fn.toString();
+
+    const workerBlob = new Blob(
+      [
+        `
+        self.onmessage = async (e) => {
+          const [fnString, args] = e.data;
+          const fn = new Function('return (' + fnString + ')')();
+          try {
+            const result = await fn(...args);
+            self.postMessage({ result });
+          } catch (err) {
+            self.postMessage({ error: err.toString() });
+          }
+        };
+      `,
+      ],
+      { type: 'application/javascript' },
+    );
+
+    const worker = new Worker(URL.createObjectURL(workerBlob));
+
+    worker.onmessage = (e) => {
+      const { result, error } = e.data;
+      if (error) reject(error);
+      else resolve(result);
+      worker.terminate();
+    };
+
+    worker.onerror = (err) => {
+      reject(err.message);
+      worker.terminate();
+    };
+
+    worker.postMessage([fnString, args]);
+  });
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -17,9 +60,10 @@ export class ExtendedHistoryService {
   });
 
   public topTracks: Signal<{ id: string; ms_played: number }[]> = computed(() => {
+    const userExtendedData = this.userExtendedDataStorage.getUserExtendedData();
+
     console.log('recalculating top tracks');
-    return this.userExtendedDataStorage
-      .getUserExtendedData()
+    const topTracks = userExtendedData
       .reduce(
         (acc: { id: string; ms_played: number }[], item: ExtendedStreamingHistory) => {
           const id = item.uri;
@@ -35,21 +79,25 @@ export class ExtendedHistoryService {
         [] as { id: string; ms_played: number }[],
       )
       .sort((a: { id: string; ms_played: number }, b: { id: string; ms_played: number }) => b.ms_played - a.ms_played);
+
+    console.log('topTracks', topTracks);
+    return topTracks;
   });
 
   public getTopTracks(params: { startingDate?: Date; endingDate?: Date }): { id: string; ms_played: number }[] {
-    return this.userExtendedDataStorage
-      .getUserExtendedData()
+    const userExtendedData = this.userExtendedDataStorage.getUserExtendedData();
+
+    return userExtendedData
       .reduce(
         (acc: { id: string; ms_played: number; ts: string }[], item: ExtendedStreamingHistory) => {
           const id = item.uri;
           const existingTrack = acc.find((track) => track.id === id);
 
           if (params.startingDate && new Date(item.ts) < params.startingDate) {
-            return;
+            return acc;
           }
           if (params.endingDate && new Date(item.ts) > params.endingDate) {
-            return;
+            return acc;
           }
 
           if (existingTrack) {

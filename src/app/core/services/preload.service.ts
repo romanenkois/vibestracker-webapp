@@ -13,22 +13,26 @@ export class PreloadService {
 
   public preloadUserLoginStatus: WritableSignal<PreloadUserLoginState> = signal('idle');
 
-  // this service always triggers on app load, so we send request to api to check if token is still valid
   constructor() {
-    this.preloadUserLoginStatus.set('loading');
-    let token = this.userStorage.getToken();
+    this.verifyUserByToken();
+  }
 
-    try {
-      // we try to get token, at first from apprun time memory, then from local storage
-      let _token = this.userSettings.getUserSettings().saveToken
-        ? JSON.parse(localStorage.getItem('userToken') || 'null')
-        : null;
-      if (_token) {
-        token = _token;
+  public verifyUserByToken() {
+    this.preloadUserLoginStatus.set('loading');
+    let token = this.userStorage.getToken() || null;
+
+    if (!token) {
+      try {
+        // we try to get token, at first from apprun time memory, then from local storage
+        let _token = this.userSettings.getUserSettings().saveToken
+          ? JSON.parse(localStorage.getItem('userToken') || 'null')
+          : null;
+        if (_token) {
+          token = _token;
+        }
+      } catch (error) {
+        console.error('Error parsing token from localStorage:', error);
       }
-    } catch (error) {
-      console.error('Error parsing token from localStorage:', error);
-      token = null;
     }
 
     // we set it in advace, so the guard doesnt freak out

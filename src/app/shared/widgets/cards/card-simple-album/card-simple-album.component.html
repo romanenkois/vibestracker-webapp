@@ -9,7 +9,8 @@
           <img
             class="w-full h-full overflow-hidden object-cover rounded-sm"
             loading="lazy"
-            [src]="this.album().images[0].url"
+            alt="{{ this.album().name || '' }} cover"
+            [src]="this.album().images.length > 0 ? this.album().images[0].url : ''"
           />
         </a>
       </div>
