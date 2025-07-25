@@ -59,6 +59,8 @@ export class ExtendedHistoryService {
     return this.userExtendedDataStorage.getUserExtendedData();
   });
 
+  // const
+
   public topTracks: Signal<{ id: string; ms_played: number }[]> = computed(() => {
     const userExtendedData = this.userExtendedDataStorage.getUserExtendedData();
 
@@ -87,7 +89,7 @@ export class ExtendedHistoryService {
   public getTopTracks(params: { startingDate?: Date; endingDate?: Date }): { id: string; ms_played: number }[] {
     const userExtendedData = this.userExtendedDataStorage.getUserExtendedData();
 
-    return userExtendedData
+    const filteredUserExtendedData = userExtendedData
       .reduce(
         (acc: { id: string; ms_played: number; ts: string }[], item: ExtendedStreamingHistory) => {
           const id = item.uri;
@@ -111,5 +113,8 @@ export class ExtendedHistoryService {
       )
       .sort((a: { id: string; ms_played: number }, b: { id: string; ms_played: number }) => b.ms_played - a.ms_played)
       .slice(0, 1000);
+
+    console.log('filteredUserExtendedData', filteredUserExtendedData);
+    return filteredUserExtendedData;
   }
 }
