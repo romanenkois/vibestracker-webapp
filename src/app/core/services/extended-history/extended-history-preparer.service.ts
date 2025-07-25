@@ -166,7 +166,7 @@ export class ExtendedHistoryPreparerService {
     return filteredData;
   }
 
-  // trasforms the columns
+  // transforms the columns
   private async transformData(data: any[]): Promise<ExtendedStreamingHistory[]> {
     return data.map((item: ExtendedStreamingHistoryDTO) => {
       return {

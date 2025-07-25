@@ -22,7 +22,7 @@ export class ExtendedHistoryUploadFormComponent {
     ExtendedHistoryCommand,
   );
 
-  proccesingStatus: ExtendedHistoryPreparingState = 'idle';
+  processingStatus: ExtendedHistoryPreparingState = 'idle';
   uploadingStatus: UploadingStatus = 'idle';
 
   startingDate: string | null = null;
@@ -71,7 +71,7 @@ export class ExtendedHistoryUploadFormComponent {
             status: ExtendedHistoryPreparingState;
             data?: ExtendedStreamingHistory[];
           }) => {
-            this.proccesingStatus = response.status;
+            this.processingStatus = response.status;
             if (
               response.data &&
               response.data.length > 0 &&
@@ -86,7 +86,7 @@ export class ExtendedHistoryUploadFormComponent {
           },
         );
     } catch (error) {
-      this.proccesingStatus = `error`;
+      this.processingStatus = `error`;
     }
   }
 

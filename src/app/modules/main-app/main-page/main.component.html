@@ -3,11 +3,11 @@
     <app-nav-bar></app-nav-bar>
   </div>
 
-  @if (this.userIsLogedIn() === 'resolved') {
+  @if (this.userIsLoggedIn() === 'resolved') {
     <div class="main__router">
       <router-outlet />
     </div>
-  } @else if (this.userIsLogedIn() === 'loading') {
+  } @else if (this.userIsLoggedIn() === 'loading') {
     <div class="main__loading-screen">
       <p>authorizing to vibes tracker...</p>
       <div class="h-[32px] w-[32px]">

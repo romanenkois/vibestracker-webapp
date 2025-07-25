@@ -42,7 +42,7 @@
             "outputPath": "dist/vibestracker-webapp",
             "index": "src/main/index.html",
             "browser": "src/main/main.ts",
-            "polyfills": ["zone.js"],
+            "polyfills": ["zone.js", "@angular/localize/init"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [

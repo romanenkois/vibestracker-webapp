@@ -16,13 +16,13 @@ export default class MainComponent {
   private _preloadService: PreloadService = inject(PreloadService);
 
   protected showHeader: boolean = true;
-  protected userIsLogedIn: WritableSignal<PreloadUserLoginState> = this._preloadService.preloadUserLoginStatus;
+  protected userIsLoggedIn: WritableSignal<PreloadUserLoginState> = this._preloadService.preloadUserLoginStatus;
 
   constructor() {
     this._preloadService.verifyUserByToken();
 
     effect(() => {
-      if (this.userIsLogedIn() === 'rejected') {
+      if (this.userIsLoggedIn() === 'rejected') {
         this._router.navigate(['/login']);
       }
     });

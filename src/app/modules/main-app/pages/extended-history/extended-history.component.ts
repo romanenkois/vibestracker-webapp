@@ -28,7 +28,7 @@ export default class ExtendedHistoryComponent implements OnInit {
   private readonly extendedDataCommand: ExtendedHistoryCommand = inject(ExtendedHistoryCommand);
 
   protected listeningDataRecord: Signal<UserPrivate['listeningData']['expandedHistory'] | null> = computed(() => {
-    console.log('user lisllasllalasda', this.userStorage.getUser());
+    console.log('user listening data', this.userStorage.getUser());
     const listeningData = this.userStorage.getUser()?.listeningData?.expandedHistory;
     return listeningData ? listeningData : null;
   });
