@@ -98,6 +98,20 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "ja": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "outputPath": "dist/ja/",
+              "localize": ["ja"]
+            },
+            "uk": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "outputPath": "dist/uk/",
+              "localize": ["uk"]
             }
           },
           "defaultConfiguration": "production"
@@ -112,10 +126,10 @@
               "buildTarget": "vibestracker-webapp:build:development"
             },
             "uk": {
-              "buildTarget": "vibestracker-webapp:build:development:uk"
+              "buildTarget": "vibestracker-webapp:build:uk"
             },
             "ja": {
-              "buildTarget": "vibestracker-webapp:build:development:ja"
+              "buildTarget": "vibestracker-webapp:build:ja"
             }
           },
           "defaultConfiguration": "development"

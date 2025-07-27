@@ -1,6 +1,18 @@
 {
   "locale": "en-US",
   "translations": {
-    "vibesTrackerTitle": " vibes tracker "
+    "vibesTrackerTitle": " vibes tracker ",
+    "login_loginWithSpotify": "login with spotify",
+    "settings_logout": "logout",
+    "settings_deleteExtendedHistory": "delete extended history",
+    "settings_clearIgnoredTracks": "clear ignored tracks",
+    "nav_simpleTop": "simple top",
+    "nav_extendedTop": "extended top",
+    "selector_artists": "artists",
+    "selector_tracks": "tracks",
+    "selector_albums": "albums",
+    "selector_shortTerm": "4 weeks",
+    "selector_mediumTerm": "6 months",
+    "selector_longTerm": "12 months"
   }
 }
