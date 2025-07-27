@@ -31,8 +31,8 @@
           "skipTests": true
         },
         "i18n": {
-        "sourceLocale": "en-US"
-      }
+          "sourceLocale": "en-US"
+        }
       },
       "root": "",
       "sourceRoot": "src",
@@ -41,10 +41,12 @@
         "sourceLocale": "en-US",
         "locales": {
           "uk": {
-            "translation": "src/translations/locale.uk.json"
+            "translation": "public/translations/locale.uk.json",
+            "baseHref": "/uk/"
           },
           "ja": {
-            "translation": "src/translations/locale.ja.json"
+            "translation": "public/translations/locale.ja.json",
+            "baseHref": "ja"
           }
         }
       },
@@ -63,6 +65,10 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/translations/*"
               }
             ],
             "styles": ["src/main/styles.scss"],

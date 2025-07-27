@@ -1,0 +1,17 @@
+.dropdown-arrow {
+  transition: transform var(--quick-transition);
+  color: var(--gray-light-color);
+}
+
+.dropdown-arrow.rotate {
+  transform: rotate(180deg);
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

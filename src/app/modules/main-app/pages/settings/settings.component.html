@@ -1,25 +1,22 @@
-<div class="w-full h-full flex flex-col justify-center gap-4 p-4">
-  <button
-    class="text-lg w-full sm:w-max py-1 px-12 bg-primary"
-    (click)="this.logOut()"
-    i18n="@@settings_logout"
-    >
-    log out
-  </button>
+<div class="w-full h-max flex flex-col gap-4 p-4">
+  <div class="w-full gap-2 flex flex-col justify-center sm:w-[450px]">
+    <h2 class="text-xl font-bold">{{ 'settings_title-language' | translate }}</h2>
+    <app-language-selector />
+  </div>
 
-  <button
-    class="text-lg w-full sm:w-max py-1 px-12 bg-primary"
-    (click)="this.deleteExtendedHistory()"
-    i18n="@@settings_deleteExtendedHistory"
-  >
-    delete extended history
-  </button>
+  <div class="w-full gap-2 flex flex-col justify-center sm:w-[450px]">
+    <h2 class="text-xl font-bold">{{ 'settings_title-general' | translate }}</h2>
 
-  <button
-    class="text-lg w-full sm:w-max py-1 px-12 bg-primary"
-    (click)="this.clearIgnoredTracks()"
-    i18n="@@settings_clearIgnoredTracks"
-  >
-    clear ignored tracks
-  </button>
+    <button class="text-lg w-full py-1 px-12 bg-primary rounded-sm" (click)="this.logOut()">
+      {{ 'settings_logout' | translate }}
+    </button>
+
+    <button class="text-lg w-full py-1 px-12 bg-primary rounded-sm" (click)="this.deleteExtendedHistory()">
+      {{ 'settings_deleteExtendedHistory' | translate }}
+    </button>
+
+    <button class="text-lg w-full py-1 px-12 bg-primary rounded-sm" (click)="this.clearIgnoredTracks()">
+      {{ 'settings_clearIgnoredTracks' | translate }}
+    </button>
+  </div>
 </div>

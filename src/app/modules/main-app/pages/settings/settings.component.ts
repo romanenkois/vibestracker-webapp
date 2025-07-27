@@ -1,8 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { AuthorizationCommand, ExtendedHistoryCommand, UserCommand } from '@commands';
+import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
+import { LanguageSelectorComponent } from '@features';
+
 @Component({
   selector: 'app-settings',
-  imports: [],
+  imports: [TranslatePipe, LanguageSelectorComponent],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.scss',
 })

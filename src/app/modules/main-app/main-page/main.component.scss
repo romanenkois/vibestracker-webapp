@@ -15,13 +15,13 @@ $header-height: 64px;
     width: 100%;
     box-sizing: border-box;
 
-    overflow-x: hidden;
+    // overflow-x: hidden;
   }
 
   &__header {
     height: $header-height;
 
-    overflow-y: hidden;
+    // overflow-y: hidden;
 
     position: absolute;
     top: 0;

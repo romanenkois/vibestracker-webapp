@@ -26,6 +26,7 @@ export const $appConfig: AppConfig = {
   },
   defaultUserSettings: {
     theme: 'dark',
+    locale: 'en-US',
     saveToken: true,
     extendedHistory: {
       ignoredTracks: [],

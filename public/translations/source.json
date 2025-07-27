@@ -3,6 +3,8 @@
   "translations": {
     "vibesTrackerTitle": " vibes tracker ",
     "login_loginWithSpotify": "login with spotify",
+    "settings_title-general": "general settings",
+    "settings_title-language": "language settings",
     "settings_logout": "logout",
     "settings_deleteExtendedHistory": "delete extended history",
     "settings_clearIgnoredTracks": "clear ignored tracks",

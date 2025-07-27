@@ -3,6 +3,8 @@
   "translations": {
     "vibesTrackerTitle": " バイブス トラッカー ",
     "login_loginWithSpotify": "Spotifyでログイン",
+    "settings_title-general": "一般設定",
+    "settings_title-language": "言語設定",
     "settings_logout": "ログアウト",
     "settings_deleteExtendedHistory": "extended historyを削除",
     "settings_clearIgnoredTracks": "無視されたトラックをクリア",

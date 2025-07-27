@@ -6,9 +6,8 @@
       <a routerLink="/">
         <h1
           class="w-full justify-center text-center text-lg md:text-2xl font-black text-primary hover:text-primary-light"
-          i18n="@@vibesTrackerTitle"
         >
-          vibes tracker
+          {{ 'vibesTrackerTitle' | translate }}
         </h1>
       </a>
     </div>
@@ -16,9 +15,8 @@
       <a routerLink="/top">
         <p
           class="w-full text-center text-base md:text-lg font-black text-gray hover:text-white"
-          i18n="@@nav_simpleTop"
         >
-          simple top
+          {{ 'nav_simpleTop' | translate }}
         </p>
       </a>
     </div>
@@ -26,14 +24,13 @@
       <a routerLink="/extended-history">
         <p
           class="w-full text-center text-base md:text-lg font-black text-gray hover:text-white"
-          i18n="@@nav_extendedTop"
         >
-          extended top
+          {{ 'nav_extendedTop' | translate }}
         </p>
       </a>
     </div>
   </div>
-  <div class="box-border flex gap-4 lg:gap-12">
+  <div class="box-border flex gap-4 lg:gap-12 items-center">
     <div class="box-border flex items-center">
       <a routerLink="/settings">
         <div class="medium-icon">

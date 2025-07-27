@@ -1,11 +1,11 @@
 <div class="bg-dark p-8 m-8 rounded-sm flex flex-col items-center justify-center gap-4">
   <div>
-    <h1 class="text-3xl font-black" i18n="@@vibesTrackerTitle">vibes tracker</h1>
+    <h1 class="text-3xl font-black">{{ 'vibesTrackerTitle' | translate }}</h1>
     <!-- <p>{{this.loadingState}}</p> -->
   </div>
   <a [href]="this.getAuthorizationUrl()" class="w-full">
     <button class="w-full py-2 bg-primary rounded-sm">
-      <p class="font-black" i18n="@@login_loginWithSpotify">login with spotify</p>
+      <p class="font-black">{{ 'login_loginWithSpotify' | translate }}</p>
     </button>
   </a>
 </div>

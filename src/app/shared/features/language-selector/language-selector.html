@@ -1,0 +1,36 @@
+<div class="language-selector min-w-[120px] relative">
+  <button
+    class="w-full flex justify-between items-center py-2 px-4 bg-dark/75 backdrop-blur-sm border border-gray rounded-md"
+    (click)="toggleDropdown()"
+    [disabled]="isLoading()"
+  >
+    <span> {{ getCurrentLanguageDisplay() }} </span>
+    <svg class="dropdown-arrow" [class.rotate]="isOpen()" width="12" height="12" viewBox="0 0 12 12" fill="none">
+      <path
+        d="M3 4.5L6 7.5L9 4.5"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </button>
+
+  @if (this.isOpen()) {
+
+  <div
+    class="absolute top-full left-0 right-0 mt-2 rounded-md border border-solid border-gray bg-dark/75 backdrop-blur-sm z-100"
+  >
+    @for (locale of supportedLocales; track $index) {
+    <button
+      class="w-full py-2 px-4 text-white overflow-hidden rounded-md bg-dark/75 backdrop-blur-sm"
+      [class]="locale === currentLocale() ? 'bg-primary font-bold' : ''"
+      (click)="selectLanguage(locale)"
+      [disabled]="isLoading()"
+    >
+      {{ getLocaleDisplayName(locale) }}
+    </button>
+    }
+  </div>
+  }
+</div>
