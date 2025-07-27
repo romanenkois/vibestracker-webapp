@@ -1,0 +1,10 @@
+:host {
+  pointer-events: none;
+
+  height: 100%;
+  width: 100%;
+}
+
+* {
+  pointer-events: all;
+}

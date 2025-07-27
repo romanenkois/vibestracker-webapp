@@ -2,20 +2,28 @@
   "locale": "en-US",
   "translations": {
     "vibesTrackerTitle": " vibes tracker ",
+
     "login_loginWithSpotify": "login with spotify",
     "login_authorizing-loading": "authorizing to vibes tracker...",
+
     "settings_title-general": "general settings",
     "settings_title-language": "language settings",
     "settings_logout": "logout",
     "settings_deleteExtendedHistory": "delete extended history",
     "settings_clearIgnoredTracks": "clear ignored tracks",
+
     "nav_simpleTop": "simple top",
     "nav_extendedTop": "extended top",
+
     "selector_artists": "artists",
     "selector_tracks": "tracks",
     "selector_albums": "albums",
     "selector_shortTerm": "4 weeks",
     "selector_mediumTerm": "6 months",
-    "selector_longTerm": "12 months"
+    "selector_longTerm": "12 months",
+
+    "alert_sessionExpired-title": "Session expired",
+    "alert_sessionExpired-message": "Session token has expired, you will be redirected to the login page.",
+    "alert_sessionExpired-buttonMessage": "Ok"
   }
 }

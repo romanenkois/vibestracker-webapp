@@ -1,2 +1,2 @@
-export { LoadingSpinner } from './loading-spinner/loading-spinner';
-export { LanguageSelectorComponent } from './language-selector/language-selector';
+export * from './loading-spinner/loading-spinner';
+export * from './language-selector/language-selector';

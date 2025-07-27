@@ -1,5 +1,6 @@
 import { Component, HostListener, inject, signal } from '@angular/core';
-import { TranslationService, SupportedLocale } from '@services';
+import { TranslationService } from '@services';
+import { SupportedLocale } from '@types';
 
 @Component({
   selector: 'app-language-selector',

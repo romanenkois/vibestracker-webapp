@@ -5,6 +5,7 @@ import { AuthorizationCommand } from '@commands';
 import { LoadingState } from '@types';
 import { TranslatePipe } from '@pipes';
 import { LoadingSpinner } from '@features';
+import { ToastNotificationsService } from '@libs';
 
 @Component({
   selector: 'app-login',
@@ -13,10 +14,11 @@ import { LoadingSpinner } from '@features';
   styleUrl: './login.component.scss',
 })
 export default class LoginComponent implements OnInit {
-  activatedRoute: ActivatedRoute = inject(ActivatedRoute);
-  router: Router = inject(Router);
+  private router: Router = inject(Router);
+  private activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 
-  authorizationCommand: AuthorizationCommand = inject(AuthorizationCommand);
+  private authorizationCommand: AuthorizationCommand = inject(AuthorizationCommand);
+  private toastNotificationsService: ToastNotificationsService = inject(ToastNotificationsService);
 
   loadingState: LoadingState = 'idle';
 
@@ -46,7 +48,12 @@ export default class LoginComponent implements OnInit {
           }
         });
       } else if (error) {
-        window.alert(`error: \n${error}`);
+        this.toastNotificationsService.sendNotification({
+          type: 'error',
+          title: 'Error',
+          message: `Error during authorization: ${error}`,
+          duration: 5000,
+        });
         this.router.navigate([], {
           relativeTo: this.activatedRoute,
           queryParams: {},
