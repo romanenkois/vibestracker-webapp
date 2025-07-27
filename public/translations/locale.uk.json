@@ -1,20 +1,20 @@
 {
   "locale": "uk",
   "translations": {
-    "vibesTrackerTitle": " vibes tracker ",
-    "login_loginWithSpotify": "login with spotify",
-    "settings_title-general": "general settings",
-    "settings_title-language": "language settings",
-    "settings_logout": "logout",
-    "settings_deleteExtendedHistory": "delete extended history",
-    "settings_clearIgnoredTracks": "clear ignored tracks",
-    "nav_simpleTop": "simple top",
-    "nav_extendedTop": "extended top",
-    "selector_artists": "artists",
-    "selector_tracks": "tracks",
-    "selector_albums": "albums",
-    "selector_shortTerm": "4 weeks",
-    "selector_mediumTerm": "6 months",
-    "selector_longTerm": "12 months"
+    "vibesTrackerTitle": " вібєс трекєр ",
+    "login_loginWithSpotify": "увійти через spotify",
+    "settings_title-general": "загальні налаштування",
+    "settings_title-language": "мовні налаштування",
+    "settings_logout": "вийти",
+    "settings_deleteExtendedHistory": "видалити розширену історію",
+    "settings_clearIgnoredTracks": "очистити проігноровані треки",
+    "nav_simpleTop": "простий топ",
+    "nav_extendedTop": "розширений топ",
+    "selector_artists": "виконавці",
+    "selector_tracks": "треки",
+    "selector_albums": "альбоми",
+    "selector_shortTerm": "4 тижні",
+    "selector_mediumTerm": "6 місяців",
+    "selector_longTerm": "12 місяців"
   }
 }
