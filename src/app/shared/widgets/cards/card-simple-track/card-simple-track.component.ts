@@ -21,7 +21,7 @@ export class CardSimpleTrackComponent {
   timeListened: InputSignal<number> = input<number>(0);
   timesPlayed: InputSignal<number> = input<number>(0);
 
-  // used when stuff happends
+  // used when stuff happens
   ignoringThisTrack: WritableSignal<boolean> = signal<boolean>(false);
   showTrackMenu: WritableSignal<boolean> = signal<boolean>(false);
 

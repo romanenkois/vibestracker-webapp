@@ -2,13 +2,15 @@
   <button
     class="text-lg w-full sm:w-max py-1 px-12 bg-primary"
     (click)="this.logOut()"
-  >
+    i18n="@@settings_logout"
+    >
     log out
   </button>
 
   <button
     class="text-lg w-full sm:w-max py-1 px-12 bg-primary"
     (click)="this.deleteExtendedHistory()"
+    i18n="@@settings_deleteExtendedHistory"
   >
     delete extended history
   </button>
@@ -16,6 +18,7 @@
   <button
     class="text-lg w-full sm:w-max py-1 px-12 bg-primary"
     (click)="this.clearIgnoredTracks()"
+    i18n="@@settings_clearIgnoredTracks"
   >
     clear ignored tracks
   </button>

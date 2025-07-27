@@ -24,7 +24,7 @@ export class AuthorizationInterceptor implements HttpInterceptor {
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
-          window.alert('Час сесії закінчився, будь ласка увійдіть знову');
+          window.alert('Session expired. Please log in again.');
           this.userStorage.setToken(null);
           window.location.reload();
         }

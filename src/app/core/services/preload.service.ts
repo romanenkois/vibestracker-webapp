@@ -23,7 +23,7 @@ export class PreloadService {
 
     if (!token) {
       try {
-        // we try to get token, at first from apprun time memory, then from local storage
+        // we try to get token, at first from uptime time memory, then from local storage
         let _token = this.userSettings.getUserSettings().saveToken
           ? JSON.parse(localStorage.getItem('userToken') || 'null')
           : null;
@@ -35,7 +35,7 @@ export class PreloadService {
       }
     }
 
-    // we set it in advace, so the guard doesnt freak out
+    // we set it in advance, so the guard doesn't freak out
     this.userStorage.setToken(token);
 
     if (token) {
@@ -43,7 +43,7 @@ export class PreloadService {
         if (status === 'resolved') {
           this.preloadUserLoginStatus.set('resolved');
           // nothing is happening if everything is ok
-          // token is loaded, guard wouldnt retrigger
+          // token is loaded, guard would not retrigger
         }
         if (status === 'error') {
           this.preloadUserLoginStatus.set('rejected');
