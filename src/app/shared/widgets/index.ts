@@ -4,5 +4,3 @@ export * from './cards/card-simple-genre/card-simple-genre.component';
 export * from './cards/card-simple-track/card-simple-track.component';
 
 export * from './nav-bar/nav-bar.component';
-export * from './screen-notification/screen-notification.component';
-export * from './screen-toaster-notifications/screen-toaster-notifications.component';

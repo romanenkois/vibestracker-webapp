@@ -23,7 +23,7 @@
     "selector_longTerm": "12 months",
 
     "alert_sessionExpired-title": "Session expired",
-    "alert_sessionExpired-message": "Session expired",
-    "alert_sessionExpired-buttonMessage": "Session expired"
+    "alert_sessionExpired-message": "Session token has expired, you will be redirected to the login page.",
+    "alert_sessionExpired-buttonMessage": "Ok"
   }
 }

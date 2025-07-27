@@ -1,5 +1,5 @@
 import { Injectable, signal, WritableSignal } from "@angular/core";
-import { ToastNotification } from "@types";
+import { ToastNotification } from "../types/shared";
 
 
 @Injectable({
@@ -12,7 +12,11 @@ export class ToastNotificationsService {
     return this.toastNotifications();
   }
 
-  public addNotification(notification: ToastNotification): void {
-    this.toastNotifications.set([...this.toastNotifications(), notification]);
+  public sendNotification(notification: Omit<ToastNotification, 'id'>): void {
+    this.toastNotifications.set([...this.toastNotifications(), { ...notification, id: this.generateId() }]);
+  }
+
+  private generateId(): string {
+    return Math.random().toString(36).substr(2, 9);
   }
 }

@@ -2,20 +2,28 @@
   "locale": "ja",
   "translations": {
     "vibesTrackerTitle": "vibes tracker",
+
     "login_loginWithSpotify": "Spotifyでログイン",
     "login_authorizing-loading": "vibes trackerに認証中...",
+
     "settings_title-general": "一般設定",
     "settings_title-language": "言語設定",
     "settings_logout": "ログアウト",
     "settings_deleteExtendedHistory": "extended historyを削除",
     "settings_clearIgnoredTracks": "無視されたトラックをクリア",
+
     "nav_simpleTop": "シンプルぶんせき",
     "nav_extendedTop": "ショウサイぶんせき",
+
     "selector_artists": "アーティスト",
     "selector_tracks": "トラック",
     "selector_albums": "アルバム",
     "selector_shortTerm": "4週間",
     "selector_mediumTerm": "6ヶ月",
-    "selector_longTerm": "12ヶ月"
+    "selector_longTerm": "12ヶ月",
+
+    "alert_sessionExpired-title": "セッションの期限切れ",
+    "alert_sessionExpired-message": "セッショントークンの期限が切れました。ログインページにリダイレクトされます。",
+    "alert_sessionExpired-buttonMessage": "OK"
   }
 }

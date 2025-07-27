@@ -1,5 +1,5 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
-import { ScreenMessage } from '/';
+import { ScreenMessage } from '../types/shared';
 
 @Injectable({
   providedIn: 'root',

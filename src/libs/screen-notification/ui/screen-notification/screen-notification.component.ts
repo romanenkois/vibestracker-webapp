@@ -1,10 +1,11 @@
 import { Component, computed, inject, Signal } from '@angular/core';
-import { ScreenNotificationService } from '../services/screen-notification.service';
-import { ScreenMessage } from '../screen-notification';
+import { ScreenNotificationService } from '../../services/screen-notification.service';
+import { ScreenMessage } from '../../types/shared';
+import { TranslatePipe } from '@pipes';
 
 @Component({
   selector: 'app-screen-notification',
-  imports: [],
+  imports: [TranslatePipe],
   templateUrl: './screen-notification.component.html',
   styleUrl: './screen-notification.component.scss',
 })

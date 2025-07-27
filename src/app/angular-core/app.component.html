@@ -1,4 +1,12 @@
 <main class="relative main">
-  <!-- <div class="absolute top-0 left-0 h-screen w-screen bg-dark/10 backdrop-blur-xl z-10"></div> -->
-  <router-outlet />
+  <div class="router">
+    <router-outlet />
+  </div>
+
+  <div class="screen-notifications">
+    <app-screen-notification />
+  </div>
+  <div class="screen-toaster-notifications">
+    <app-screen-toaster-notifications />
+  </div>
 </main>

@@ -5,36 +5,30 @@
   box-sizing: border-box;
   position: relative;
 
-  // .header {
-  //     width: 100%;
-  //     max-width: 100vw;
-  //     box-sizing: border-box;
+  > .router {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
 
-  //     // overflow: hidden; // TODO
-
-  //     position: sticky;
-  //     top: 0;
-  //     z-index: 100;
-  // }
-
-  // .router {
-  //     position: relative;
-  //     width: 100%;
-  //     box-sizing: border-box;
-
-  //     flex: 1;
-
-  //     align-self: flex-start;
-
-  //     display: flex;
-  //     flex-direction: column;
-
-  //     router-outlet {
-  //         display: none;
-  //     }
-  //     > * {
-  //         width: 100%;
-  //         flex: 1;
-  //     }
-  // }
+  > .screen-notifications {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+  }
+  > .screen-toaster-notifications {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 1001;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+  }
 }
