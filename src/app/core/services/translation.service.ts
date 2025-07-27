@@ -1,17 +1,14 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
+import { SupportedLocale, TranslationFile } from '@types';
 
-export interface TranslationFile {
-  locale: string;
-  translations: Record<string, string>;
-}
-
-export type SupportedLocale = 'en-US' | 'uk' | 'ja';
+// This service was entirely vibecoded ^^
+// fuck you illya in future
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TranslationService {
   private readonly currentLocale: WritableSignal<SupportedLocale> = signal('en-US');
@@ -97,7 +94,7 @@ export class TranslationService {
       .replace(/_/g, ' ') // Replace underscores with spaces
       .toLowerCase()
       .trim()
-      .replace(/^./, str => str.toUpperCase()); // Capitalize first letter
+      .replace(/^./, (str) => str.toUpperCase()); // Capitalize first letter
   }
 
   /**
@@ -155,16 +152,19 @@ export class TranslationService {
   private getTranslationFile(locale: SupportedLocale): Promise<TranslationFile> {
     const filePath = this.getTranslationFilePath(locale);
 
-    return this.http.get<TranslationFile>(filePath).pipe(
-      catchError(error => {
-        console.error(`Failed to load translation file for ${locale}:`, error);
-        // Fallback to English if the translation file fails to load
-        if (locale !== 'en-US') {
-          return this.http.get<TranslationFile>(this.getTranslationFilePath('en-US'));
-        }
-        throw error;
-      })
-    ).toPromise() as Promise<TranslationFile>;
+    return this.http
+      .get<TranslationFile>(filePath)
+      .pipe(
+        catchError((error) => {
+          console.error(`Failed to load translation file for ${locale}:`, error);
+          // Fallback to English if the translation file fails to load
+          if (locale !== 'en-US') {
+            return this.http.get<TranslationFile>(this.getTranslationFilePath('en-US'));
+          }
+          throw error;
+        }),
+      )
+      .toPromise() as Promise<TranslationFile>;
   }
 
   /**

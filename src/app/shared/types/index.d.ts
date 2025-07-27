@@ -1,8 +1,9 @@
 export * from './spotify/index';
 
-export { AppConfig } from './app-config.type';
+export * from './app-config.type';
+export * from './locale.type';
 export * from './loading-state.type';
 export * from './shared.type';
-export { UserTopItemsSimpleStorageType } from './storage.type';
-export { UserSettings } from './user-settings.type';
-export { UserPrivate, UserPublic } from './user.type';
+export * from './storage.type';
+export * from './user-settings.type';
+export * from './user.type';

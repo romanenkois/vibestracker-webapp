@@ -2,12 +2,14 @@ import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest
 import { inject, Injectable } from '@angular/core';
 import { UserStorage } from '@storage';
 import { catchError, Observable, throwError } from 'rxjs';
+import { ScreenNotificationService } from '../core/services/screen-notification.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthorizationInterceptor implements HttpInterceptor {
-  private readonly userStorage: UserStorage = inject(UserStorage);
+  private userStorage: UserStorage = inject(UserStorage);
+  private screenNotificationService: ScreenNotificationService = inject(ScreenNotificationService);
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const accessToken = this.userStorage.getToken();
@@ -24,7 +26,11 @@ export class AuthorizationInterceptor implements HttpInterceptor {
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
-          window.alert('Session expired. Please log in again.');
+          this.screenNotificationService.sendMessage({
+            title: '@@alert_sessionExpired-title',
+            message: '@@alert_sessionExpired-message',
+            buttonMessage: '@@alert_sessionExpired-buttonMessage',
+          });
           this.userStorage.setToken(null);
           window.location.reload();
         }

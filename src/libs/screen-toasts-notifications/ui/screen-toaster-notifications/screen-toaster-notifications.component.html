@@ -1,0 +1,14 @@
+<div class="w-full h-full relative">
+  <div class="absolute top-0 right-0">
+    @for (notification of this.screenToasterNotifications(); track $index) {
+      <div class="w-full sm:w-[450px] flex flex-col" [attr.data-id]="notification.id">
+        @if (notification.title) {
+          <h4 class="w-full">{{ notification.title }}</h4>
+        }
+        @if (notification.message) {
+          <p class="w-full truncate-#2">{{ notification.message }}</p>
+        }
+      </div>
+    }
+  </div>
+</div>
