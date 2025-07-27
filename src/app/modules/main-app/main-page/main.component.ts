@@ -4,10 +4,11 @@ import { PreloadService } from '@services';
 import { PreloadUserLoginState } from '@types';
 import { NavBarComponent } from '@widgets';
 import { LoadingSpinner } from '@features';
+import { TranslatePipe } from '@pipes';
 
 @Component({
   selector: 'app-main',
-  imports: [RouterModule, NavBarComponent, LoadingSpinner],
+  imports: [RouterModule, NavBarComponent, LoadingSpinner, TranslatePipe],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss',
 })

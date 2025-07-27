@@ -3,11 +3,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { $appConfig } from '@environments';
 import { AuthorizationCommand } from '@commands';
 import { LoadingState } from '@types';
-import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
+import { TranslatePipe } from '@pipes';
+import { LoadingSpinner } from '@features';
 
 @Component({
   selector: 'app-login',
-  imports: [TranslatePipe],
+  imports: [TranslatePipe, LoadingSpinner],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })

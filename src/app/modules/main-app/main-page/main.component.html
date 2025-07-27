@@ -9,7 +9,7 @@
     </div>
   } @else if (this.userIsLoggedIn() === 'loading') {
     <div class="main__loading-screen">
-      <p>authorizing to vibes tracker...</p>
+      <p>{{ 'login_authorizing-loading' | translate }}</p>
       <div class="h-[32px] w-[32px]">
         <app-loading-spinner />
       </div>

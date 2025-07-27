@@ -1,10 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslatePipe } from '@pipes';
 import { SimpleItemsSelection, SimpleTimeFrame } from '@types';
 
 @Component({
   selector: 'app-user-top-items-selector',
-  imports: [],
+  imports: [TranslatePipe],
   templateUrl: './user-top-items-selector.component.html',
   styleUrl: './user-top-items-selector.component.scss',
 })

@@ -37,10 +37,7 @@ export class LanguageSelectorComponent {
 
   @HostListener('document:click', ['$event'])
   listenToClickOutside(event: MouseEvent): void {
-    console.log('Click detected outside language selector');
-    // Close dropdown if clicked outside
     const target = event.target as HTMLElement;
-    console.log(!target.closest('.language-selector'));
     if (!target.closest('.language-selector') && this.isOpen()) {
       this.isOpen.set(false);
     }

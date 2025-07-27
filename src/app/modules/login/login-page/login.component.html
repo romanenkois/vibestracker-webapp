@@ -1,11 +1,23 @@
 <div class="bg-dark p-8 m-8 rounded-sm flex flex-col items-center justify-center gap-4">
   <div>
     <h1 class="text-3xl font-black">{{ 'vibesTrackerTitle' | translate }}</h1>
-    <!-- <p>{{this.loadingState}}</p> -->
   </div>
-  <a [href]="this.getAuthorizationUrl()" class="w-full">
-    <button class="w-full py-2 bg-primary rounded-sm">
-      <p class="font-black">{{ 'login_loginWithSpotify' | translate }}</p>
-    </button>
-  </a>
+  @if (this.loadingState === 'idle' || this.loadingState === 'error') {
+    <a [href]="this.getAuthorizationUrl()" class="w-full">
+      <button class="w-full py-2 bg-primary rounded-sm">
+        <p class="font-black">{{ 'login_loginWithSpotify' | translate }}</p>
+      </button>
+    </a>
+  } @else if (this.loadingState === 'loading') {
+    <div class="flex flex-col items-center justify-center gap-2">
+      <p>{{ 'login_authorizing-loading' | translate }}</p>
+      <div class="h-[32px] w-[32px]">
+        <app-loading-spinner />
+      </div>
+    </div>
+  } @else {
+    <div>
+      <p>{{ this.loadingState }}</p>
+    </div>
+  }
 </div>

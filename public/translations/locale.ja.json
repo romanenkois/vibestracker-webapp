@@ -1,8 +1,9 @@
 {
   "locale": "ja",
   "translations": {
-    "vibesTrackerTitle": " バイブス トラッカー ",
+    "vibesTrackerTitle": "vibes tracker",
     "login_loginWithSpotify": "Spotifyでログイン",
+    "login_authorizing-loading": "vibes trackerに認証中...",
     "settings_title-general": "一般設定",
     "settings_title-language": "言語設定",
     "settings_logout": "ログアウト",
