@@ -5,7 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development",
+    "lang": "ng extract-i18n --format=json --out-file src/translations/source.json",
     "spell": "cspell --no-progress --gitignore  \"src/**/*.ts\""
   },
   "author": "romanenkoisnot@gmail.com",

@@ -1,6 +1,6 @@
 <div class="p-6 max-w mx-auto flex flex-col gap-6 justify-center items-center">
   <div class="w-full h-full min-h-[500px] flex justify-center items-center">
-    @if (this.proccesingStatus == 'idle' || this.proccesingStatus == 'error') {
+    @if (this.processingStatus == 'idle' || this.processingStatus == 'error') {
       <form class="w-full flex flex-col gap-6">
         <div class="rounded-md w-full p-8 bg-dark cursor-pointer">
           <div class="flex flex-col items-center justify-center gap-4">
@@ -46,7 +46,7 @@
                 'h-8 w-8 rounded-full flex items-center justify-center bg-pure-white text-primary'
               "
             >
-              @switch (this.proccesingStatus) {
+              @switch (this.processingStatus) {
                 @case ('all-prepared') {
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -117,9 +117,9 @@
             </div>
           </div>
           <div class="flex-1 min-w-0">
-            @if (this.proccesingStatus !== 'all-prepared') {
+            @if (this.processingStatus !== 'all-prepared') {
               <p class="text-sm w-full text-gray truncate">
-                {{ this.proccesingStatus }}
+                {{ this.processingStatus }}
               </p>
             } @else if (this.canUpload) {
               <button (click)="this.uploadHistory()">upload</button>

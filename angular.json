@@ -29,11 +29,25 @@
         },
         "@schematics/angular:service": {
           "skipTests": true
-        }
+        },
+        "i18n": {
+        "sourceLocale": "en-US"
+      }
       },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
+      "i18n": {
+        "sourceLocale": "en-US",
+        "locales": {
+          "uk": {
+            "translation": "src/translations/locale.uk.json"
+          },
+          "ja": {
+            "translation": "src/translations/locale.ja.json"
+          }
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:application",
@@ -96,6 +110,12 @@
             },
             "development": {
               "buildTarget": "vibestracker-webapp:build:development"
+            },
+            "uk": {
+              "buildTarget": "vibestracker-webapp:build:development:uk"
+            },
+            "ja": {
+              "buildTarget": "vibestracker-webapp:build:development:ja"
             }
           },
           "defaultConfiguration": "development"
