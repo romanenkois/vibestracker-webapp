@@ -2,9 +2,7 @@
   <div>
     <div class="p-2 sm:py-4 sm:px-8 gap-4 flex flex-col md:flex-row justify-between items-center">
       <div>
-        @if (this.userExtendedDataLoaded()) {
-
-        }
+        @if (this.userExtendedDataLoaded()) {}
         <p class="text-gray">
           <span>Uploaded data from</span>
           <span class="text-xl font-black text-pure-white">
@@ -37,14 +35,12 @@
 
       <a
         routerLink="/extended-history/upload"
-        class="py-2 px-2 sm:px-8 w-full sm:w-max font-black text-lg sm:text-base text-center bg-primary rounded-sm"
+        class="py-2 px-2 sm:px-8 w-full sm:w-max font-black text-lg sm:text-base text-center bg-primary rounded-sm hover:bg-primary-light"
         >Upload more</a
       >
     </div>
     <div>
-      @if (
-        this.loadingState() === 'all-resolved' || this.loadingState() === 'resolved'
-      ) {
+      @if (this.loadingState() === 'all-resolved' || this.loadingState() === 'resolved') {
         <app-user-top-extended />
       } @else if (this.loadingState() === 'loading') {
         <div class="w-full flex justify-center align-center h-">

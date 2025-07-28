@@ -28,7 +28,7 @@ export class SpotifyItemsCommand {
 
       this.http
         .get<any>(
-          `${$appConfig.api.BASE_API_URL}/spotify/albums?ids=${ids.join(',')}`,
+          `${$appConfig.api.BASE_API_URL}/spotify/albums?ids=${idsToLoad.join(',')}`,
         )
         .subscribe({
           next: (response) => {
@@ -60,7 +60,7 @@ export class SpotifyItemsCommand {
 
       this.http
         .get<any>(
-          `${$appConfig.api.BASE_API_URL}/spotify/artists?ids=${ids.join(',')}`,
+          `${$appConfig.api.BASE_API_URL}/spotify/artists?ids=${idsToLoad.join(',')}`,
         )
         .subscribe({
           next: (response) => {
@@ -92,7 +92,7 @@ export class SpotifyItemsCommand {
 
       this.http
         .get<any>(
-          `${$appConfig.api.BASE_API_URL}/spotify/tracks?ids=${ids.join(',')}`,
+          `${$appConfig.api.BASE_API_URL}/spotify/tracks?ids=${idsToLoad.join(',')}`,
         )
         .subscribe({
           next: (response) => {
