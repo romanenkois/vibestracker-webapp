@@ -1,11 +1,7 @@
-import { Component, HostListener, inject } from '@angular/core';
+import { Component, HostListener, inject, signal, WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ExtendedHistoryPreparerService } from '@services';
-import {
-  ExtendedHistoryPreparingState,
-  ExtendedStreamingHistory,
-  UploadingStatus,
-} from '@types';
+import { ExtendedHistoryPreparerService, ScreenNotificationService } from '@services';
+import { ExtendedHistoryPreparingState, ExtendedStreamingHistory, UploadingStatus } from '@types';
 import { ExtendedHistoryCommand } from '@commands';
 
 @Component({
@@ -16,20 +12,18 @@ import { ExtendedHistoryCommand } from '@commands';
   styleUrls: ['./extended-history-upload-form.component.scss'],
 })
 export class ExtendedHistoryUploadFormComponent {
-  private readonly extendedHistoryPreparerService: ExtendedHistoryPreparerService =
-    inject(ExtendedHistoryPreparerService);
-  private readonly extendedHistoryCommand: ExtendedHistoryCommand = inject(
-    ExtendedHistoryCommand,
-  );
+  private _extendedHistoryPreparerService: ExtendedHistoryPreparerService = inject(ExtendedHistoryPreparerService);
+  private _extendedHistoryCommand: ExtendedHistoryCommand = inject(ExtendedHistoryCommand);
+  private _screenNotificationService: ScreenNotificationService = inject(ScreenNotificationService);
 
-  processingStatus: ExtendedHistoryPreparingState = 'idle';
-  uploadingStatus: UploadingStatus = 'idle';
+  protected processingStatus: WritableSignal<ExtendedHistoryPreparingState> = signal('idle');
+  protected uploadingStatus: WritableSignal<UploadingStatus> = signal('idle');
 
-  startingDate: string | null = null;
-  endingDate: string | null = null;
+  protected startingDate: WritableSignal<string | null> = signal(null);
+  protected endingDate: WritableSignal<string | null> = signal(null);
 
-  canUpload = false;
-  history: ExtendedStreamingHistory[] = [];
+  protected canUpload: WritableSignal<boolean> = signal(false);
+  private history: WritableSignal<ExtendedStreamingHistory[]> = signal([]);
 
   @HostListener('dragover', ['$event'])
   onDragOver(event: DragEvent) {
@@ -54,7 +48,7 @@ export class ExtendedHistoryUploadFormComponent {
     }
   }
 
-  async onFileSelected(event: Event) {
+  protected async onFileSelected(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
       await this.handleFile(file);
@@ -62,46 +56,41 @@ export class ExtendedHistoryUploadFormComponent {
   }
 
   private async handleFile(file: File) {
-    this.canUpload = false; // just in case
+    this.canUpload.set(false);
     try {
-      this.extendedHistoryPreparerService
+      this._extendedHistoryPreparerService
         .FullyProcessFile(file)
-        .subscribe(
-          (response: {
-            status: ExtendedHistoryPreparingState;
-            data?: ExtendedStreamingHistory[];
-          }) => {
-            this.processingStatus = response.status;
-            if (
-              response.data &&
-              response.data.length > 0 &&
-              response.status === 'all-prepared'
-            ) {
-              this.canUpload = true;
-              this.history = response.data;
-              this.startingDate = response.data[0].ts;
-              this.endingDate = response.data[response.data.length - 1].ts;
-              console.log('Data:', response.data);
-            }
-          },
-        );
+        .subscribe((response: { status: ExtendedHistoryPreparingState; data?: ExtendedStreamingHistory[] }) => {
+          this.processingStatus.set(response.status);
+          if (response.data && response.data.length > 0 && response.status === 'all-prepared') {
+            this.canUpload.set(true);
+            this.history.set(response.data);
+            this.startingDate.set(response.data[0].ts);
+            this.endingDate.set(response.data[response.data.length - 1].ts);
+            console.log('Data:', response.data);
+          }
+        });
     } catch (error) {
-      this.processingStatus = `error`;
+      this.processingStatus.set('error');
     }
   }
 
   protected uploadHistory() {
-    if (this.history.length === 0) {
-      console.warn('No history to upload');
+    if (this.history().length === 0) {
+      this._screenNotificationService.sendMessage({
+        title: 'alert_emptyExtendedHistory-title',
+        message: 'alert_emptyExtendedHistory-message',
+        buttonMessage: 'alert_emptyExtendedHistory-buttonMessage',
+      });
       return;
     }
-    console.log('Uploading history:', this.history);
-    this.extendedHistoryCommand
+    console.log('Uploading history:', this.history());
+    this._extendedHistoryCommand
       .uploadExtendedHistory({
-        history: this.history,
+        history: this.history(),
       })
       .subscribe((status: UploadingStatus) => {
-        this.uploadingStatus = status;
+        this.uploadingStatus.set(status);
       });
   }
 }

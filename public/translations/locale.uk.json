@@ -24,6 +24,10 @@
 
     "alert_sessionExpired-title": "Сесія закінчилася",
     "alert_sessionExpired-message": "Токен сесії закінчився, ви будете перенаправлені на сторінку логіну.",
-    "alert_sessionExpired-buttonMessage": "Ок"
+    "alert_sessionExpired-buttonMessage": "Ок",
+
+    "alert_emptyExtendedHistory-title": "Empty extended history",
+    "alert_emptyExtendedHistory-message": "The extended history file you provided had no valid records to upload. Make sure you upload the correct file.",
+    "alert_emptyExtendedHistory-buttonMessage": "OK"
   }
 }

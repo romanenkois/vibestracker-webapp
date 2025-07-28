@@ -1,6 +1,6 @@
 <div class="p-6 max-w mx-auto flex flex-col gap-6 justify-center items-center">
   <div class="w-full h-full min-h-[500px] flex justify-center items-center">
-    @if (this.processingStatus == 'idle' || this.processingStatus == 'error') {
+    @if (this.processingStatus() == 'idle' || this.processingStatus() == 'error') {
       <form class="w-full flex flex-col gap-6">
         <div class="rounded-md w-full p-8 bg-dark cursor-pointer">
           <div class="flex flex-col items-center justify-center gap-4">
@@ -22,9 +22,7 @@
               <p class="text-lg font-black">Drop your ZIP file here</p>
               <p class="text-sm">or</p>
             </div>
-            <label
-              class="relative cursor-pointer bg-primary font-black py-2 px-4 rounded-sm"
-            >
+            <label class="relative cursor-pointer bg-primary font-black py-2 px-4 rounded-sm">
               Select a file
               <input
                 type="file"
@@ -41,19 +39,10 @@
       <div class="w-full h-full bg-dark shadow rounded-md p-4">
         <div class="flex items-center gap-3">
           <div class="flex-shrink-0">
-            <div
-              [class]="
-                'h-8 w-8 rounded-full flex items-center justify-center bg-pure-white text-primary'
-              "
-            >
-              @switch (this.processingStatus) {
+            <div [class]="'h-8 w-8 rounded-full flex items-center justify-center bg-pure-white text-primary'">
+              @switch (this.processingStatus()) {
                 @case ('all-prepared') {
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path
                       fill-rule="evenodd"
                       d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -62,12 +51,7 @@
                   </svg>
                 }
                 @case ('all-prepared') {
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path
                       fill-rule="evenodd"
                       d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -77,12 +61,7 @@
                 }
 
                 @case ('merged') {
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path
                       fill-rule="evenodd"
                       d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -92,20 +71,8 @@
                 }
 
                 @default {
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5 animate-spin"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                  >
-                    <circle
-                      class="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      stroke-width="4"
-                    ></circle>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 animate-spin" viewBox="0 0 24 24" fill="none">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path
                       class="opacity-75"
                       fill="currentColor"
@@ -117,19 +84,19 @@
             </div>
           </div>
           <div class="flex-1 min-w-0">
-            @if (this.processingStatus !== 'all-prepared') {
+            @if (this.processingStatus() !== 'all-prepared') {
               <p class="text-sm w-full text-gray truncate">
-                {{ this.processingStatus }}
+                {{ this.processingStatus() }}
               </p>
-            } @else if (this.canUpload) {
+            } @else if (this.canUpload()) {
               <button (click)="this.uploadHistory()">upload</button>
             } @else {
               <p>waiting readyness to upload...</p>
             }
-            @if (this.startingDate && this.endingDate) {
+            @if (this.startingDate() && this.endingDate()) {
               <p class="text-sm text-gray">
-                {{ this.startingDate | date: 'dd/MM/yyyy' }} -
-                {{ this.endingDate | date: 'dd/MM/yyyy' }}
+                {{ this.startingDate() | date: 'dd/MM/yyyy' }} -
+                {{ this.endingDate() | date: 'dd/MM/yyyy' }}
               </p>
             }
           </div>

@@ -24,6 +24,10 @@
 
     "alert_sessionExpired-title": "Session expired",
     "alert_sessionExpired-message": "Session token has expired, you will be redirected to the login page.",
-    "alert_sessionExpired-buttonMessage": "Ok"
+    "alert_sessionExpired-buttonMessage": "Ok",
+
+    "alert_emptyExtendedHistory-title": "Empty extended history",
+    "alert_emptyExtendedHistory-message": "The extended history file you provided had no valid records to upload. Make sure you upload the correct file.",
+    "alert_emptyExtendedHistory-buttonMessage": "OK"
   }
 }
