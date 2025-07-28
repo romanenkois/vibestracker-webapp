@@ -4,7 +4,7 @@
   </div>
   @if (this.loadingState === 'idle' || this.loadingState === 'error') {
     <a [href]="this.getAuthorizationUrl()" class="w-full">
-      <button class="w-full py-2 bg-primary rounded-sm">
+      <button class="w-full py-2 bg-primary rounded-sm hover:bg-primary-light">
         <p class="font-black">{{ 'login_loginWithSpotify' | translate }}</p>
       </button>
     </a>

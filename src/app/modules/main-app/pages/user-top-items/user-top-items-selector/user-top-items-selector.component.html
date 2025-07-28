@@ -1,21 +1,21 @@
 <div class="p-2 no-select">
   <div class="flex justify-between align-center">
     <button
-      class="p-2 w-full flex justify-between align-center text-gray"
+      class="p-2 w-full flex justify-between align-center text-gray hover:text-primary-light"
       [class]="this.itemsType === 'artists' ? 'text-primary' : ''"
       (click)="this.changeItemsType('artists')"
     >
       <p class="font-black w-full text-center">{{ 'selector_artists' | translate }}</p>
     </button>
     <button
-      class="p-2 w-full flex justify-between align-center text-gray"
+      class="p-2 w-full flex justify-between align-center text-gray hover:text-primary-light"
       [class]="this.itemsType === 'albums' ? 'text-primary' : ''"
       (click)="this.changeItemsType('albums')"
     >
       <p class="w-full text-center">{{ 'selector_albums' | translate }}</p>
     </button>
     <button
-      class="p-2 w-full flex justify-between align-center text-gray"
+      class="p-2 w-full flex justify-between align-center text-gray hover:text-primary-light"
       [class]="this.itemsType === 'tracks' ? 'text-primary' : ''"
       (click)="this.changeItemsType('tracks')"
     >
@@ -25,21 +25,21 @@
 
   <div class="flex justify-between align-center">
     <button
-      class="p-2 w-full flex justify-between align-center text-gray"
+      class="p-2 w-full flex justify-between align-center text-gray hover:text-primary-light"
       [class]="this.periodOfTime === 'short_term' ? 'text-primary' : ''"
       (click)="this.changePeriodOfTime('short_term')"
     >
       <p class="w-full text-center">{{ 'selector_shortTerm' | translate }}</p>
     </button>
     <button
-      class="p-2 w-full flex justify-between align-center text-gray"
+      class="p-2 w-full flex justify-between align-center text-gray hover:text-primary-light"
       [class]="this.periodOfTime === 'medium_term' ? 'text-primary' : ''"
       (click)="this.changePeriodOfTime('medium_term')"
     >
       <p class="w-full text-center">{{ 'selector_mediumTerm' | translate }}</p>
     </button>
     <button
-      class="p-2 w-full flex justify-between align-center text-gray"
+      class="p-2 w-full flex justify-between align-center text-gray hover:text-primary-light"
       [class]="this.periodOfTime === 'long_term' ? 'text-primary' : ''"
       (click)="this.changePeriodOfTime('long_term')"
     >

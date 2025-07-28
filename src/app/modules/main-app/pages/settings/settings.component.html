@@ -7,15 +7,15 @@
   <div class="w-full gap-2 flex flex-col justify-center sm:w-[450px]">
     <h2 class="text-xl font-bold">{{ 'settings_title-general' | translate }}</h2>
 
-    <button class="text-lg w-full py-1 px-12 bg-primary rounded-sm" (click)="this.logOut()">
+    <button class="text-lg w-full py-1 px-12 bg-primary rounded-sm hover:bg-primary-light" (click)="this.logOut()">
       {{ 'settings_logout' | translate }}
     </button>
 
-    <button class="text-lg w-full py-1 px-12 bg-primary rounded-sm" (click)="this.deleteExtendedHistory()">
+    <button class="text-lg w-full py-1 px-12 bg-primary rounded-sm hover:bg-primary-light" (click)="this.deleteExtendedHistory()">
       {{ 'settings_deleteExtendedHistory' | translate }}
     </button>
 
-    <button class="text-lg w-full py-1 px-12 bg-primary rounded-sm" (click)="this.clearIgnoredTracks()">
+    <button class="text-lg w-full py-1 px-12 bg-primary rounded-sm hover:bg-primary-light" (click)="this.clearIgnoredTracks()">
       {{ 'settings_clearIgnoredTracks' | translate }}
     </button>
   </div>
