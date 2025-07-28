@@ -17,14 +17,15 @@
         </div>
       </div>
 
-      <div
+      <!-- TODO -->
+      <!-- <div
         class="absolute top-2 right-2 p-2 w-max h-max bg-dark-light flex gap-[2px] rounded-md cursor-pointer"
         (click)="this.ignoreTrack()"
       >
         <div class="w-[4px] h-[4px] rounded-full bg-gray"></div>
         <div class="w-[4px] h-[4px] rounded-full bg-gray"></div>
         <div class="w-[4px] h-[4px] rounded-full bg-gray"></div>
-      </div>
+      </div> -->
 
       <!-- TRACK DATA -->
       <div class="flex-1 overflow-hidden relative">
@@ -42,7 +43,7 @@
                 </span>
               } @else {
                 <span class="text-xl w-full">
-                  <span class="hidden sm:inline"> {{ this.index() }}# </span>
+                  <span> {{ this.index() }}# </span>
                 </span>
               }
             </p>
