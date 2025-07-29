@@ -4,10 +4,11 @@ import { UserTopItemsSimpleCommand } from '@commands';
 import { CardSimpleAlbumComponent, CardSimpleArtistComponent, CardSimpleTrackComponent } from '@widgets';
 import { UserTopItemsSimpleStorage } from '@storage';
 import { Album, Artist, Genre, LoadingState, SimpleItemsSelection, SimpleTimeFrame, Track } from '@types';
+import { LoadingSpinner } from "@features";
 
 @Component({
   selector: 'app-user-top-items-simple',
-  imports: [CardSimpleAlbumComponent, CardSimpleArtistComponent, CardSimpleTrackComponent],
+  imports: [CardSimpleAlbumComponent, CardSimpleArtistComponent, CardSimpleTrackComponent, LoadingSpinner],
   templateUrl: './user-top-items-simple.component.html',
   styleUrl: './user-top-items-simple.component.scss',
 })
@@ -64,11 +65,13 @@ export class UserTopItemsSimpleComponent implements OnInit {
 
   protected loadMoreItems() {
     const itemType = this.itemsType();
+    console.log('load more items', itemType);
     if (itemType !== 'genres' && itemType !== 'albums') {
       this.UserTopItemsCommand.loadInMoreUserTopItems({
         type: itemType,
         timeFrame: this.periodOfTime(),
       }).subscribe((state: LoadingState) => {
+        console.log(state);
         this.loadingState.set(state);
       });
     }

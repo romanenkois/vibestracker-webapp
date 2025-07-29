@@ -1,4 +1,4 @@
-<div class="p-2">
+<div class="p-2 flex flex-col gap-4">
   @if (this.userTopItems() && this.userTopItems().length > 0) {
     <div
       class="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4 sm:grid-cols-[repeat(auto-fill,minmax(240px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(300px,1fr))]"
@@ -7,41 +7,42 @@
         <div class="w-full h-full">
           @switch (this.itemsType()) {
             @case ('albums') {
-              <app-card-simple-album
-                [album]="$any(item)"
-                [index]="$index + 1"
-              ></app-card-simple-album>
+              <app-card-simple-album [album]="$any(item)" [index]="$index + 1" />
             }
             @case ('artists') {
-              <app-card-simple-artist
-                [artist]="$any(item)"
-                [index]="$index + 1 || 0"
-              ></app-card-simple-artist>
+              <app-card-simple-artist [artist]="$any(item)" [index]="$index + 1 || 0" />
             }
             @case ('tracks') {
-              <app-card-simple-track
-                [track]="$any(item)"
-                [index]="$index + 1"
-              ></app-card-simple-track>
+              <app-card-simple-track [track]="$any(item)" [index]="$index + 1" />
             }
           }
         </div>
       }
     </div>
-    <div class="w-full flex justify-center align-center mt-4">
+    <div class="w-full h-full flex justify-center items-center">
       @if (this.loadingState() === 'idle' || this.loadingState() === 'resolved') {
-        <button class="w-full p-4" (click)="this.loadMoreItems()">
-          <p class="font-3xl">load more</p>
-        </button>
-      } @else if (
-        this.loadingState() === 'loading' || this.loadingState() === 'appending'
-      ) {
+        @if (this.itemsType() !== 'genres' && this.itemsType() !== 'albums') {
+          <button class="w-full p-4" (click)="this.loadMoreItems()">
+            <p class="font-3xl">load more</p>
+          </button>
+        }
+      } @else if (true || this.loadingState() === 'loading' || this.loadingState() === 'appending') {
         <p class="font-3xl p-4">loading...</p>
+        <div class="w-max h-full flex justify-center items-center">
+          <app-loading-spinner class="w-8 h-8"/>
+        </div>
       } @else if (this.loadingState() === 'all-resolved') {
         <p class="font-3xl p-4">all available data is loaded</p>
       } @else {
         <p class="font-3xl p-4">error loading data</p>
       }
+    </div>
+  } @else if (this.loadingState() === 'loading' || this.loadingState() === 'appending') {
+    <div class="w-full h-full flex justify-center items-center">
+      <p class="font-3xl p-4">loading...</p>
+      <div class="w-max h-full flex justify-center items-center">
+        <app-loading-spinner class="w-8 h-8"/>
+      </div>
     </div>
   }
 </div>
