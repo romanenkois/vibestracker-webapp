@@ -1,6 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { ToastNotificationsService } from '../../services/toast-notifications.service';
 import { TranslatePipe } from '@pipes';
+import { ToastNotification } from '../../types/shared';
 
 @Component({
   selector: 'app-screen-toaster-notifications',
@@ -14,4 +15,12 @@ export class ScreenToasterNotificationsComponent {
   protected screenToasterNotifications = computed(() => {
     return this.screenToasterNotificationsService.getNotifications();
   });
+
+  protected onDismissNotification(id: string): void {
+    this.screenToasterNotificationsService.removeNotification(id);
+  }
+
+  protected onDismissAll(): void {
+    this.screenToasterNotificationsService.removeAllNotifications();
+  }
 }

@@ -1,13 +1,54 @@
 <div class="w-full h-full relative">
-  <div class="absolute top-0 right-0">
-    @for (notification of this.screenToasterNotifications(); track $index) {
-      <div class="item w-full sm:w-[450px] flex flex-col" [attr.data-id]="notification.id">
-        @if (notification.title) {
-          <h4 class="w-full">{{ (notification.title || '' | translate) || notification.title }}</h4>
-        }
-        @if (notification.message) {
-          <p class="w-full truncate-#2">{{ (notification.message || '' | translate) || notification.message }}</p>
-        }
+  <div class="absolute top-0 right-0 z-50 space-y-2 p-4">
+    <!-- @if (this.screenToasterNotifications().length > 0) {
+      <div class="flex justify-end mb-2">
+        <button
+          class="text-xs px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded-md transition-colors"
+          (click)="onDismissAll()"
+          type="button"
+        >
+          {{ 'DISMISS_ALL' | translate }}
+        </button>
+      </div>
+    } -->
+
+    @for (notification of this.screenToasterNotifications(); track notification.id) {
+      <div
+        class="item w-full sm:w-[450px] flex flex-col relative shadow-lg rounded-lg p-4 transition-all duration-300 ease-in-out "
+        [classList]="{
+          'bg-red-900 text-white': notification.type === 'error',
+          'bg-green-900 text-white': notification.type === 'success',
+          'bg-yellow-900 text-white': notification.type === 'warning',
+          'bg-dark text-white': notification.type === 'info',
+        }"
+
+        [attr.data-id]="notification.id"
+      >
+      <!-- {{notification.type}}
+        <button
+          class="absolute top-2 right-2 w-6 h-6 flex items-center justify-center text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-200 transition-colors"
+          (click)="onDismissNotification(notification.id)"
+          type="button"
+          aria-label="Dismiss notification"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button> -->
+
+        <!-- Content -->
+        <div class="pr-8">
+          @if (notification.title) {
+            <h4 class="w-full font-semibold text-sm mb-1 text-gray-800">
+              {{ (notification.title | translate) || notification.title }}
+            </h4>
+          }
+          @if (notification.message) {
+            <p class="w-full text-sm text-gray-600 line-clamp-3">
+              {{ (notification.message | translate) || notification.message }}
+            </p>
+          }
+        </div>
       </div>
     }
   </div>

@@ -1,5 +1,5 @@
-import { Component, HostListener, inject, signal } from '@angular/core';
-import { TranslationService } from '@services';
+import { Component, HostListener, inject, Signal, signal, WritableSignal } from '@angular/core';
+import { ToastNotificationsService, TranslationService } from '@services';
 import { SupportedLocale } from '@types';
 
 @Component({
@@ -9,32 +9,13 @@ import { SupportedLocale } from '@types';
   styleUrl: './language-selector.scss',
 })
 export class LanguageSelectorComponent {
-  translationService = inject(TranslationService);
+  private _translationService: TranslationService = inject(TranslationService);
+  private _toastNotificationsService: ToastNotificationsService = inject(ToastNotificationsService);
 
-  isOpen = signal(false);
-  currentLocale = signal<SupportedLocale>('en-US');
-  supportedLocales: SupportedLocale[] = ['en-US', 'uk', 'ja'];
-  isLoading = signal(false);
-
-  constructor() {
-    // Initialize with current locale from service
-    this.currentLocale.set(this.translationService.getCurrentLocale());
-    this.isLoading.set(this.translationService.getIsLoading());
-
-    // Subscribe to locale changes
-    this.translationService.getCurrentLocale$().subscribe((locale) => {
-      this.currentLocale.set(locale);
-    });
-
-    // Monitor loading state changes
-    // Note: In a real app, you might want to use computed() or effect() for this
-    setInterval(() => {
-      this.isLoading.set(this.translationService.getIsLoading());
-    }, 100);
-  }
-  toggleDropdown(): void {
-    this.isOpen.update((open) => !open);
-  }
+  protected isOpen: WritableSignal<boolean> = signal(false);
+  protected currentLocale: Signal<SupportedLocale> = this._translationService.getCurrentLocale();
+  protected supportedLocales: SupportedLocale[] = this._translationService.supportedLocales;
+  protected isLoading: WritableSignal<boolean> = signal(false);
 
   @HostListener('document:click', ['$event'])
   listenToClickOutside(event: MouseEvent): void {
@@ -46,18 +27,26 @@ export class LanguageSelectorComponent {
 
   async selectLanguage(locale: SupportedLocale): Promise<void> {
     try {
-      await this.translationService.setLocale(locale);
+      await this._translationService.setLocale(locale);
       this.isOpen.set(false);
+      this._toastNotificationsService.sendNotification({
+        type: 'success',
+        message: `Language changed to ${this.getLocaleDisplayName(locale)}`,
+      });
     } catch (error) {
+      this._toastNotificationsService.sendNotification({
+        type: 'error',
+        message: `Failed to change language to ${this.getLocaleDisplayName(locale)}`,
+      });
       console.error('Failed to change language:', error);
     }
   }
 
-  getCurrentLanguageDisplay(): string {
+  protected getCurrentLanguageDisplay(): string {
     return this.getLocaleDisplayName(this.currentLocale());
   }
 
-  getLocaleDisplayName(locale: SupportedLocale): string {
-    return this.translationService.getLocaleDisplayName(locale);
+  protected getLocaleDisplayName(locale: SupportedLocale): string {
+    return this._translationService.getLocaleDisplayName(locale);
   }
 }

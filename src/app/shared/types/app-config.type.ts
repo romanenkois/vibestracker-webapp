@@ -1,4 +1,5 @@
-import { UserSettings } from "./user-settings.type";
+import { SupportedLocale } from './locale.type';
+import { UserSettings } from './user-settings.type';
 
 export type AppConfig = {
   api: {
@@ -12,9 +13,13 @@ export type AppConfig = {
       scopes: string[];
       showDialog: 'true' | 'false';
     };
-  },
+  };
   analyzer: {
     maxTopTracksAnalyze: number;
-  },
+  };
+  localization: {
+    defaultLocale: SupportedLocale;
+    supportedLocales: SupportedLocale[];
+  };
   defaultUserSettings: UserSettings;
 };

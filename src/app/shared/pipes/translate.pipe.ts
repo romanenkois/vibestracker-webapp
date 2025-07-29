@@ -4,29 +4,29 @@ import { TranslationService } from '../../core/services/translation.service';
 @Pipe({
   name: 'translate',
   pure: false, // Make it impure so it updates when language changes
-  standalone: true
+  standalone: true,
 })
 export class TranslatePipe implements PipeTransform, OnDestroy {
-  private translationService = inject(TranslationService);
-  private cdr = inject(ChangeDetectorRef);
-  private translationUpdateEffect: any;
+  private _cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+  private _translationService: TranslationService = inject(TranslationService);
+  private _translationUpdateEffect: any;
 
   constructor() {
     // Create an effect that triggers change detection when translations change
-    this.translationUpdateEffect = effect(() => {
+    this._translationUpdateEffect = effect(() => {
       // Access the translations signal to make this effect reactive
-      this.translationService.getTranslations();
+      this._translationService.getTranslations();
       // Trigger change detection when translations change
-      this.cdr.markForCheck();
+      this._cdr.markForCheck();
     });
   }
 
   transform(key: string, fallback?: string): string {
-    const translation = this.translationService.translate(key, fallback);
+    const translation = this._translationService.translate(key, fallback);
 
     // If translation service isn't initialized yet and we're showing a key,
     // show a formatted version instead of the raw key
-    if (!this.translationService.isInitialized() && translation === key && !fallback) {
+    if (!this._translationService.isInitialized() && translation === key && !fallback) {
       return this.formatKeyAsFallback(key);
     }
 
@@ -43,13 +43,12 @@ export class TranslatePipe implements PipeTransform, OnDestroy {
       .replace(/_/g, ' ') // Replace underscores with spaces
       .toLowerCase()
       .trim()
-      .replace(/^./, str => str.toUpperCase()); // Capitalize first letter
+      .replace(/^./, (str) => str.toUpperCase()); // Capitalize first letter
   }
 
-  ngOnDestroy(): void {
-    // Clean up the effect
-    if (this.translationUpdateEffect) {
-      this.translationUpdateEffect.destroy();
+  ngOnDestroy() {
+    if (this._translationUpdateEffect) {
+      this._translationUpdateEffect.destroy();
     }
   }
 }

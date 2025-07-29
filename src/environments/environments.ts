@@ -24,6 +24,10 @@ export const $appConfig: AppConfig = {
   analyzer: {
     maxTopTracksAnalyze: 2000,
   },
+  localization: {
+    defaultLocale: 'en-US',
+    supportedLocales: ['en-US', 'uk', 'ja'],
+  },
   defaultUserSettings: {
     theme: 'dark',
     locale: 'en-US',

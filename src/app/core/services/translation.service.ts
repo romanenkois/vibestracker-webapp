@@ -1,8 +1,9 @@
-import { Injectable, signal, WritableSignal } from '@angular/core';
+import { Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { SupportedLocale, TranslationFile } from '@types';
+import { $appConfig } from '@environments';
 
 // This service was entirely vibecoded ^^
 // fuck you illya in future
@@ -11,15 +12,15 @@ import { SupportedLocale, TranslationFile } from '@types';
   providedIn: 'root',
 })
 export class TranslationService {
-  private readonly currentLocale: WritableSignal<SupportedLocale> = signal('en-US');
+  private readonly currentLocale: WritableSignal<SupportedLocale> = signal($appConfig.localization.defaultLocale);
   private readonly translations: WritableSignal<Record<string, string>> = signal({});
   private readonly isLoading: WritableSignal<boolean> = signal(false);
   private initialized = false;
 
   // Observable for components that need to react to language changes
-  private localeChange$ = new BehaviorSubject<SupportedLocale>('en-US');
+  private localeChange$ = new BehaviorSubject<SupportedLocale>(this.currentLocale());
 
-  public readonly supportedLocales: SupportedLocale[] = ['en-US', 'uk', 'ja'];
+  public readonly supportedLocales: SupportedLocale[] = $appConfig.localization.supportedLocales;
 
   constructor(private http: HttpClient) {
     // Don't auto-initialize here - let APP_INITIALIZER handle it
@@ -28,16 +29,20 @@ export class TranslationService {
   /**
    * Get current locale as signal
    */
-  getCurrentLocale(): SupportedLocale {
-    return this.currentLocale();
+  getCurrentLocale(): Signal<SupportedLocale> {
+    return this.currentLocale;
   }
 
   /**
    * Get current locale as observable for reactive components
    */
-  getCurrentLocale$(): Observable<SupportedLocale> {
-    return this.localeChange$.asObservable();
-  }
+  // getCurrentLocale$(): Observable<SupportedLocale> {
+  //   return this.localeChange$.asObservable();
+  // }
+
+  // getCurrentLocale(): SupportedLocale {
+  //   return this.currentLocale();
+  // }
 
   /**
    * Get current translations as signal
@@ -181,27 +186,6 @@ export class TranslationService {
       default:
         return 'translations/source.json';
     }
-  }
-
-  /**
-   * Detect browser locale
-   */
-  private getBrowserLocale(): string {
-    if (typeof navigator === 'undefined') {
-      return 'en-US';
-    }
-
-    const lang = navigator.language || 'en-US';
-
-    // Map browser locales to our supported locales
-    if (lang.startsWith('uk') || lang.startsWith('ua')) {
-      return 'uk';
-    }
-    if (lang.startsWith('ja')) {
-      return 'ja';
-    }
-
-    return 'en-US';
   }
 
   /**
