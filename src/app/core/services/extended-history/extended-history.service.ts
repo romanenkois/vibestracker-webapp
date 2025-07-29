@@ -1,5 +1,5 @@
 import { literalMap } from '@angular/compiler';
-import { computed, inject, Injectable, Signal } from '@angular/core';
+import { computed, inject, Injectable, signal, Signal, WritableSignal } from '@angular/core';
 import { SpotifyItemsCommand } from '@commands';
 import { UserExtendedDataStorage, UserStorage, SpotifyItemsStorage } from '@storage';
 import { Track, ExtendedStreamingHistory, LoadingState } from '@types';
@@ -61,33 +61,37 @@ export class ExtendedHistoryService {
 
   // const
 
-  public topTracks: Signal<{ id: string; ms_played: number }[]> = computed(() => {
-    const userExtendedData = this.userExtendedDataStorage.getUserExtendedData();
+  public topTracks: WritableSignal<{ id: string; ms_played: number }[]> = signal([]);
 
-    console.log('recalculating top tracks');
-    const topTracks = userExtendedData
-      .reduce(
-        (acc: { id: string; ms_played: number }[], item: ExtendedStreamingHistory) => {
-          const id = item.uri;
-          const existingTrack = acc.find((track) => track.id === id);
+  // computed(() => {
+  //   const userExtendedData = this.userExtendedDataStorage.getUserExtendedData();
 
-          if (existingTrack) {
-            existingTrack.ms_played += item.ms_played;
-          } else {
-            acc.push({ id, ms_played: item.ms_played });
-          }
-          return acc;
-        },
-        [] as { id: string; ms_played: number }[],
-      )
-      .sort((a: { id: string; ms_played: number }, b: { id: string; ms_played: number }) => b.ms_played - a.ms_played);
+  //   console.log('recalculating top tracks');
+  //   const topTracks = userExtendedData
+  //     .reduce(
+  //       (acc: { id: string; ms_played: number }[], item: ExtendedStreamingHistory) => {
+  //         const id = item.uri;
+  //         const existingTrack = acc.find((track) => track.id === id);
 
-    console.log('topTracks', topTracks);
-    return topTracks;
-  });
+  //         if (existingTrack) {
+  //           existingTrack.ms_played += item.ms_played;
+  //         } else {
+  //           acc.push({ id, ms_played: item.ms_played });
+  //         }
+  //         return acc;
+  //       },
+  //       [] as { id: string; ms_played: number }[],
+  //     )
+  //     .sort((a: { id: string; ms_played: number }, b: { id: string; ms_played: number }) => b.ms_played - a.ms_played);
 
-  public getTopTracks(params: { startingDate?: Date; endingDate?: Date }): { id: string; ms_played: number }[] {
-    const userExtendedData = this.userExtendedDataStorage.getUserExtendedData();
+  //   console.log('topTracks', topTracks);
+  //   return topTracks;
+  // });
+
+  getTopTracks = (params: { data: any; startingDate?: Date; endingDate?: Date }): { id: string; ms_played: number }[] => {
+    // const userExtendedData = this.userExtendedDataStorage.getUserExtendedData();
+
+    const userExtendedData = params.data as ExtendedStreamingHistory[];
 
     const filteredUserExtendedData = userExtendedData
       .reduce(
@@ -112,9 +116,28 @@ export class ExtendedHistoryService {
         [] as { id: string; ms_played: number; ts: string }[],
       )
       .sort((a: { id: string; ms_played: number }, b: { id: string; ms_played: number }) => b.ms_played - a.ms_played)
-      .slice(0, 1000);
+      // .slice(0, 1000);
 
-    console.log('filteredUserExtendedData', filteredUserExtendedData);
+    // console.log('filteredUserExtendedData', filteredUserExtendedData);
     return filteredUserExtendedData;
+  }
+
+  public getTopTracksIds(params: { startingDate?: Date; endingDate?: Date }): Observable<string[]> {
+    return new Observable((observer) => {
+
+
+
+      runInWorker(this.getTopTracks, { data: this.userExtendedDataStorage.getUserExtendedData(), ...params })
+        .then((topTracks) => {
+          this.topTracks.set(topTracks);
+          // console.log('topTracks', topTracks);
+          const topTrackIds = topTracks.map((track) => track.id);
+          observer.next(topTrackIds);
+          observer.complete();
+        })
+        .catch((error) => {
+          observer.error(error);
+        });
+    });
   }
 }

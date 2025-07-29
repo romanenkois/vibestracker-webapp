@@ -1,8 +1,9 @@
 import { Component, HostListener, inject, signal, WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ExtendedHistoryPreparerService, ScreenNotificationService } from '@services';
+import { ExtendedHistoryPreparerService, ScreenNotificationService, ToastNotificationsService } from '@services';
 import { ExtendedHistoryPreparingState, ExtendedStreamingHistory, UploadingStatus } from '@types';
 import { ExtendedHistoryCommand } from '@commands';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-extended-history-upload-form',
@@ -12,9 +13,11 @@ import { ExtendedHistoryCommand } from '@commands';
   styleUrls: ['./extended-history-upload-form.component.scss'],
 })
 export class ExtendedHistoryUploadFormComponent {
+  private _router: Router = inject(Router);
   private _extendedHistoryPreparerService: ExtendedHistoryPreparerService = inject(ExtendedHistoryPreparerService);
   private _extendedHistoryCommand: ExtendedHistoryCommand = inject(ExtendedHistoryCommand);
   private _screenNotificationService: ScreenNotificationService = inject(ScreenNotificationService);
+  private _toastNotificationsService: ToastNotificationsService = inject(ToastNotificationsService);
 
   protected processingStatus: WritableSignal<ExtendedHistoryPreparingState> = signal('idle');
   protected uploadingStatus: WritableSignal<UploadingStatus> = signal('idle');
@@ -91,6 +94,18 @@ export class ExtendedHistoryUploadFormComponent {
       })
       .subscribe((status: UploadingStatus) => {
         this.uploadingStatus.set(status);
+        if (status === 'resolved') {
+          this._toastNotificationsService.sendNotification({
+            title: 'Extended history uploaded successfully',
+            type: 'success',
+          });
+          this._router.navigate(['/extended-history']);
+        } else if (status === 'error') {
+          this._toastNotificationsService.sendNotification({
+            title: 'Error uploading extended history to the server',
+            type: 'error',
+          });
+        }
       });
   }
 }

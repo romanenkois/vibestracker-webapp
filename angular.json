@@ -76,7 +76,8 @@
               "includePaths": ["src/styles", "node_modules"]
             },
             "scripts": [],
-            "preserveSymlinks": true
+            "preserveSymlinks": true,
+            "webWorkerTsConfig": "tsconfig.worker.json"
           },
           "configurations": {
             "production": {
