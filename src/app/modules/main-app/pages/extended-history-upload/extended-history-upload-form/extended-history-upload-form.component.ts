@@ -81,9 +81,9 @@ export class ExtendedHistoryUploadFormComponent {
   protected uploadHistory() {
     if (this.history().length === 0) {
       this._screenNotificationService.sendMessage({
-        title: 'alert_emptyExtendedHistory-title',
-        message: 'alert_emptyExtendedHistory-message',
-        buttonMessage: 'alert_emptyExtendedHistory-buttonMessage',
+        title: '@@alert_emptyExtendedHistory-title',
+        message: '@@alert_emptyExtendedHistory-message',
+        buttonMessage: '@@alert_emptyExtendedHistory-buttonMessage',
       });
       return;
     }

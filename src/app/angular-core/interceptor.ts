@@ -29,9 +29,9 @@ export class AuthorizationInterceptor implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
           this.screenNotificationService.sendMessage({
-            title: 'alert_sessionExpired-title',
-            message: 'alert_sessionExpired-message',
-            buttonMessage: 'alert_sessionExpired-buttonMessage',
+            title: '@@alert_sessionExpired-title',
+            message: '@@alert_sessionExpired-message',
+            buttonMessage: '@@alert_sessionExpired-buttonMessage',
           });
           this.userStorage.setToken(null);
           this.userStorage.setUser(null);

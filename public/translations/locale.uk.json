@@ -1,33 +1,38 @@
 {
   "locale": "uk",
   "translations": {
-    "vibesTrackerTitle": "vibes tracker",
+    "@@vibesTrackerTitle": "vibes tracker",
 
-    "login_loginWithSpotify": "увійти через spotify",
-    "login_authorizing-loading": "проводимо авторизацію...",
+    "@@login_loginWithSpotify": "увійти через spotify",
+    "@@login_authorizing-loading": "проводимо авторизацію...",
 
-    "settings_title-general": "загальні налаштування",
-    "settings_title-language": "мовні налаштування",
-    "settings_logout": "вийти",
-    "settings_deleteExtendedHistory": "видалити розширену історію",
-    "settings_clearIgnoredTracks": "очистити проігноровані треки",
+    "@@settings_title-general": "загальні налаштування",
+    "@@settings_title-language": "мовні налаштування",
+    "@@settings_logout": "вийти",
+    "@@settings_deleteExtendedHistory": "видалити розширену історію",
+    "@@settings_clearIgnoredTracks": "очистити проігноровані треки",
 
-    "nav_simpleTop": "простий топ",
-    "nav_extendedTop": "розширений топ",
+    "@@nav_simpleTop": "простий топ",
+    "@@nav_extendedTop": "розширений топ",
 
-    "selector_artists": "виконавці",
-    "selector_tracks": "треки",
-    "selector_albums": "альбоми",
-    "selector_shortTerm": "4 тижні",
-    "selector_mediumTerm": "6 місяців",
-    "selector_longTerm": "12 місяців",
+    "@@selector_artists": "виконавці",
+    "@@selector_tracks": "треки",
+    "@@selector_albums": "альбоми",
+    "@@selector_shortTerm": "4 тижні",
+    "@@selector_mediumTerm": "6 місяців",
+    "@@selector_longTerm": "12 місяців",
 
-    "alert_sessionExpired-title": "Сесія закінчилася",
-    "alert_sessionExpired-message": "Токен сесії закінчився, ви будете перенаправлені на сторінку логіну.",
-    "alert_sessionExpired-buttonMessage": "Ок",
+    "@@selector_loading": "завантаження",
+    "@@selector_load-more": "завантажити ще",
+    "@@selector_all-resolved": "всі доступні дані завантажено",
+    "@@selector_load-error": "помилка завантаження даних",
 
-    "alert_emptyExtendedHistory-title": "Empty extended history",
-    "alert_emptyExtendedHistory-message": "The extended history file you provided had no valid records to upload. Make sure you upload the correct file.",
-    "alert_emptyExtendedHistory-buttonMessage": "OK"
+    "@@alert_sessionExpired-title": "Сесія закінчилася",
+    "@@alert_sessionExpired-message": "Токен сесії закінчився, ви будете перенаправлені на сторінку логіну.",
+    "@@alert_sessionExpired-buttonMessage": "Ок",
+
+    "@@alert_emptyExtendedHistory-title": "Empty extended history",
+    "@@alert_emptyExtendedHistory-message": "The extended history file you provided had no valid records to upload. Make sure you upload the correct file.",
+    "@@alert_emptyExtendedHistory-buttonMessage": "OK"
   }
 }

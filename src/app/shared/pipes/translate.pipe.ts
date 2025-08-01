@@ -23,10 +23,12 @@ export class TranslatePipe implements PipeTransform, OnDestroy {
 
   transform(key: string, fallback?: string): string {
     const translation = this._translationService.translate(key, fallback);
+    // console.log(translation, key, fallback);
 
     // If translation service isn't initialized yet and we're showing a key,
     // show a formatted version instead of the raw key
-    if (!this._translationService.isInitialized() && translation === key && !fallback) {
+    if (!this._translationService.isInitialized() || (!translation && !fallback) || translation === key) {
+      console.warn(`Translation for key "${key}" not found.`);
       return this.formatKeyAsFallback(key);
     }
 
@@ -38,9 +40,12 @@ export class TranslatePipe implements PipeTransform, OnDestroy {
    */
   private formatKeyAsFallback(key: string): string {
     // Convert camelCase or snake_case to readable text
+    console.log(key);
     return key
+      .replace('@@', '') // Remove the '@@' prefix
       .replace(/([A-Z])/g, ' $1') // Add space before capital letters
       .replace(/_/g, ' ') // Replace underscores with spaces
+      .replace(/-/g, ' ') // Replace hyphens with spaces
       .toLowerCase()
       .trim()
       .replace(/^./, (str) => str.toUpperCase()); // Capitalize first letter

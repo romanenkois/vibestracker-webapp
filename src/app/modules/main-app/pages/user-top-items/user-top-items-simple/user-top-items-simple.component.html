@@ -19,29 +19,29 @@
         </div>
       }
     </div>
-    <div class="w-full h-full flex justify-center items-center">
+    <div class="w-full h-full flex gap-2 justify-center items-center">
       @if (this.loadingState() === 'idle' || this.loadingState() === 'resolved') {
         @if (this.itemsType() !== 'genres' && this.itemsType() !== 'albums') {
           <button class="w-full p-4" (click)="this.loadMoreItems()">
-            <p class="font-3xl">load more</p>
+            <p class="font-3xl">{{ '@@selector_load-more' | translate }}</p>
           </button>
         }
       } @else if (true || this.loadingState() === 'loading' || this.loadingState() === 'appending') {
-        <p class="font-3xl p-4">loading...</p>
+        <p class="font-3xl p-4">{{ '@@selector_loading' | translate }}</p>
         <div class="w-max h-full flex justify-center items-center">
-          <app-loading-spinner class="w-8 h-8"/>
+          <app-loading-spinner class="w-8 h-8" />
         </div>
       } @else if (this.loadingState() === 'all-resolved') {
-        <p class="font-3xl p-4">all available data is loaded</p>
+        <p class="font-3xl p-4">{{ '@@selector_all-resolved' | translate }}</p>
       } @else {
-        <p class="font-3xl p-4">error loading data</p>
+        <p class="font-3xl p-4">{{ '@@selector_load-error' | translate }}</p>
       }
     </div>
   } @else if (this.loadingState() === 'loading' || this.loadingState() === 'appending') {
-    <div class="w-full h-full flex justify-center items-center">
-      <p class="font-3xl p-4">loading...</p>
+    <div class="w-full h-full gap-2 flex justify-center items-center">
+      <p class="font-3xl p-4">{{ '@@selector_loading' | translate }}</p>
       <div class="w-max h-full flex justify-center items-center">
-        <app-loading-spinner class="w-8 h-8"/>
+        <app-loading-spinner class="w-8 h-8" />
       </div>
     </div>
   }

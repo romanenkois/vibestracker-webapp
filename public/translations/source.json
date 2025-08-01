@@ -1,34 +1,39 @@
 {
   "locale": "en-US",
   "translations": {
-    "vibesTrackerTitle": " vibes tracker ",
+    "@@vibesTrackerTitle": " vibes tracker ",
 
-    "login_loginWithSpotify": "login with spotify",
-    "login_authorizing-loading": "authorizing to vibes tracker...",
+    "@@login_loginWithSpotify": "login with spotify",
+    "@@login_authorizing-loading": "authorizing to vibes tracker...",
 
-    "settings_title-general": "general settings",
-    "settings_title-language": "language settings",
-    "settings_logout": "logout",
-    "settings_deleteExtendedHistory": "delete extended history",
-    "settings_clearIgnoredTracks": "clear ignored tracks",
+    "@@settings_title-general": "general settings",
+    "@@settings_title-language": "language settings",
+    "@@settings_logout": "logout",
+    "@@settings_deleteExtendedHistory": "delete extended history",
+    "@@settings_clearIgnoredTracks": "clear ignored tracks",
 
-    "nav_simpleTop": "simple top",
-    "nav_extendedTop": "extended top",
+    "@@nav_simpleTop": "simple top",
+    "@@nav_extendedTop": "extended top",
 
-    "selector_artists": "artists",
-    "selector_tracks": "tracks",
-    "selector_albums": "albums",
-    "selector_shortTerm": "4 weeks",
-    "selector_mediumTerm": "6 months",
-    "selector_longTerm": "12 months",
+    "@@selector_artists": "artists",
+    "@@selector_tracks": "tracks",
+    "@@selector_albums": "albums",
+    "@@selector_shortTerm": "4 weeks",
+    "@@selector_mediumTerm": "6 months",
+    "@@selector_longTerm": "12 months",
 
-    "alert_sessionExpired-title": "Session expired",
-    "alert_sessionExpired-message": "Session token has expired, you will be redirected to the login page.",
-    "alert_sessionExpired-buttonMessage": "Ok",
+    "@@selector_loading": "loading",
+    "@@selector_load-more": "load more",
+    "@@selector_all-resolved": "all available data is loaded",
+    "@@selector_load-error": "error loading data",
 
-    "alert_emptyExtendedHistory-title": "Empty extended history",
-    "alert_emptyExtendedHistory-message": "The extended history file you provided had no valid records to upload. Make sure you upload the correct file.",
-    "alert_emptyExtendedHistory-buttonMessage": "OK",
+    "@@alert_sessionExpired-title": "Session expired",
+    "@@alert_sessionExpired-message": "Session token has expired, you will be redirected to the login page.",
+    "@@alert_sessionExpired-buttonMessage": "Ok",
+
+    "@@alert_emptyExtendedHistory-title": "Empty extended history",
+    "@@alert_emptyExtendedHistory-message": "The extended history file you provided had no valid records to upload. Make sure you upload the correct file.",
+    "@@alert_emptyExtendedHistory-buttonMessage": "OK",
 
     "DISMISS_ALL": "dismiss all"
   }

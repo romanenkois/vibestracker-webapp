@@ -4,11 +4,18 @@ import { UserTopItemsSimpleCommand } from '@commands';
 import { CardSimpleAlbumComponent, CardSimpleArtistComponent, CardSimpleTrackComponent } from '@widgets';
 import { UserTopItemsSimpleStorage } from '@storage';
 import { Album, Artist, Genre, LoadingState, SimpleItemsSelection, SimpleTimeFrame, Track } from '@types';
-import { LoadingSpinner } from "@features";
+import { LoadingSpinner } from '@features';
+import { TranslatePipe } from '@pipes';
 
 @Component({
   selector: 'app-user-top-items-simple',
-  imports: [CardSimpleAlbumComponent, CardSimpleArtistComponent, CardSimpleTrackComponent, LoadingSpinner],
+  imports: [
+    CardSimpleAlbumComponent,
+    CardSimpleArtistComponent,
+    CardSimpleTrackComponent,
+    LoadingSpinner,
+    TranslatePipe,
+  ],
   templateUrl: './user-top-items-simple.component.html',
   styleUrl: './user-top-items-simple.component.scss',
 })
