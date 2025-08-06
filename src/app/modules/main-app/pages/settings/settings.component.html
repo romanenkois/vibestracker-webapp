@@ -11,9 +11,15 @@
       {{ '@@settings_logout' | translate }}
     </button>
 
+    @if (this.deleteExtendedHistoryStatus() === 'idle' || this.deleteExtendedHistoryStatus() === 'resolved') {
+
     <button class="text-lg w-full py-1 px-12 bg-primary rounded-sm hover:bg-primary-light" (click)="this.deleteExtendedHistory()">
+      <div>
+        <app-loading-spinner />
+      </div>
       {{ '@@settings_deleteExtendedHistory' | translate }}
     </button>
+  }
 
     <button class="text-lg w-full py-1 px-12 bg-primary rounded-sm hover:bg-primary-light" (click)="this.clearIgnoredTracks()">
       {{ '@@settings_clearIgnoredTracks' | translate }}
