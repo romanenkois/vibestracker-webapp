@@ -12,6 +12,7 @@
 
       "@modules/*": ["src/app/modules/*"],
 
+      "@directives": ["src/app/shared/directives/index.ts"],
       "@features": ["src/app/shared/features/index.ts"],
       "@mappers": ["src/app/shared/mappers/index.ts"],
       "@pipes": ["src/app/shared/pipes/index.ts"],
