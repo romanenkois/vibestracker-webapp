@@ -1,7 +1,7 @@
 import { Component, HostListener, inject, signal, WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ExtendedHistoryPreparerService, ScreenNotificationService, ToastNotificationsService } from '@services';
-import { ExtendedHistoryPreparingState, ExtendedStreamingHistory, UploadingStatus } from '@types';
+import { ExtendedHistoryPreparingState, ExtendedStreamingHistory, ExtendedStreamingHistoryPrepared, UploadingStatus } from '@types';
 import { ExtendedHistoryCommand } from '@commands';
 import { Router } from '@angular/router';
 
@@ -26,7 +26,7 @@ export class ExtendedHistoryUploadFormComponent {
   protected endingDate: WritableSignal<string | null> = signal(null);
 
   protected canUpload: WritableSignal<boolean> = signal(false);
-  private history: WritableSignal<ExtendedStreamingHistory[]> = signal([]);
+  private history: WritableSignal<ExtendedStreamingHistoryPrepared[]> = signal([]);
 
   @HostListener('dragover', ['$event'])
   onDragOver(event: DragEvent) {
@@ -63,7 +63,7 @@ export class ExtendedHistoryUploadFormComponent {
     try {
       this._extendedHistoryPreparerService
         .FullyProcessFile(file)
-        .subscribe((response: { status: ExtendedHistoryPreparingState; data?: ExtendedStreamingHistory[] }) => {
+        .subscribe((response: { status: ExtendedHistoryPreparingState; data?: ExtendedStreamingHistoryPrepared[] }) => {
           this.processingStatus.set(response.status);
           if (response.data && response.data.length > 0 && response.status === 'all-prepared') {
             this.canUpload.set(true);

@@ -29,4 +29,4 @@ export type ExtendedHistoryPreparingState =
   | 'all-prepared'
   | 'error';
 
-  export type PreloadUserLoginState = 'idle' | 'loading' | 'resolved' | 'rejected';
+export type PreloadUserLoginState = 'idle' | 'loading' | 'resolved' | 'rejected';

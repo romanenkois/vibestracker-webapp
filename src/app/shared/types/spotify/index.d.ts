@@ -1,12 +1,8 @@
-export {
-  ExtendedStreamingHistoryDTO,
-  ExtendedStreamingHistory,
-  RefinedExtendedStreamingHistory,
-} from './spotify/extended-streaming-history.dto';
+export * from './spotify/extended-streaming-history.dto';
 
-export { Album } from './spotify.album.type';
-export { Artist } from './spotify.artist.type';
-export { Genre } from './spotify.genre.type';
-export { Track } from './spotify.track.type';
+export * from './spotify.album.type';
+export * from './spotify.artist.type';
+export * from './spotify.genre.type';
+export * from './spotify.track.type';
 
-export { SpotifyUser } from './spotify.user.type';
+export * from './spotify.user.type';

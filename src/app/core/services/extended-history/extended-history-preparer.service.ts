@@ -1,11 +1,7 @@
 import { Injectable } from '@angular/core';
 import JSZip from 'jszip';
 import { Observable } from 'rxjs';
-import {
-  ExtendedHistoryPreparingState,
-  ExtendedStreamingHistoryDTO,
-  ExtendedStreamingHistory
-} from '@types';
+import { ExtendedHistoryPreparingState, ExtendedStreamingHistoryDTO, ExtendedStreamingHistoryPrepared } from '@types';
 
 @Injectable({
   providedIn: 'root',
@@ -13,10 +9,10 @@ import {
 export class ExtendedHistoryPreparerService {
   public FullyProcessFile(
     zipFile: File,
-  ): Observable<{ status: ExtendedHistoryPreparingState; data?: any }> {
+  ): Observable<{ status: ExtendedHistoryPreparingState; data?: ExtendedStreamingHistoryPrepared[] }> {
     return new Observable<{
       status: ExtendedHistoryPreparingState;
-      data?: ExtendedStreamingHistory[];
+      data?: ExtendedStreamingHistoryPrepared[];
     }>((observer) => {
       observer.next({ status: 'started-preparing' });
 
@@ -54,7 +50,7 @@ export class ExtendedHistoryPreparerService {
           observer.next({ status: 'transformed' });
           return this.sortData(transformedData);
         })
-        .then((sortedData: ExtendedStreamingHistory[]) => {
+        .then((sortedData: ExtendedStreamingHistoryPrepared[]) => {
           observer.next({ status: 'sorted' });
           observer.next({
             status: 'all-prepared',
@@ -80,9 +76,7 @@ export class ExtendedHistoryPreparerService {
     for (const fileName of Object.keys(zip.files)) {
       // console.log(fileName);
       if (
-        fileName.startsWith(
-          'Spotify Extended Streaming History/Streaming_History_Audio_',
-        ) &&
+        fileName.startsWith('Spotify Extended Streaming History/Streaming_History_Audio_') &&
         fileName.endsWith('.json')
       ) {
         // console.log('Found JSON file:', fileName);
@@ -100,7 +94,7 @@ export class ExtendedHistoryPreparerService {
   }
 
   // just merges all the json files into one
-  private async mergeJsonFiles(jsonFiles: any[]): Promise<any> {
+  private async mergeJsonFiles(jsonFiles: any[]): Promise<ExtendedStreamingHistoryDTO[]> {
     const mergedData = jsonFiles.reduce((acc, file) => {
       if (Array.isArray(file)) {
         return acc.concat(file);
@@ -113,70 +107,65 @@ export class ExtendedHistoryPreparerService {
   }
 
   // filters the data in different ways
-  private async filterData(data: any[]): Promise<any[]> {
+  private async filterData(data: ExtendedStreamingHistoryDTO[]): Promise<ExtendedStreamingHistoryDTO[]> {
     // Define minimum timestamp (January 1, 2008)
     const minTimestamp = new Date('2008-01-01T00:00:00Z').getTime();
     // Get current timestamp for future date validation
     const currentTimestamp = new Date().getTime();
 
-    const filteredData: ExtendedStreamingHistoryDTO[] = data.filter(
-      (item: ExtendedStreamingHistoryDTO) => {
-        // Convert ISO string timestamp to milliseconds
-        const itemTimestamp = new Date(item.ts).getTime();
+    const filteredData: ExtendedStreamingHistoryDTO[] = data.filter((item) => {
+      // Convert ISO string timestamp to milliseconds
+      const itemTimestamp = new Date(item.ts).getTime();
 
-        return (
-          // we check if the most crucial fields are present, and not nulled
-          'ts' in item &&
-          item.ts != null &&
-          'platform' in item &&
-          item.platform != null &&
-          'ms_played' in item &&
-          item.ms_played != null &&
-          'conn_country' in item &&
-          item.conn_country != null &&
-          'master_metadata_track_name' in item &&
-          item.master_metadata_track_name != null &&
-          'master_metadata_album_artist_name' in item &&
-          item.master_metadata_album_artist_name != null &&
-          'master_metadata_album_album_name' in item &&
-          item.master_metadata_album_album_name != null &&
-          'spotify_track_uri' in item &&
-          item.spotify_track_uri != null &&
-          // just  to be sure, as its used in next step
-          item.spotify_track_uri.startsWith('spotify:track:') &&
-          'reason_start' in item &&
-          item.reason_start != null &&
-          'reason_end' in item &&
-          item.reason_end != null &&
-          'shuffle' in item && // shuffle can be null by design
-          'skipped' in item && // skipped can be null by design
-          // we skip the tracks, that were skipped too early
-          item.ms_played > 20000 &&
-          // we skip the absurdly long records
-          // 1 hour is the most we tolerate
-          item.ms_played < 3600000 &&
-          // check if timestamp is before Jan 1, 2008
-          // it's the spotify release date
-          itemTimestamp > minTimestamp &&
-          //check if the timestamp is not in the future
-          itemTimestamp <= currentTimestamp
-        );
-      },
-    );
+      return (
+        // we check if the most crucial fields are present, and not nulled
+        'ts' in item &&
+        item.ts != null &&
+        'platform' in item &&
+        item.platform != null &&
+        'ms_played' in item &&
+        item.ms_played != null &&
+        'conn_country' in item &&
+        item.conn_country != null &&
+        'master_metadata_track_name' in item &&
+        item.master_metadata_track_name != null &&
+        'master_metadata_album_artist_name' in item &&
+        item.master_metadata_album_artist_name != null &&
+        'master_metadata_album_album_name' in item &&
+        item.master_metadata_album_album_name != null &&
+        'spotify_track_uri' in item &&
+        item.spotify_track_uri != null &&
+        // just  to be sure, as its used in next step
+        item.spotify_track_uri.startsWith('spotify:track:') &&
+        'reason_start' in item &&
+        item.reason_start != null &&
+        'reason_end' in item &&
+        item.reason_end != null &&
+        'shuffle' in item && // shuffle can be null by design
+        'skipped' in item && // skipped can be null by design
+        // we skip the tracks, that were skipped too early
+        item.ms_played > 20000 &&
+        // we skip the absurdly long records
+        // 1 hour is the most we tolerate
+        item.ms_played < 3600000 &&
+        // check if timestamp is before Jan 1, 2008
+        // it's the spotify release date
+        itemTimestamp > minTimestamp &&
+        //check if the timestamp is not in the future
+        itemTimestamp <= currentTimestamp
+      );
+    });
     return filteredData;
   }
 
   // transforms the columns
-  private async transformData(data: any[]): Promise<ExtendedStreamingHistory[]> {
-    return data.map((item: ExtendedStreamingHistoryDTO) => {
+  private async transformData(data: ExtendedStreamingHistoryDTO[]): Promise<ExtendedStreamingHistoryPrepared[]> {
+    return data.map((item) => {
       return {
         ts: item.ts,
         platform: item.platform,
         ms_played: item.ms_played,
         conn_country: item.conn_country,
-        track_name: item.master_metadata_track_name,
-        track_artist: item.master_metadata_album_artist_name,
-        track_album: item.master_metadata_album_album_name,
         uri: item.spotify_track_uri.replace('spotify:track:', ''),
         reason_start: item.reason_start,
         reason_end: item.reason_end,
@@ -187,14 +176,12 @@ export class ExtendedHistoryPreparerService {
   }
 
   // sorts by the timestamp, older go first
-  private async sortData(data: ExtendedStreamingHistory[]): Promise<any[]> {
-    return data.sort(
-      (a: ExtendedStreamingHistory, b: ExtendedStreamingHistory) => {
-        const dateA = new Date(a.ts).getTime();
-        const dateB = new Date(b.ts).getTime();
-        return dateA - dateB;
-      },
-    );
+  private async sortData(data: ExtendedStreamingHistoryPrepared[]): Promise<ExtendedStreamingHistoryPrepared[]> {
+    return data.sort((a: ExtendedStreamingHistoryPrepared, b: ExtendedStreamingHistoryPrepared) => {
+      const dateA = new Date(a.ts).getTime();
+      const dateB = new Date(b.ts).getTime();
+      return dateA - dateB;
+    });
   }
 
   // TODO: remove

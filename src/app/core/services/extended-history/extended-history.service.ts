@@ -95,8 +95,8 @@ export class ExtendedHistoryService {
 
     const filteredUserExtendedData = userExtendedData
       .reduce(
-        (acc: { id: string; ms_played: number; ts: string }[], item: ExtendedStreamingHistory) => {
-          const id = item.uri;
+        (acc: { id: string; ms_played: number; ts: Date }[], item: ExtendedStreamingHistory) => {
+          const id = item.trackId;
           const existingTrack = acc.find((track) => track.id === id);
 
           if (params.startingDate && new Date(item.ts) < params.startingDate) {
@@ -113,7 +113,7 @@ export class ExtendedHistoryService {
           }
           return acc;
         },
-        [] as { id: string; ms_played: number; ts: string }[],
+        [] as { id: string; ms_played: number; ts: Date }[],
       )
       .sort((a: { id: string; ms_played: number }, b: { id: string; ms_played: number }) => b.ms_played - a.ms_played)
       // .slice(0, 1000);

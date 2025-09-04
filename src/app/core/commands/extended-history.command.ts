@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { UploadingStatus, ExtendedStreamingHistory, LoadingState } from '@types';
+import { UploadingStatus, LoadingState, ExtendedStreamingHistoryPrepared } from '@types';
 import { UserExtendedDataStorage, UserStorage } from '@storage';
 import { HttpClient } from '@angular/common/http';
 import { $appConfig } from '@environments';
@@ -13,7 +13,7 @@ export class ExtendedHistoryCommand {
   private userStorage: UserStorage = inject(UserStorage);
   private userExtendedDataStorage: UserExtendedDataStorage = inject(UserExtendedDataStorage);
 
-  public uploadExtendedHistory(params: { history: ExtendedStreamingHistory[] }): Observable<UploadingStatus> {
+  public uploadExtendedHistory(params: { history: ExtendedStreamingHistoryPrepared[] }): Observable<UploadingStatus> {
     const jsonString = JSON.stringify(params.history);
     const sizeInMB = Number((jsonString.length / (1024 * 1024)).toFixed(2));
     console.log(`File size: ${sizeInMB} MB`);
