@@ -59,39 +59,17 @@ export class ExtendedHistoryService {
     return this.userExtendedDataStorage.getUserExtendedData();
   });
 
-  // const
-
   public topTracks: WritableSignal<{ id: string; ms_played: number }[]> = signal([]);
 
-  // computed(() => {
-  //   const userExtendedData = this.userExtendedDataStorage.getUserExtendedData();
+  private getTopTracks = (params: {
+    data: ExtendedStreamingHistory[];
+    startingDate?: Date;
+    endingDate?: Date;
+  }): { id: string; ms_played: number }[] => {
+    const userExtendedData = params.data;
 
-  //   console.log('recalculating top tracks');
-  //   const topTracks = userExtendedData
-  //     .reduce(
-  //       (acc: { id: string; ms_played: number }[], item: ExtendedStreamingHistory) => {
-  //         const id = item.uri;
-  //         const existingTrack = acc.find((track) => track.id === id);
-
-  //         if (existingTrack) {
-  //           existingTrack.ms_played += item.ms_played;
-  //         } else {
-  //           acc.push({ id, ms_played: item.ms_played });
-  //         }
-  //         return acc;
-  //       },
-  //       [] as { id: string; ms_played: number }[],
-  //     )
-  //     .sort((a: { id: string; ms_played: number }, b: { id: string; ms_played: number }) => b.ms_played - a.ms_played);
-
-  //   console.log('topTracks', topTracks);
-  //   return topTracks;
-  // });
-
-  getTopTracks = (params: { data: any; startingDate?: Date; endingDate?: Date }): { id: string; ms_played: number }[] => {
-    // const userExtendedData = this.userExtendedDataStorage.getUserExtendedData();
-
-    const userExtendedData = params.data as ExtendedStreamingHistory[];
+    const dataSizeMB0 = (JSON.stringify(userExtendedData).length / 1024 / 1024).toFixed(2);
+    console.log(`0topTracks data size: ${dataSizeMB0} MB`);
 
     const filteredUserExtendedData = userExtendedData
       .reduce(
@@ -115,22 +93,19 @@ export class ExtendedHistoryService {
         },
         [] as { id: string; ms_played: number; ts: Date }[],
       )
-      .sort((a: { id: string; ms_played: number }, b: { id: string; ms_played: number }) => b.ms_played - a.ms_played)
-      // .slice(0, 1000);
+      .sort((a: { id: string; ms_played: number }, b: { id: string; ms_played: number }) => b.ms_played - a.ms_played);
 
     // console.log('filteredUserExtendedData', filteredUserExtendedData);
+    // const dataSizeMB = (JSON.stringify(filteredUserExtendedData).length / 1024 / 1024).toFixed(2);
+    // console.log(`1topTracks data size: ${dataSizeMB} MB`);
     return filteredUserExtendedData;
-  }
+  };
 
   public getTopTracksIds(params: { startingDate?: Date; endingDate?: Date }): Observable<string[]> {
     return new Observable((observer) => {
-
-
-
       runInWorker(this.getTopTracks, { data: this.userExtendedDataStorage.getUserExtendedData(), ...params })
         .then((topTracks) => {
           this.topTracks.set(topTracks);
-          // console.log('topTracks', topTracks);
           const topTrackIds = topTracks.map((track) => track.id);
           observer.next(topTrackIds);
           observer.complete();

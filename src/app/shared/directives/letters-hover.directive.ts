@@ -9,7 +9,6 @@ export type LetterHoverEffect = 'scale' | '3d' | 'bounce' | 'glow' | 'flip';
 })
 export class LetterHoverDirective implements OnInit, OnDestroy, AfterContentInit {
   @Input() appLetterHover: LetterHoverEffect = 'scale';
-  hoverColor?: string;
   animationDuration: string = '0.3s';
   preserveSpaces: boolean = true;
 
@@ -22,13 +21,13 @@ export class LetterHoverDirective implements OnInit, OnDestroy, AfterContentInit
   ) {}
 
   ngOnInit() {
-    // this.setupLetterHover();
-    // this.addStyles();
+    this.setupLetterHover();
+    this.addStyles();
   }
 
   ngAfterContentInit() {
-    this.setupLetterHover();
-    this.addStyles();
+    // this.setupLetterHover();
+    // this.addStyles();
   }
 
   ngOnDestroy() {
@@ -96,11 +95,6 @@ export class LetterHoverDirective implements OnInit, OnDestroy, AfterContentInit
       // this.renderer.removeStyle(span, 'filter');
       // this.renderer.removeStyle(span, 'animation');
       return;
-    }
-
-    // Apply color if specified
-    if (this.hoverColor) {
-      this.renderer.setStyle(span, 'color', this.hoverColor);
     }
 
     // Apply effect based on type
@@ -174,65 +168,3 @@ export class LetterHoverDirective implements OnInit, OnDestroy, AfterContentInit
     this.renderer.appendChild(document.head, style);
   }
 }
-
-// Usage examples in component:
-
-/*
-// app.component.ts
-import { Component } from '@angular/core';
-import { LetterHoverDirective } from './letter-hover.directive';
-
-@Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [LetterHoverDirective],
-  template: `
-    <div class="demo-container">
-      <h1>Angular Letter Hover Effects</h1>
-
-      <div class="demo-section">
-        <h2 appLetterHover="scale">Hover over me!</h2>
-      </div>
-
-      <div class="demo-section">
-        <p appLetterHover="3d" hoverColor="#FF6B6B">3D Rotation Effect</p>
-      </div>
-
-      <div class="demo-section">
-        <span appLetterHover="bounce" animationDuration="0.4s">Bouncy Letters</span>
-      </div>
-
-      <div class="demo-section">
-        <h3 appLetterHover="glow" hoverColor="#00FF88">Glowing Text</h3>
-      </div>
-
-      <div class="demo-section">
-        <p appLetterHover="flip" hoverColor="#FF69B4">Flip Effect</p>
-      </div>
-    </div>
-  `,
-  styles: [`
-    .demo-container {
-      padding: 40px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      color: white;
-      font-family: 'Arial', sans-serif;
-    }
-
-    .demo-section {
-      margin: 30px 0;
-      text-align: center;
-    }
-
-    h1 { font-size: 2.5em; margin-bottom: 50px; text-align: center; }
-    h2 { font-size: 2.2em; }
-    h3 { font-size: 2em; }
-    p { font-size: 1.8em; }
-    span { font-size: 1.8em; }
-  `]
-})
-export class AppComponent {
-  title = 'letter-hover-demo';
-}
-*/
