@@ -1,6 +1,6 @@
-import { Injectable, Signal, signal, WritableSignal } from '@angular/core';
+import { inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { SupportedLocale, TranslationFile } from '@types';
 import { $appConfig } from '@environments';
@@ -12,6 +12,8 @@ import { $appConfig } from '@environments';
   providedIn: 'root',
 })
 export class TranslationService {
+  private readonly _http = inject(HttpClient);
+
   private readonly currentLocale: WritableSignal<SupportedLocale> = signal($appConfig.localization.defaultLocale);
   private readonly translations: WritableSignal<Record<string, string>> = signal({});
   private readonly isLoading: WritableSignal<boolean> = signal(false);
@@ -22,31 +24,10 @@ export class TranslationService {
 
   public readonly supportedLocales: SupportedLocale[] = $appConfig.localization.supportedLocales;
 
-  constructor(private http: HttpClient) {
-    // Don't auto-initialize here - let APP_INITIALIZER handle it
-  }
-
-  /**
-   * Get current locale as signal
-   */
   getCurrentLocale(): Signal<SupportedLocale> {
     return this.currentLocale;
   }
 
-  /**
-   * Get current locale as observable for reactive components
-   */
-  // getCurrentLocale$(): Observable<SupportedLocale> {
-  //   return this.localeChange$.asObservable();
-  // }
-
-  // getCurrentLocale(): SupportedLocale {
-  //   return this.currentLocale();
-  // }
-
-  /**
-   * Get current translations as signal
-   */
   getTranslations(): Record<string, string> {
     return this.translations();
   }
@@ -157,14 +138,14 @@ export class TranslationService {
   private getTranslationFile(locale: SupportedLocale): Promise<TranslationFile> {
     const filePath = this.getTranslationFilePath(locale);
 
-    return this.http
+    return this._http
       .get<TranslationFile>(filePath)
       .pipe(
         catchError((error) => {
           console.error(`Failed to load translation file for ${locale}:`, error);
           // Fallback to English if the translation file fails to load
           if (locale !== 'en-US') {
-            return this.http.get<TranslationFile>(this.getTranslationFilePath('en-US'));
+            return this._http.get<TranslationFile>(this.getTranslationFilePath('en-US'));
           }
           throw error;
         }),

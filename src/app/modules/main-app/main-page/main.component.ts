@@ -13,8 +13,8 @@ import { TranslatePipe } from '@pipes';
   styleUrl: './main.component.scss',
 })
 export default class MainComponent {
-  private _router: Router = inject(Router);
-  private _preloadService: PreloadService = inject(PreloadService);
+  private readonly _router: Router = inject(Router);
+  private readonly _preloadService: PreloadService = inject(PreloadService);
 
   protected showHeader: boolean = true;
   protected userIsLoggedIn: WritableSignal<PreloadUserLoginState> = this._preloadService.preloadUserLoginStatus;

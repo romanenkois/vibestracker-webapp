@@ -17,6 +17,7 @@
       "@mappers": ["src/app/shared/mappers/index.ts"],
       "@pipes": ["src/app/shared/pipes/index.ts"],
       "@types": ["src/app/shared/types/index.d.ts"],
+      "@utils": ["src/app/shared/utils/index.ts"],
       "@widgets": ["src/app/shared/widgets/index.ts"],
 
       "@libs": ["src/libs/index.ts"],

@@ -1,4 +1,4 @@
-export type ExtendedStreamingHistoryDTO = {
+export interface ExtendedStreamingHistoryDTO {
   ts: string;
 
   // is not actually present
@@ -41,9 +41,9 @@ export type ExtendedStreamingHistoryDTO = {
   offline_timestamp: number | null;
 
   incognito_mode: null | true | false;
-};
+}
 
-export type ExtendedStreamingHistoryPrepared = {
+export interface ExtendedStreamingHistoryPrepared {
   ts: string;
   platform: string;
   ms_played: number;
@@ -56,9 +56,9 @@ export type ExtendedStreamingHistoryPrepared = {
 
   shuffle: null | true | false;
   skipped: null | true | false;
-};
+}
 
-export type ExtendedStreamingHistory = {
+export interface ExtendedStreamingHistory {
   ts: Date;
   ms_played: number;
 
@@ -74,4 +74,4 @@ export type ExtendedStreamingHistory = {
 
   shuffle: null | true | false;
   skipped: null | true | false;
-};
+}

@@ -7,9 +7,9 @@ import { LoadingState, PreloadUserLoginState } from '@types';
   providedIn: 'root',
 })
 export class PreloadService {
-  private userSettings: UserSettingsStorage = inject(UserSettingsStorage);
-  private authorizationCommand: AuthorizationCommand = inject(AuthorizationCommand);
-  private userStorage: UserStorage = inject(UserStorage);
+  private readonly _userSettings = inject(UserSettingsStorage);
+  private readonly _authorizationCommand = inject(AuthorizationCommand);
+  private readonly _userStorage = inject(UserStorage);
 
   public preloadUserLoginStatus: WritableSignal<PreloadUserLoginState> = signal('idle');
 
@@ -19,12 +19,12 @@ export class PreloadService {
 
   public verifyUserByToken() {
     this.preloadUserLoginStatus.set('loading');
-    let token = this.userStorage.getToken() || null;
+    let token = this._userStorage.getToken() || null;
 
     if (!token) {
       try {
         // we try to get token, at first from uptime time memory, then from local storage
-        let _token = this.userSettings.getUserSettings().saveToken
+        const _token = this._userSettings.getUserSettings().saveToken
           ? JSON.parse(localStorage.getItem('userToken') || 'null')
           : null;
         if (_token) {
@@ -36,10 +36,10 @@ export class PreloadService {
     }
 
     // we set it in advance, so the guard doesn't freak out
-    this.userStorage.setToken(token);
+    this._userStorage.setToken(token);
 
     if (token) {
-      this.authorizationCommand.verifyToken(token).subscribe((status: LoadingState) => {
+      this._authorizationCommand.verifyToken(token).subscribe((status: LoadingState) => {
         if (status === 'resolved') {
           this.preloadUserLoginStatus.set('resolved');
           // nothing is happening if everything is ok
@@ -49,8 +49,8 @@ export class PreloadService {
           this.preloadUserLoginStatus.set('rejected');
           // if token is not valid, we set it to null
           // this would trigger the guard to redirect to login page
-          this.userStorage.setUser(null);
-          this.userStorage.setToken(null);
+          this._userStorage.setUser(null);
+          this._userStorage.setToken(null);
         }
       });
     }

@@ -17,16 +17,16 @@ export class UserTopItemsSimpleStorage {
   public getUserTopItems<T>(
     term: SimpleTimeFrame,
     type: SimpleItemsSelection,
-  ): Array<T> {
+  ): T[] {
     switch (type) {
       case 'albums':
-        return this.getUserTopAlbums(term) as Array<T>;
+        return this.getUserTopAlbums(term) as T[];
       case 'artists':
-        return this.getUserTopArtists(term) as Array<T>;
+        return this.getUserTopArtists(term) as T[];
       case 'tracks':
-        return this.getUserTopTracks(term) as Array<T>;
+        return this.getUserTopTracks(term) as T[];
       case 'genres':
-        return this.getUserTopGenres(term) as Array<T>;
+        return this.getUserTopGenres(term) as T[];
       default:
         return [];
     }

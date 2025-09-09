@@ -1,10 +1,8 @@
-import { Observable } from 'rxjs';
-
 export function runInWorker<TArgs extends any[], TResult>(
   fn: (...args: TArgs) => TResult,
   ...args: TArgs
-): Observable<TResult> {
-  return new Observable<TResult>((observer) => {
+): Promise<TResult> {
+  return new Promise((resolve, reject) => {
     const fnString = fn.toString();
 
     const workerBlob = new Blob(
@@ -29,27 +27,16 @@ export function runInWorker<TArgs extends any[], TResult>(
 
     worker.onmessage = (e) => {
       const { result, error } = e.data;
-      if (error) {
-        observer.error(new Error(error));
-        observer.complete();
-      } else {
-        observer.next(result);
-        observer.complete();
-      }
+      if (error) reject(error);
+      else resolve(result);
       worker.terminate();
     };
 
     worker.onerror = (err) => {
-      observer.error(new Error(err.message));
-      observer.complete();
+      reject(err.message);
       worker.terminate();
     };
 
     worker.postMessage([fnString, args]);
-
-    // Return cleanup function for when observable is unsubscribed
-    return () => {
-      worker.terminate();
-    };
   });
 }

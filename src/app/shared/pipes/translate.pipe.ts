@@ -1,5 +1,5 @@
-import { Pipe, PipeTransform, OnDestroy, ChangeDetectorRef, signal, effect, inject } from '@angular/core';
-import { TranslationService } from '../../core/services/translation.service';
+import { Pipe, PipeTransform, OnDestroy, ChangeDetectorRef, effect, inject } from '@angular/core';
+import { TranslationService } from '@services';
 
 @Pipe({
   name: 'translate',

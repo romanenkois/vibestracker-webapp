@@ -1,5 +1,5 @@
 // letter-hover.directive.ts
-import { Directive, ElementRef, Input, OnInit, Renderer2, OnDestroy, AfterContentInit } from '@angular/core';
+import { Directive, ElementRef, Input, OnInit, Renderer2, OnDestroy, AfterContentInit, inject } from '@angular/core';
 
 export type LetterHoverEffect = 'scale' | '3d' | 'bounce' | 'glow' | 'flip';
 
@@ -8,6 +8,9 @@ export type LetterHoverEffect = 'scale' | '3d' | 'bounce' | 'glow' | 'flip';
   standalone: true,
 })
 export class LetterHoverDirective implements OnInit, OnDestroy, AfterContentInit {
+  // private readonly _elementRef = inject(ElementRef);
+  // private readonly _renderer2 = inject(Renderer2);
+
   @Input() appLetterHover: LetterHoverEffect = 'scale';
   animationDuration: string = '0.3s';
   preserveSpaces: boolean = true;
@@ -16,8 +19,8 @@ export class LetterHoverDirective implements OnInit, OnDestroy, AfterContentInit
   private spans: HTMLElement[] = [];
 
   constructor(
-    private el: ElementRef,
-    private renderer: Renderer2,
+    private _elementRef: ElementRef,
+    private _renderer2: Renderer2,
   ) {}
 
   ngOnInit() {
@@ -36,38 +39,38 @@ export class LetterHoverDirective implements OnInit, OnDestroy, AfterContentInit
   }
 
   private setupLetterHover() {
-    const element = this.el.nativeElement;
+    const element = this._elementRef.nativeElement;
     this.originalContent = element.textContent || '';
 
     // Clear the element
     element.innerHTML = '';
 
     // Add base class for the effect
-    this.renderer.addClass(element, `letter-hover-${this.appLetterHover}`);
-    this.renderer.setStyle(element, 'cursor', 'default');
-    this.renderer.setStyle(element, 'display', 'inline-block');
+    this._renderer2.addClass(element, `letter-hover-${this.appLetterHover}`);
+    this._renderer2.setStyle(element, 'cursor', 'default');
+    this._renderer2.setStyle(element, 'display', 'inline-block');
 
     // Wrap each character in a span
     this.originalContent.split('').forEach((char, index) => {
       if (char === ' ' && this.preserveSpaces) {
         // Add space as text node
-        const textNode = this.renderer.createText(' ');
-        this.renderer.appendChild(element, textNode);
+        const textNode = this._renderer2.createText(' ');
+        this._renderer2.appendChild(element, textNode);
       } else if (char !== ' ') {
-        const span = this.renderer.createElement('span');
-        const text = this.renderer.createText(char);
+        const span = this._renderer2.createElement('span');
+        const text = this._renderer2.createText(char);
 
-        this.renderer.appendChild(span, text);
-        this.renderer.appendChild(element, span);
+        this._renderer2.appendChild(span, text);
+        this._renderer2.appendChild(element, span);
 
         // Set base span styles
-        this.renderer.setStyle(span, 'display', 'inline-block');
-        this.renderer.setStyle(
-          span,
-          'transition',
-          `all ${this.animationDuration} cubic-bezier(0.68, -0.55, 0.265, 1.55)`,
-        );
-        this.renderer.setStyle(span, 'position', 'relative');
+        this._renderer2.setStyle(span, 'display', 'inline-block');
+        // this._renderer2.setStyle(
+        //   span,
+        //   'transition',
+        //   `all ${this.animationDuration} cubic-bezier(0.68, -0.55, 0.265, 1.55)`,
+        // );
+        this._renderer2.setStyle(span, 'position', 'relative');
 
         // Add hover listeners
         this.addHoverListeners(span);
@@ -77,11 +80,11 @@ export class LetterHoverDirective implements OnInit, OnDestroy, AfterContentInit
   }
 
   private addHoverListeners(span: HTMLElement) {
-    this.renderer.listen(span, 'mouseenter', () => {
+    this._renderer2.listen(span, 'mouseenter', () => {
       this.applyHoverEffect(span, true);
     });
 
-    this.renderer.listen(span, 'mouseleave', () => {
+    this._renderer2.listen(span, 'mouseleave', () => {
       this.applyHoverEffect(span, false);
     });
   }
@@ -89,44 +92,44 @@ export class LetterHoverDirective implements OnInit, OnDestroy, AfterContentInit
   private applyHoverEffect(span: HTMLElement, isHover: boolean) {
     if (!isHover) {
       // Reset styles
-      this.renderer.removeStyle(span, 'transform');
-      // this.renderer.removeStyle(span, 'color');
-      // this.renderer.removeStyle(span, 'text-shadow');
-      // this.renderer.removeStyle(span, 'filter');
-      // this.renderer.removeStyle(span, 'animation');
+      this._renderer2.removeStyle(span, 'transform');
+      // this._renderer2.removeStyle(span, 'color');
+      // this._renderer2.removeStyle(span, 'text-shadow');
+      // this._renderer2.removeStyle(span, 'filter');
+      // this._renderer2.removeStyle(span, 'animation');
       return;
     }
 
     // Apply effect based on type
     switch (this.appLetterHover) {
       case 'scale':
-        this.renderer.setStyle(span, 'transform', 'scale(1.3) translateY(-10px)');
+        this._renderer2.setStyle(span, 'transform', 'scale(1.3) translateY(-10px)');
         break;
 
       case '3d':
-        this.renderer.setStyle(span, 'transform', 'rotateY(360deg) scale(1.2)');;
-        this.renderer.setStyle(span, 'transition', `all 0.4s ease`);
+        this._renderer2.setStyle(span, 'transform', 'rotateY(360deg) scale(1.2)');
+        this._renderer2.setStyle(span, 'transition', `all 0.4s ease`);
         break;
 
       case 'bounce':
-        this.renderer.setStyle(span, 'animation', 'letterBounce 0.6s ease');
-        this.renderer.setStyle(span, 'text-shadow', '0 5px 20px rgba(78, 205, 196, 0.4)');
+        this._renderer2.setStyle(span, 'animation', 'letterBounce 0.6s ease');
+        this._renderer2.setStyle(span, 'text-shadow', '0 5px 20px rgba(78, 205, 196, 0.4)');
         break;
 
       case 'glow':
-        this.renderer.setStyle(span, 'transform', 'translateY(-8px)');
-        this.renderer.setStyle(
+        this._renderer2.setStyle(span, 'transform', 'translateY(-8px)');
+        this._renderer2.setStyle(
           span,
           'text-shadow',
           '0 0 10px rgba(168, 230, 207, 0.8), 0 0 20px rgba(168, 230, 207, 0.6), 0 0 30px rgba(168, 230, 207, 0.4)',
         );
-        this.renderer.setStyle(span, 'filter', 'brightness(1.2)');
+        this._renderer2.setStyle(span, 'filter', 'brightness(1.2)');
         break;
 
       case 'flip':
-        this.renderer.setStyle(span, 'transform', 'rotateX(360deg) scale(1.15)');
-        this.renderer.setStyle(span, 'text-shadow', '0 10px 25px rgba(0,0,0,0.3)');
-        this.renderer.setStyle(span, 'transition', `all 0.5s ease`);
+        this._renderer2.setStyle(span, 'transform', 'rotateX(360deg) scale(1.15)');
+        this._renderer2.setStyle(span, 'text-shadow', '0 10px 25px rgba(0,0,0,0.3)');
+        this._renderer2.setStyle(span, 'transition', `all 0.5s ease`);
         break;
     }
   }
@@ -137,8 +140,8 @@ export class LetterHoverDirective implements OnInit, OnDestroy, AfterContentInit
       return;
     }
 
-    const style = this.renderer.createElement('style');
-    this.renderer.setAttribute(style, 'id', 'letter-hover-styles');
+    const style = this._renderer2.createElement('style');
+    this._renderer2.setAttribute(style, 'id', 'letter-hover-styles');
 
     const css = `
       @keyframes letterBounce {
@@ -164,7 +167,7 @@ export class LetterHoverDirective implements OnInit, OnDestroy, AfterContentInit
       }
     `;
 
-    this.renderer.appendChild(style, this.renderer.createText(css));
-    this.renderer.appendChild(document.head, style);
+    this._renderer2.appendChild(style, this._renderer2.createText(css));
+    this._renderer2.appendChild(document.head, style);
   }
 }

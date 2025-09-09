@@ -7,35 +7,39 @@
     "build": "ng build",
     "lang": "ng extract-i18n --format=json --out-file src/translations/source.json",
     "sync-translations": "cp src/translations/*.json public/translations/",
-    "spell": "cspell --no-progress --gitignore  \"src/**/*.ts\""
+    "spell": "cspell --no-progress --gitignore  \"src/**/*.ts\"",
+    "lint": "ng lint"
   },
   "author": "romanenkoisnot@gmail.com",
   "license": "Apache-2.0",
   "private": true,
   "dependencies": {
-    "@angular/common": "^20.1.3",
-    "@angular/compiler": "^20.1.3",
-    "@angular/core": "^20.1.3",
-    "@angular/forms": "^20.1.3",
-    "@angular/platform-browser": "^20.1.3",
-    "@angular/platform-browser-dynamic": "^20.1.3",
-    "@angular/router": "^20.1.3",
+    "@angular/common": "^20.2.4",
+    "@angular/compiler": "^20.2.4",
+    "@angular/core": "^20.2.4",
+    "@angular/forms": "^20.2.4",
+    "@angular/platform-browser": "^20.2.4",
+    "@angular/platform-browser-dynamic": "^20.2.4",
+    "@angular/router": "^20.2.4",
     "jszip": "^3.10.1",
     "rxjs": "~7.8.2",
     "tslib": "^2.8.1",
     "zone.js": "~0.15.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^20.1.3",
-    "@angular/cli": "^20.1.3",
-    "@angular/compiler-cli": "^20.1.3",
-    "@angular/localize": "^20.1.3",
+    "@angular-devkit/build-angular": "^20.2.2",
+    "@angular/cli": "^20.2.2",
+    "@angular/compiler-cli": "^20.2.4",
+    "@angular/localize": "^20.2.4",
+    "angular-eslint": "20.2.0",
     "autoprefixer": "^10.4.21",
-    "cspell": "^9.2.0",
+    "cspell": "^9.2.1",
+    "eslint": "^9.35.0",
     "postcss": "^8.5.6",
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.14",
     "tailwindcss": "^3.4.17",
-    "typescript": "~5.8.3"
+    "typescript": "~5.9.2",
+    "typescript-eslint": "8.43.0"
   }
 }
