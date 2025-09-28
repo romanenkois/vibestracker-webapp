@@ -1,8 +1,8 @@
-// @ts-check
 const eslint = require("@eslint/js");
 const tseslint = require("typescript-eslint");
 const angular = require("angular-eslint");
 
+// @ts-check
 module.exports = tseslint.config(
   {
     files: ["**/*.ts"],
