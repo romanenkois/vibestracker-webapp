@@ -10,6 +10,10 @@
     "@@settings_title-language": "language settings",
     "@@settings_logout": "logout",
     "@@settings_deleteExtendedHistory": "delete extended history",
+    "@@settings_deleteExtendedHistoryButton_idle": "delete extended history",
+    "@@settings_deleteExtendedHistoryButton_deleting": "deleting extended history",
+    "@@settings_deleteExtendedHistoryButton_deleted": "extended history deleted",
+    "@@settings_deleteExtendedHistoryButton_error": "error deleting extended history",
     "@@settings_clearIgnoredTracks": "clear ignored tracks",
 
     "@@nav_simpleTop": "simple top",

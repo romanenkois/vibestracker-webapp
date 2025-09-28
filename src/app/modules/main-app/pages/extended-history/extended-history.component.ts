@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { UserStorage } from '@storage';
-import { LoadingState, UserPrivate } from '@types';
+import { LoadingStatusEnum, UserPrivate } from '@types';
 import { ExtendedHistoryCommand } from '@commands';
 import { LoadingSpinner } from '@features';
 import { TimeSimplePipe } from '@pipes';
@@ -35,7 +35,7 @@ export default class ExtendedHistoryComponent implements OnInit {
   protected userExtendedDataLoaded: Signal<boolean> = computed(() => {
     return this.userStorage.userExtendedDataLoaded();
   });
-  protected loadingState: WritableSignal<LoadingState> = signal('idle');
+  protected loadingState = signal(LoadingStatusEnum.Idle);
 
   ngOnInit() {
     if (!this.userExtendedDataLoaded()) {
@@ -45,7 +45,7 @@ export default class ExtendedHistoryComponent implements OnInit {
       const endingDate: Date = new Date(
         this.userStorage.getUser()?.listeningData?.expandedHistory?.endingDate || Date.now(),
       );
-      this.extendedDataCommand.loadExtendedHistory({ startingDate, endingDate }).subscribe((status: LoadingState) => {
+      this.extendedDataCommand.loadExtendedHistory({ startingDate, endingDate }).subscribe((status) => {
         this.loadingState.set(status);
       });
     }

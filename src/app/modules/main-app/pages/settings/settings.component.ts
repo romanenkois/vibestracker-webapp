@@ -2,7 +2,7 @@ import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { AuthorizationCommand, ExtendedHistoryCommand, UserCommand } from '@commands';
 import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
 import { LanguageSelectorComponent, LoadingSpinner } from '@features';
-import { UploadingStatus } from '@types';
+import { DeletingStatusEnum } from '@types';
 
 @Component({
   selector: 'app-settings',
@@ -11,23 +11,23 @@ import { UploadingStatus } from '@types';
   styleUrl: './settings.component.scss',
 })
 export default class SettingsComponent {
-  private authorizationCommand: AuthorizationCommand = inject(AuthorizationCommand);
-  private extendedHistoryCommand: ExtendedHistoryCommand = inject(ExtendedHistoryCommand);
-  private userCommand: UserCommand = inject(UserCommand);
+  private readonly _authorizationCommand = inject(AuthorizationCommand);
+  private readonly _extendedHistoryCommand = inject(ExtendedHistoryCommand);
+  private readonly _userCommand = inject(UserCommand);
 
-  protected deleteExtendedHistoryStatus: WritableSignal<UploadingStatus> = signal('idle');
+  protected DeletingStatusEnum = DeletingStatusEnum;
 
-  deleteExtendedHistory() {
-    this.extendedHistoryCommand.deleteUserExtendedHistory().subscribe((status: UploadingStatus) => {
+  protected deleteExtendedHistoryStatus = signal(DeletingStatusEnum.Idle);
+
+  protected deleteExtendedHistory() {
+    this._extendedHistoryCommand.deleteUserExtendedHistory().subscribe((status) => {
       this.deleteExtendedHistoryStatus.set(status);
     });
   }
-
-  clearIgnoredTracks() {
-    this.userCommand.clearIgnoredTracks();
+  protected clearIgnoredTracks() {
+    this._userCommand.clearIgnoredTracks();
   }
-
-  logOut() {
-    this.authorizationCommand.logOut();
+  protected logOut() {
+    this._authorizationCommand.logOut();
   }
 }

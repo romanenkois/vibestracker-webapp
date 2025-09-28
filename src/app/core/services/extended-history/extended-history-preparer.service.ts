@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
 import JSZip from 'jszip';
 import { Observable } from 'rxjs';
-import { ExtendedHistoryPreparingState, ExtendedStreamingHistoryDTO, ExtendedStreamingHistoryPrepared } from '@types';
+import {
+  ExtendedHistoryPreparingStateEnum,
+  ExtendedStreamingHistoryDTO,
+  ExtendedStreamingHistoryPrepared,
+} from '@types';
 
 @Injectable({
   providedIn: 'root',
@@ -9,51 +13,51 @@ import { ExtendedHistoryPreparingState, ExtendedStreamingHistoryDTO, ExtendedStr
 export class ExtendedHistoryPreparerService {
   public FullyProcessFile(
     zipFile: File,
-  ): Observable<{ status: ExtendedHistoryPreparingState; data?: ExtendedStreamingHistoryPrepared[] }> {
+  ): Observable<{ status: ExtendedHistoryPreparingStateEnum; data?: ExtendedStreamingHistoryPrepared[] }> {
     return new Observable<{
-      status: ExtendedHistoryPreparingState;
+      status: ExtendedHistoryPreparingStateEnum;
       data?: ExtendedStreamingHistoryPrepared[];
     }>((observer) => {
-      observer.next({ status: 'started-preparing' });
+      observer.next({ status: ExtendedHistoryPreparingStateEnum.StartedPreparing });
 
       // i am sorry, for whoever will read this
 
       this.extractStreamingHistory(zipFile)
         .then((unzippedFiles) => {
           if (unzippedFiles.length === 0) {
-            observer.next({ status: 'error' });
+            observer.next({ status: ExtendedHistoryPreparingStateEnum.Error });
             observer.complete();
             throw new Error('No valid json files found in the zip archive');
           }
-          observer.next({ status: 'unzipped' });
+          observer.next({ status: ExtendedHistoryPreparingStateEnum.Unzipped });
           return this.mergeJsonFiles(unzippedFiles);
         })
         .then((mergedData) => {
           if (mergedData.length === 0) {
-            observer.next({ status: 'error' });
+            observer.next({ status: ExtendedHistoryPreparingStateEnum.Error });
             observer.complete();
             throw new Error('No data in merged json files');
           }
-          observer.next({ status: 'merged' });
+          observer.next({ status: ExtendedHistoryPreparingStateEnum.Merged });
           return this.filterData(mergedData);
         })
         .then((filteredData) => {
           if (filteredData.length === 0) {
-            observer.next({ status: 'error' });
+            observer.next({ status: ExtendedHistoryPreparingStateEnum.Error });
             observer.complete();
             throw new Error('All data has been discarded');
           }
-          observer.next({ status: 'filtered' });
+          observer.next({ status: ExtendedHistoryPreparingStateEnum.Filtered });
           return this.transformData(filteredData);
         })
         .then((transformedData) => {
-          observer.next({ status: 'transformed' });
+          observer.next({ status: ExtendedHistoryPreparingStateEnum.Transformed });
           return this.sortData(transformedData);
         })
         .then((sortedData: ExtendedStreamingHistoryPrepared[]) => {
-          observer.next({ status: 'sorted' });
+          observer.next({ status: ExtendedHistoryPreparingStateEnum.Sorted });
           observer.next({
-            status: 'all-prepared',
+            status: ExtendedHistoryPreparingStateEnum.AllPrepared,
             data: sortedData,
           });
           observer.complete();

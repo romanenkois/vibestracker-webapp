@@ -1,7 +1,7 @@
-import { inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { AuthorizationCommand } from '@commands';
 import { UserStorage, UserSettingsStorage } from '@storage';
-import { LoadingState, PreloadUserLoginState } from '@types';
+import { PreloadUserLoginStatusEnum } from '@types';
 
 @Injectable({
   providedIn: 'root',
@@ -11,14 +11,14 @@ export class PreloadService {
   private readonly _authorizationCommand = inject(AuthorizationCommand);
   private readonly _userStorage = inject(UserStorage);
 
-  public preloadUserLoginStatus: WritableSignal<PreloadUserLoginState> = signal('idle');
+  public preloadUserLoginStatus = signal(PreloadUserLoginStatusEnum.Idle);
 
   constructor() {
     this.verifyUserByToken();
   }
 
   public verifyUserByToken() {
-    this.preloadUserLoginStatus.set('loading');
+    this.preloadUserLoginStatus.set(PreloadUserLoginStatusEnum.Loading);
     let token = this._userStorage.getToken() || null;
 
     if (!token) {
@@ -39,14 +39,14 @@ export class PreloadService {
     this._userStorage.setToken(token);
 
     if (token) {
-      this._authorizationCommand.verifyToken(token).subscribe((status: LoadingState) => {
+      this._authorizationCommand.verifyToken(token).subscribe((status) => {
         if (status === 'resolved') {
-          this.preloadUserLoginStatus.set('resolved');
+          this.preloadUserLoginStatus.set(PreloadUserLoginStatusEnum.Resolved);
           // nothing is happening if everything is ok
           // token is loaded, guard would not retrigger
         }
         if (status === 'error') {
-          this.preloadUserLoginStatus.set('rejected');
+          this.preloadUserLoginStatus.set(PreloadUserLoginStatusEnum.Rejected);
           // if token is not valid, we set it to null
           // this would trigger the guard to redirect to login page
           this._userStorage.setUser(null);

@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SpotifyItemsStorage } from '@storage';
-import { LoadingState } from '@types';
+import { LoadingStatusEnum } from '@types';
 import { HttpClient } from '@angular/common/http';
 import { $appConfig } from '@environments';
 
@@ -13,15 +13,15 @@ export class SpotifyItemsCommand {
   private spotifyItemsStorage: SpotifyItemsStorage =
     inject(SpotifyItemsStorage);
 
-  public loadAlbums(ids: string[]): Observable<LoadingState> {
-    return new Observable<LoadingState>((observer) => {
-      observer.next('loading');
+  public loadAlbums(ids: string[]): Observable<LoadingStatusEnum> {
+    return new Observable<LoadingStatusEnum>((observer) => {
+      observer.next(LoadingStatusEnum.Loading);
 
       const idsToLoad: string[] = ids.filter(
         (id) => !this.spotifyItemsStorage.getAlbum(id),
       );
       if (idsToLoad.length === 0) {
-        observer.next('resolved');
+        observer.next(LoadingStatusEnum.Resolved);
         observer.complete();
         return;
       }
@@ -33,27 +33,27 @@ export class SpotifyItemsCommand {
         .subscribe({
           next: (response) => {
             this.spotifyItemsStorage.appendAlbums(response.albums);
-            observer.next('resolved');
+            observer.next(LoadingStatusEnum.Resolved);
             observer.complete();
           },
           error: (error) => {
             console.error('Error loading albums:', error);
-            observer.next('error');
+            observer.next(LoadingStatusEnum.Error);
             observer.complete();
           },
         });
     });
   }
 
-  loadArtists(ids: string[]): Observable<LoadingState> {
-    return new Observable<LoadingState>((observer) => {
-      observer.next('loading');
+  loadArtists(ids: string[]): Observable<LoadingStatusEnum> {
+    return new Observable<LoadingStatusEnum>((observer) => {
+      observer.next(LoadingStatusEnum.Loading);
 
       const idsToLoad: string[] = ids.filter(
         (id) => !this.spotifyItemsStorage.getArtist(id),
       );
       if (idsToLoad.length === 0) {
-        observer.next('resolved');
+        observer.next(LoadingStatusEnum.Resolved);
         observer.complete();
         return;
       }
@@ -65,27 +65,27 @@ export class SpotifyItemsCommand {
         .subscribe({
           next: (response) => {
             this.spotifyItemsStorage.appendArtists(response.artists);
-            observer.next('resolved');
+            observer.next(LoadingStatusEnum.Resolved);
             observer.complete();
           },
           error: (error) => {
             console.error('Error loading artists:', error);
-            observer.next('error');
+            observer.next(LoadingStatusEnum.Error);
             observer.complete();
           },
         });
     });
   }
 
-  public loadTracks(ids: string[]): Observable<LoadingState> {
-    return new Observable<LoadingState>((observer) => {
-      observer.next('loading');
+  public loadTracks(ids: string[]): Observable<LoadingStatusEnum> {
+    return new Observable<LoadingStatusEnum>((observer) => {
+      observer.next(LoadingStatusEnum.Loading);
 
       const idsToLoad: string[] = ids.filter(
         (id) => !this.spotifyItemsStorage.getTrack(id),
       );
       if (idsToLoad.length === 0) {
-        observer.next('resolved');
+        observer.next(LoadingStatusEnum.Resolved);
         observer.complete();
         return;
       }
@@ -97,12 +97,12 @@ export class SpotifyItemsCommand {
         .subscribe({
           next: (response) => {
             this.spotifyItemsStorage.appendTracks(response.tracks);
-            observer.next('resolved');
+            observer.next(LoadingStatusEnum.Resolved);
             observer.complete();
           },
           error: (error) => {
             console.error('Error loading tracks:', error);
-            observer.next('error');
+            observer.next(LoadingStatusEnum.Error);
             observer.complete();
           },
         });

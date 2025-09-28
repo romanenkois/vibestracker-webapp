@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { UploadingStatus, LoadingState, ExtendedStreamingHistoryPrepared } from '@types';
+import { LoadingStatusEnum, ExtendedStreamingHistoryPrepared, UploadingStatusEnum, DeletingStatusEnum } from '@types';
 import { UserExtendedDataStorage, UserStorage } from '@storage';
 import { HttpClient } from '@angular/common/http';
 import { $appConfig } from '@environments';
@@ -13,13 +13,15 @@ export class ExtendedHistoryCommand {
   private userStorage: UserStorage = inject(UserStorage);
   private userExtendedDataStorage: UserExtendedDataStorage = inject(UserExtendedDataStorage);
 
-  public uploadExtendedHistory(params: { history: ExtendedStreamingHistoryPrepared[] }): Observable<UploadingStatus> {
+  public uploadExtendedHistory(params: {
+    history: ExtendedStreamingHistoryPrepared[];
+  }): Observable<UploadingStatusEnum> {
     const jsonString = JSON.stringify(params.history);
     const sizeInMB = Number((jsonString.length / (1024 * 1024)).toFixed(2));
     console.log(`File size: ${sizeInMB} MB`);
 
-    return new Observable<UploadingStatus>((observer) => {
-      observer.next('uploading');
+    return new Observable<UploadingStatusEnum>((observer) => {
+      observer.next(UploadingStatusEnum.Uploading);
 
       this.http
         .post(`${$appConfig.api.BASE_API_URL}/extended-history`, {
@@ -29,28 +31,28 @@ export class ExtendedHistoryCommand {
           next: (response: any) => {
             if (response && response.user) {
               this.userStorage.setUser(response.user);
-              observer.next('resolved');
+              observer.next(UploadingStatusEnum.Resolved);
               observer.complete();
               return;
             } else {
               console.error('Invalid response from upload:', response);
-              observer.next('error');
+              observer.next(UploadingStatusEnum.Error);
               observer.complete();
               return;
             }
           },
-          error: (error: any) => {
+          error: (error) => {
             console.error('Error during upload:', error);
-            observer.next('error');
+            observer.next(UploadingStatusEnum.Error);
             observer.complete();
           },
         });
     });
   }
 
-  public loadExtendedHistory(params: { startingDate: Date; endingDate: Date }): Observable<LoadingState> {
-    return new Observable<LoadingState>((observer) => {
-      observer.next('loading');
+  public loadExtendedHistory(params: { startingDate: Date; endingDate: Date }): Observable<LoadingStatusEnum> {
+    return new Observable<LoadingStatusEnum>((observer) => {
+      observer.next(LoadingStatusEnum.Loading);
 
       this.http
         .get<any>(
@@ -61,21 +63,21 @@ export class ExtendedHistoryCommand {
             if (response && response.userExtendedHistory) {
               this.userExtendedDataStorage.setUserExtendedData(response.userExtendedHistory);
               this.userStorage.userExtendedDataLoaded.set(true);
-              observer.next('resolved');
+              observer.next(LoadingStatusEnum.Resolved);
               observer.complete();
               return;
             } else {
               this.userStorage.userExtendedDataLoaded.set(false);
               console.error(response);
-              observer.next('error');
+              observer.next(LoadingStatusEnum.Error);
               observer.complete();
               return;
             }
           },
-          error: (error: any) => {
+          error: (error) => {
             this.userStorage.userExtendedDataLoaded.set(false);
             console.error('Error during load:', error);
-            observer.next('error');
+            observer.next(LoadingStatusEnum.Error);
             observer.complete();
             return;
           },
@@ -83,23 +85,23 @@ export class ExtendedHistoryCommand {
     });
   }
 
-  public deleteUserExtendedHistory(): Observable<UploadingStatus> {
-    return new Observable<UploadingStatus>((observer) => {
+  public deleteUserExtendedHistory(): Observable<DeletingStatusEnum> {
+    return new Observable<DeletingStatusEnum>((observer) => {
       this.http.delete(`${$appConfig.api.BASE_API_URL}/extended-history`).subscribe({
         next: (response: any) => {
           if (response.user) {
             this.userStorage.setUser(response.user);
-            observer.next('resolved');
+            observer.next(DeletingStatusEnum.Deleted);
             observer.complete();
           } else {
             console.error('Invalid response from delete extended history:', response);
-            observer.next('error');
+            observer.next(DeletingStatusEnum.Error);
             observer.complete();
           }
         },
-        error: (error: any) => {
+        error: (error) => {
           console.error('Error during delete extended history:', error);
-          observer.next('error');
+          observer.next(DeletingStatusEnum.Error);
           observer.complete();
         },
       });

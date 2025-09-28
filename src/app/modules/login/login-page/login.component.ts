@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { $appConfig } from '@environments';
 import { AuthorizationCommand } from '@commands';
-import { LoadingState } from '@types';
+import { LoadingStatusEnum } from '@types';
 import { TranslatePipe } from '@pipes';
 import { LoadingSpinner } from '@features';
 import { ToastNotificationsService } from '@libs';
@@ -20,7 +20,7 @@ export default class LoginComponent implements OnInit {
   private authorizationCommand: AuthorizationCommand = inject(AuthorizationCommand);
   private toastNotificationsService: ToastNotificationsService = inject(ToastNotificationsService);
 
-  loadingState: LoadingState = 'idle';
+  loadingState = LoadingStatusEnum.Idle;
 
   getAuthorizationUrl(): string {
     const state = '37';
@@ -35,11 +35,11 @@ export default class LoginComponent implements OnInit {
       const error = params['error'];
 
       if (code && state) {
-        this.authorizationCommand.codeLogIn(code).subscribe((loadingState: LoadingState) => {
+        this.authorizationCommand.codeLogIn(code).subscribe((loadingState) => {
           this.loadingState = loadingState;
-          if (loadingState === 'resolved') {
+          if (loadingState === LoadingStatusEnum.Resolved) {
             this.router.navigate(['/']);
-          } else if (loadingState === 'error') {
+          } else if (loadingState === LoadingStatusEnum.Error) {
             this.router.navigate([], {
               relativeTo: this.activatedRoute,
               queryParams: {},

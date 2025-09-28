@@ -1,9 +1,10 @@
 import { Component, computed, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+
 import { UserTopItemsSimpleCommand } from '@commands';
 import { CardSimpleAlbumComponent, CardSimpleArtistComponent, CardSimpleTrackComponent } from '@widgets';
 import { UserTopItemsSimpleStorage } from '@storage';
-import { Album, Artist, Genre, LoadingState, SimpleItemsSelection, SimpleTimeFrame, Track } from '@types';
+import { Album, Artist, Genre, LoadingStatusEnum, SimpleItemsSelection, SimpleTimeFrame, Track } from '@types';
 import { LoadingSpinner } from '@features';
 import { TranslatePipe } from '@pipes';
 
@@ -28,7 +29,7 @@ export class UserTopItemsSimpleComponent implements OnInit {
 
   protected itemsType: WritableSignal<SimpleItemsSelection> = signal<SimpleItemsSelection>('tracks');
   protected periodOfTime: WritableSignal<SimpleTimeFrame> = signal<SimpleTimeFrame>('short_term');
-  protected loadingState: WritableSignal<LoadingState> = signal<LoadingState>('idle');
+  protected loadingState = signal(LoadingStatusEnum.Idle);
 
   protected userTopItems = computed<(Track | Artist | Album | Genre)[]>(() => {
     return this.userTopItemsStorage.getUserTopItems(this.periodOfTime(), this.itemsType());
@@ -63,7 +64,7 @@ export class UserTopItemsSimpleComponent implements OnInit {
         this.UserTopItemsCommand.loadInUserTopItems({
           type: this.itemsType(),
           timeFrame: this.periodOfTime(),
-        }).subscribe((state: LoadingState) => {
+        }).subscribe((state) => {
           this.loadingState.set(state);
         });
       }
@@ -77,7 +78,7 @@ export class UserTopItemsSimpleComponent implements OnInit {
       this.UserTopItemsCommand.loadInMoreUserTopItems({
         type: itemType,
         timeFrame: this.periodOfTime(),
-      }).subscribe((state: LoadingState) => {
+      }).subscribe((state) => {
         console.log(state);
         this.loadingState.set(state);
       });

@@ -10,6 +10,10 @@
     "@@settings_title-language": "мовні налаштування",
     "@@settings_logout": "вийти",
     "@@settings_deleteExtendedHistory": "видалити розширену історію",
+    "@@settings_deleteExtendedHistoryButton_idle": "видалити розширену історію",
+    "@@settings_deleteExtendedHistoryButton_deleting": "видалення розширеної історії",
+    "@@settings_deleteExtendedHistoryButton_deleted": "розширену історію видалено",
+    "@@settings_deleteExtendedHistoryButton_error": "помилка видалення розширеної історії",
     "@@settings_clearIgnoredTracks": "очистити проігноровані треки",
 
     "@@nav_simpleTop": "простий топ",

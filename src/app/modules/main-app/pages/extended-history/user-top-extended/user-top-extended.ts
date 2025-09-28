@@ -3,7 +3,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { SpotifyItemsCommand } from '@commands';
 import { ExtendedHistoryService } from '@services';
 import { SpotifyItemsStorage, UserStorage } from '@storage';
-import { LoadingState, Track, UserPrivate } from '@types';
+import { LoadingStatusEnum, Track, UserPrivate } from '@types';
 import { CardSimpleTrackComponent } from '@widgets';
 
 @Component({
@@ -26,8 +26,8 @@ export class UserTopExtended implements OnInit {
     return this.userStorage.getUser()?.listeningData?.expandedHistory || null;
   });
 
-  protected loadingState: LoadingState = 'idle';
-  protected tracksToShow: WritableSignal<number> = signal(this.initialTracksToShow);
+  protected loadingState = LoadingStatusEnum.Idle;
+  protected tracksToShow = signal<number>(this.initialTracksToShow);
 
   protected startingDate: WritableSignal<Date> = signal(new Date(0));
   protected endingDate: WritableSignal<Date> = signal(new Date());
@@ -58,7 +58,7 @@ export class UserTopExtended implements OnInit {
     const tracks = this.spotifyItemsStorage.getTracks([...this.tracksIdsToShow()]);
 
     if (tracks.length !== this.tracksIdsToShow().length) {
-      this.spotifyItemsCommand.loadTracks(this.tracksIdsToShow()).subscribe((status: LoadingState) => {
+      this.spotifyItemsCommand.loadTracks(this.tracksIdsToShow()).subscribe((status) => {
         this.loadingState =status;
       });
     }
@@ -69,19 +69,19 @@ export class UserTopExtended implements OnInit {
     this.startingDate.set(this.listeningData()?.startingDate || new Date(0));
     this.endingDate.set(this.listeningData()?.endingDate || new Date());
 
-    this.loadingState = 'loading';
+    this.loadingState = LoadingStatusEnum.Loading;
     this.extendedHistoryService.getTopTracksIds({
       startingDate: this.startingDate(),
       endingDate: this.endingDate(),
     }).subscribe((tracksIds: string[]) => {
       this.tracksIds.set(tracksIds);
-      this.loadingState = 'resolved';
+      this.loadingState = LoadingStatusEnum.Resolved;
       // this.loadingState.set('resolved');
     });
   }
 
   protected loadMoreItems() {
-    this.loadingState = 'appending';
+    this.loadingState = LoadingStatusEnum.Appending;
     this.tracksToShow.set(this.tracksToShow() + this.tracksNumberToLoad);
   }
 

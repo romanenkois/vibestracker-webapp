@@ -10,6 +10,10 @@
     "@@settings_title-language": "言語設定",
     "@@settings_logout": "ログアウト",
     "@@settings_deleteExtendedHistory": "extended historyを削除",
+    "@@settings_deleteExtendedHistoryButton_idle": "extended historyを削除",
+    "@@settings_deleteExtendedHistoryButton_deleting": "extended historyを削除",
+    "@@settings_deleteExtendedHistoryButton_deleted": "extended historyを削除",
+    "@@settings_deleteExtendedHistoryButton_error": "extended historyを削除",
     "@@settings_clearIgnoredTracks": "無視されたトラックをクリア",
 
     "@@nav_simpleTop": "シンプルぶんせき",

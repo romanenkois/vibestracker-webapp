@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserTopItemsSimpleStorage } from '@storage';
-import { LoadingState, SimpleItemsSelection, SimpleTimeFrame } from '@types';
+import { LoadingStatusEnum, SimpleItemsSelection, SimpleTimeFrame } from '@types';
 import { $appConfig } from '@environments';
 import { HttpClient } from '@angular/common/http';
 import { ToastNotificationsService } from '@libs';
@@ -19,12 +19,12 @@ export class UserTopItemsSimpleCommand {
   public loadInUserTopItems(params: {
     type: SimpleItemsSelection;
     timeFrame: SimpleTimeFrame;
-  }): Observable<LoadingState> {
-    return new Observable<LoadingState>((observer: any) => {
-      observer.next('loading');
+  }): Observable<LoadingStatusEnum> {
+    return new Observable<LoadingStatusEnum>((observer: any) => {
+      observer.next(LoadingStatusEnum.Loading);
 
       if (this.userTopItemsStorage.getUserTopItems(params.timeFrame, params.type).length > 0) {
-        observer.next('resolved');
+        observer.next(LoadingStatusEnum.Resolved);
         observer.complete();
         return;
       }
@@ -41,7 +41,7 @@ export class UserTopItemsSimpleCommand {
               return;
             }
             this.userTopItemsStorage.setUserTopItems(response.items, params.timeFrame, params.type);
-            observer.next('resolved');
+            observer.next(LoadingStatusEnum.Resolved);
             observer.complete();
             return;
           },
@@ -64,9 +64,9 @@ export class UserTopItemsSimpleCommand {
   public loadInMoreUserTopItems(params: {
     type: 'artists' | 'tracks';
     timeFrame: SimpleTimeFrame;
-  }): Observable<LoadingState> {
-    return new Observable<LoadingState>((observer: any) => {
-      observer.next('appending');
+  }): Observable<LoadingStatusEnum> {
+    return new Observable<LoadingStatusEnum>((observer: any) => {
+      observer.next(LoadingStatusEnum.Appending);
 
       this.http
         .get(
@@ -82,7 +82,7 @@ export class UserTopItemsSimpleCommand {
               return;
             }
             this.userTopItemsStorage.appendUserTopItems(response.items, params.timeFrame, params.type);
-            observer.next('resolved');
+            observer.next(LoadingStatusEnum.Resolved);
             observer.complete();
             return;
           },

@@ -1,28 +1,29 @@
-export type LoadingState =
-  | 'idle'
-  | 'nothing-to-load' // used, when we know that there is nothing to load, before we even try
-  | 'loading'
-  | 'appending' // used, when we have loaded something, and now loading more
-  | 'reloading' // used when we must reload new data
-  | 'resolved' // used when the loading is finished, but could be loaded again
-  | 'all-resolved' // used when there is no more to append
-  | 'resolved-empty' // the data was not loaded, but the request was send successfully
-  | 'error';
+export enum LoadingStatusEnum {
+  Idle = 'idle',
+  NothingToLoad = 'nothing-to-load', // used, when we know that there is nothing to load, before we even try
+  Loading = 'loading',
+  Appending = 'appending', // used, when we have loaded something, and now loading more
+  Reloading = 'reloading', // used when we must reload new data
+  Resolved = 'resolved', // used when the loading is finished, but could be loaded again
+  AllResolved = 'all-resolved', // used when there is no more to append
+  ResolvedEmpty = 'resolved-empty', // the data was not loaded, but the request was send successfully
+  Error = 'error',
+}
 
-export type UploadingStatus = 'idle' | 'uploading' | 'resolved' | 'error';
+// export type LoadingState = LoadingStateEnum;
 
-export type ExtendedHistoryPreparingState =
-  | 'idle'
-  | 'started-preparing'
-  | 'unzipped'
-  | 'merged'
-  | 'filtered'
-  | 'transformed'
-  | 'sorted'
-  | 'all-prepared'
-  | 'error';
-
-export type PreloadUserLoginState = 'idle' | 'loading' | 'resolved' | 'rejected';
+export enum UploadingStatusEnum {
+  Idle = 'idle',
+  Uploading = 'uploading',
+  Resolved = 'resolved',
+  Error = 'error',
+}
+export enum DeletingStatusEnum {
+  Idle = 'idle',
+  Deleting = 'deleting',
+  Deleted = 'deleted',
+  Error = 'error',
+}
 
 export enum PreloadUserLoginStatusEnum {
   Idle = 'idle',
@@ -31,6 +32,14 @@ export enum PreloadUserLoginStatusEnum {
   Rejected = 'rejected',
 }
 
-// export enum LoadingStateEnum {
-
-// }
+export enum ExtendedHistoryPreparingStateEnum {
+  Idle = 'idle',
+  StartedPreparing = 'started-preparing',
+  Unzipped = 'unzipped',
+  Merged = 'merged',
+  Filtered = 'filtered',
+  Transformed = 'transformed',
+  Sorted = 'sorted',
+  AllPrepared = 'all-prepared',
+  Error = 'error',
+}

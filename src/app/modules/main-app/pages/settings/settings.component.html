@@ -11,17 +11,30 @@
       {{ '@@settings_logout' | translate }}
     </button>
 
-    @if (this.deleteExtendedHistoryStatus() === 'idle' || this.deleteExtendedHistoryStatus() === 'resolved') {
-      <button
-        class="text-lg w-full py-1 px-12 bg-primary rounded-sm hover:bg-primary-light"
-        (click)="this.deleteExtendedHistory()"
-      >
-        <div>
-          <app-loading-spinner />
-        </div>
-        {{ '@@settings_deleteExtendedHistory' | translate }}
-      </button>
-    }
+    <button
+      class="text-lg w-full py-1 px-12 bg-primary rounded-sm hover:bg-primary-light"
+      (click)="this.deleteExtendedHistory()"
+    >
+      @switch (this.deleteExtendedHistoryStatus()) {
+        @case (DeletingStatusEnum.Idle) {
+          {{ '@@settings_deleteExtendedHistoryButton_idle' | translate }}
+        }
+        @case (DeletingStatusEnum.Deleting) {
+          <div class="flex gap-2 justify-center items-center">
+            {{ '@@settings_deleteExtendedHistoryButton_deleting' | translate }}
+            <div class="w-[20px] h-[20px] text-pure-white">
+              <app-loading-spinner />
+            </div>
+          </div>
+        }
+        @case (DeletingStatusEnum.Deleted) {
+          {{ '@@settings_deleteExtendedHistoryButton_deleted' | translate }}
+        }
+        @case (DeletingStatusEnum.Error) {
+          {{ '@@settings_deleteExtendedHistoryButton_error' | translate }}
+        }
+      }
+    </button>
 
     <button
       class="text-lg w-full py-1 px-12 bg-primary rounded-sm hover:bg-primary-light"

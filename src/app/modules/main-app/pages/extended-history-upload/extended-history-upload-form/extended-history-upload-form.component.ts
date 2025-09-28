@@ -1,9 +1,10 @@
 import { Component, HostListener, inject, signal, WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ExtendedHistoryPreparerService, ScreenNotificationService, ToastNotificationsService } from '@services';
-import { ExtendedHistoryPreparingState, ExtendedStreamingHistory, ExtendedStreamingHistoryPrepared, UploadingStatus } from '@types';
-import { ExtendedHistoryCommand } from '@commands';
 import { Router } from '@angular/router';
+
+import { ExtendedHistoryPreparerService, ScreenNotificationService, ToastNotificationsService } from '@services';
+import { ExtendedHistoryPreparingStateEnum, ExtendedStreamingHistoryPrepared, UploadingStatusEnum } from '@types';
+import { ExtendedHistoryCommand } from '@commands';
 
 @Component({
   selector: 'app-extended-history-upload-form',
@@ -19,8 +20,8 @@ export class ExtendedHistoryUploadFormComponent {
   private _screenNotificationService: ScreenNotificationService = inject(ScreenNotificationService);
   private _toastNotificationsService: ToastNotificationsService = inject(ToastNotificationsService);
 
-  protected processingStatus: WritableSignal<ExtendedHistoryPreparingState> = signal('idle');
-  protected uploadingStatus: WritableSignal<UploadingStatus> = signal('idle');
+  protected processingStatus = signal(ExtendedHistoryPreparingStateEnum.Idle);
+  protected uploadingStatus = signal(UploadingStatusEnum.Idle);
 
   protected startingDate: WritableSignal<string | null> = signal(null);
   protected endingDate: WritableSignal<string | null> = signal(null);
@@ -61,20 +62,18 @@ export class ExtendedHistoryUploadFormComponent {
   private async handleFile(file: File) {
     this.canUpload.set(false);
     try {
-      this._extendedHistoryPreparerService
-        .FullyProcessFile(file)
-        .subscribe((response: { status: ExtendedHistoryPreparingState; data?: ExtendedStreamingHistoryPrepared[] }) => {
-          this.processingStatus.set(response.status);
-          if (response.data && response.data.length > 0 && response.status === 'all-prepared') {
-            this.canUpload.set(true);
-            this.history.set(response.data);
-            this.startingDate.set(response.data[0].ts);
-            this.endingDate.set(response.data[response.data.length - 1].ts);
-            console.log('Data:', response.data);
-          }
-        });
+      this._extendedHistoryPreparerService.FullyProcessFile(file).subscribe((response) => {
+        this.processingStatus.set(response.status);
+        if (response.data && response.data.length > 0 && response.status === 'all-prepared') {
+          this.canUpload.set(true);
+          this.history.set(response.data);
+          this.startingDate.set(response.data[0].ts);
+          this.endingDate.set(response.data[response.data.length - 1].ts);
+          console.log('Data:', response.data);
+        }
+      });
     } catch (error) {
-      this.processingStatus.set('error');
+      this.processingStatus.set(ExtendedHistoryPreparingStateEnum.Error);
     }
   }
 
@@ -92,9 +91,9 @@ export class ExtendedHistoryUploadFormComponent {
       .uploadExtendedHistory({
         history: this.history(),
       })
-      .subscribe((status: UploadingStatus) => {
+      .subscribe((status) => {
         this.uploadingStatus.set(status);
-        if (status === 'resolved') {
+        if (status === UploadingStatusEnum.Resolved) {
           this._toastNotificationsService.sendNotification({
             title: 'Extended history uploaded successfully',
             type: 'success',

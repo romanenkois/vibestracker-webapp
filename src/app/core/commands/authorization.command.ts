@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserStorage } from '@storage';
-import { LoadingState } from '@types';
+import { LoadingStatusEnum } from '@types';
 import { $appConfig } from '@environments';
 import { HttpClient } from '@angular/common/http';
 
@@ -12,9 +12,9 @@ export class AuthorizationCommand {
   private http: HttpClient = inject(HttpClient);
   private userStorage: UserStorage = inject(UserStorage);
 
-  public codeLogIn(code: string): Observable<LoadingState> {
-    return new Observable<LoadingState>((observer) => {
-      observer.next('loading');
+  public codeLogIn(code: string): Observable<LoadingStatusEnum> {
+    return new Observable<LoadingStatusEnum>((observer) => {
+      observer.next(LoadingStatusEnum.Loading);
 
       this.http
         .get<any>(
@@ -26,26 +26,26 @@ export class AuthorizationCommand {
               this.userStorage.setToken(response.token);
               this.userStorage.setUser(response.user);
 
-              observer.next('resolved');
+              observer.next(LoadingStatusEnum.Resolved);
               observer.complete();
             } else {
               console.error('Invalid response from login:', response);
-              observer.next('error');
+              observer.next(LoadingStatusEnum.Error);
               observer.complete();
             }
           },
           error: (error: any) => {
             console.error('Error during login:', error);
-            observer.next('error');
+            observer.next(LoadingStatusEnum.Error);
             observer.complete();
           },
         });
     });
   }
 
-  public verifyToken(token: string): Observable<LoadingState> {
-    return new Observable<LoadingState>((observer) => {
-      observer.next('loading');
+  public verifyToken(token: string): Observable<LoadingStatusEnum> {
+    return new Observable<LoadingStatusEnum>((observer) => {
+      observer.next(LoadingStatusEnum.Loading);
 
       this.http
         .get<any>(`${$appConfig.api.BASE_API_URL}/authorization/verify`)
@@ -54,16 +54,16 @@ export class AuthorizationCommand {
             if (response.user && response.token) {
               this.userStorage.setUser(response.user);
               this.userStorage.setToken(response.token);
-              observer.next('resolved');
+              observer.next(LoadingStatusEnum.Resolved);
               observer.complete();
             } else {
               // is 401 if not valid, but we would handle anything else as error of authorization
-              observer.next('error');
+              observer.next(LoadingStatusEnum.Error);
               observer.complete();
             }
           },
           error: (error: any) => {
-            observer.next('error');
+            observer.next(LoadingStatusEnum.Error);
             observer.complete();
           },
         });
