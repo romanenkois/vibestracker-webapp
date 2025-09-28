@@ -1,7 +1,7 @@
 import { Component, effect, inject, WritableSignal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { PreloadService } from '@services';
-import { PreloadUserLoginState } from '@types';
+import { PreloadUserLoginStatusEnum } from '@types';
 import { NavBarComponent } from '@widgets';
 import { LoadingSpinner } from '@features';
 import { TranslatePipe } from '@pipes';
@@ -17,13 +17,13 @@ export default class MainComponent {
   private readonly _preloadService: PreloadService = inject(PreloadService);
 
   protected showHeader: boolean = true;
-  protected userIsLoggedIn: WritableSignal<PreloadUserLoginState> = this._preloadService.preloadUserLoginStatus;
+  protected userIsLoggedIn = this._preloadService.preloadUserLoginStatus;
 
   constructor() {
     this._preloadService.verifyUserByToken();
 
     effect(() => {
-      if (this.userIsLoggedIn() === 'rejected') {
+      if (this.userIsLoggedIn() === PreloadUserLoginStatusEnum.Rejected) {
         this._router.navigate(['/login']);
       }
     });

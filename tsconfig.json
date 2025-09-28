@@ -16,7 +16,7 @@
       "@features": ["src/app/shared/features/index.ts"],
       "@mappers": ["src/app/shared/mappers/index.ts"],
       "@pipes": ["src/app/shared/pipes/index.ts"],
-      "@types": ["src/app/shared/types/index.d.ts"],
+      "@types": ["src/app/shared/types/index.ts"],
       "@utils": ["src/app/shared/utils/index.ts"],
       "@widgets": ["src/app/shared/widgets/index.ts"],
 

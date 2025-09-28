@@ -11,7 +11,6 @@ export class UserStorage {
   public readonly userExtendedDataLoaded: WritableSignal<boolean> = signal(false);
 
   private readonly userToken: WritableSignal<string | null> = signal(null);
-  public readonly userTokenLoadingState: WritableSignal<LoadingState> = signal('idle');
 
   private readonly user: WritableSignal<UserPrivate | null> = signal(null);
   public readonly userLoadingState: WritableSignal<LoadingState> = signal('idle');

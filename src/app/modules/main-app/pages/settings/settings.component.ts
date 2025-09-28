@@ -15,11 +15,8 @@ export default class SettingsComponent {
   private extendedHistoryCommand: ExtendedHistoryCommand = inject(ExtendedHistoryCommand);
   private userCommand: UserCommand = inject(UserCommand);
 
-  logOut() {
-    this.authorizationCommand.logOut();
-  }
-
   protected deleteExtendedHistoryStatus: WritableSignal<UploadingStatus> = signal('idle');
+
   deleteExtendedHistory() {
     this.extendedHistoryCommand.deleteUserExtendedHistory().subscribe((status: UploadingStatus) => {
       this.deleteExtendedHistoryStatus.set(status);
@@ -28,5 +25,9 @@ export default class SettingsComponent {
 
   clearIgnoredTracks() {
     this.userCommand.clearIgnoredTracks();
+  }
+
+  logOut() {
+    this.authorizationCommand.logOut();
   }
 }

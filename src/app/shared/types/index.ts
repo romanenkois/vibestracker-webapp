@@ -14,4 +14,4 @@ export * from './user-settings.type';
 export * from './user.type';
 
 export * from '@libs/screen-notification/types';
-export * from '@libs/screen-toasts-notification/types';
+export * from './../../../libs/screen-toasts-notifications/types/index';
