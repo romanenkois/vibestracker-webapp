@@ -7,8 +7,11 @@
       <app-card-simple-track
         [track]="track"
         [index]="$index + 1"
-        [timeListened]="this.getTrackTimeListenedTotal(track.id)"
-      ></app-card-simple-track>
+        [userTrackStats]="{
+          timeListened: this.getTrackTimeListenedTotal(track.id),
+          timesPlayed: this.getTrackTimesPlayedTotal(track.id)
+        }"
+      />
     </div>
     }
   </div>

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import JSZip from 'jszip';
 import { Observable } from 'rxjs';
+import JSZip from 'jszip';
+
 import {
   ExtendedHistoryPreparingStateEnum,
   ExtendedStreamingHistoryDTO,
@@ -71,6 +72,8 @@ export class ExtendedHistoryPreparerService {
       return () => {}; // Cleanup function
     });
   }
+
+  // #region Private methods
 
   // unzips archive, and take sonly streaming history files
   private async extractStreamingHistory(zipFile: File): Promise<any[]> {
@@ -188,9 +191,11 @@ export class ExtendedHistoryPreparerService {
     });
   }
 
+  // #endregion Private methods
+
   // TODO: remove
   // is used for testing
-  private download(data: string): void {
+  private download(data: string) {
     const blob = new Blob([data], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);

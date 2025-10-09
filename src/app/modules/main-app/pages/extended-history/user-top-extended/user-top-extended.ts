@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, Signal, signal, WritableSignal } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, Signal, signal, WritableSignal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { SpotifyItemsCommand } from '@commands';
 import { ExtendedHistoryService } from '@services';
@@ -54,30 +54,42 @@ export class UserTopExtended implements OnInit {
   //   return toSignal<string[]>(tracksId) || [];
   // });
 
-  protected topTracks = computed(() => {
-    const tracks = this.spotifyItemsStorage.getTracks([...this.tracksIdsToShow()]);
+  // protected topTracks = computed(() => {
+  //   const tracks = this.spotifyItemsStorage.getTracks([...this.tracksIdsToShow()]);
 
-    if (tracks.length !== this.tracksIdsToShow().length) {
-      this.spotifyItemsCommand.loadTracks(this.tracksIdsToShow()).subscribe((status) => {
-        this.loadingState =status;
-      });
-    }
-    return tracks;
+  //   return tracks;
+  // });
+
+  protected topTracks = computed<Track[]>(() => {
+    return this.spotifyItemsStorage.getTracks([...this.tracksIdsToShow()]);
   });
+
+  constructor() {
+    effect(() => {
+      const tracks = this.spotifyItemsStorage.getTracks([...this.tracksIdsToShow()]);
+      if (tracks.length !== this.tracksIdsToShow().length) {
+        this.spotifyItemsCommand.loadTracks(this.tracksIdsToShow()).subscribe((status) => {
+          this.loadingState = status;
+        });
+      }
+    });
+  }
 
   ngOnInit() {
     this.startingDate.set(this.listeningData()?.startingDate || new Date(0));
     this.endingDate.set(this.listeningData()?.endingDate || new Date());
 
     this.loadingState = LoadingStatusEnum.Loading;
-    this.extendedHistoryService.getTopTracksIds({
-      startingDate: this.startingDate(),
-      endingDate: this.endingDate(),
-    }).subscribe((tracksIds: string[]) => {
-      this.tracksIds.set(tracksIds);
-      this.loadingState = LoadingStatusEnum.Resolved;
-      // this.loadingState.set('resolved');
-    });
+    this.extendedHistoryService
+      .getTopTracksIds({
+        startingDate: this.startingDate(),
+        endingDate: this.endingDate(),
+      })
+      .subscribe((tracksIds: string[]) => {
+        this.tracksIds.set(tracksIds);
+        this.loadingState = LoadingStatusEnum.Resolved;
+        // this.loadingState.set('resolved');
+      });
   }
 
   protected loadMoreItems() {
@@ -90,5 +102,13 @@ export class UserTopExtended implements OnInit {
       this.extendedHistoryService.topTracks().find((track: { id: string; ms_played: number }) => track.id === id)
         ?.ms_played || 0
     );
+  }
+
+  protected getTrackTimesPlayedTotal(id: Track['id']): number {
+    return 0;
+    // return (
+    //   this.extendedHistoryService.topTracks().find((track: { id: string; times_played: number }) => track.id === id)
+    //     ?.times_played || 0
+    // );
   }
 }

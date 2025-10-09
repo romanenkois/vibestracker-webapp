@@ -1,8 +1,22 @@
-import { ChangeDetectionStrategy, Component, HostListener, inject, input, InputSignal, signal, WritableSignal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostListener,
+  inject,
+  input,
+  InputSignal,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { UserCommand } from '@commands';
 import { TimeSimplePipe } from '@pipes';
 import { Track } from '@types';
+
+export interface UserTrackStats {
+  timeListened?: number;
+  timesPlayed?: number;
+}
 
 @Component({
   selector: 'app-card-simple-track',
@@ -15,16 +29,12 @@ import { Track } from '@types';
 export class CardSimpleTrackComponent {
   private userCommand: UserCommand = inject(UserCommand);
 
-  track: InputSignal<Track> = input.required<Track>();
-  index: InputSignal<number> = input.required<number>();
+  track = input.required<Track>();
 
-  timeListened: InputSignal<number> = input<number>(0);
-  timesPlayed: InputSignal<number> = input<number>(0);
+  index = input<number>();
+  userTrackStats = input<UserTrackStats>();
 
-  // used when stuff happens
-  ignoringThisTrack: WritableSignal<boolean> = signal<boolean>(false);
   showTrackMenu: WritableSignal<boolean> = signal<boolean>(false);
-
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
@@ -35,8 +45,6 @@ export class CardSimpleTrackComponent {
   }
 
   ignoreTrack() {
-    this.ignoringThisTrack.set(true);
-    this.userCommand
-      .addIgnoredTrack(this.track().id);
+    this.userCommand.addIgnoredTrack(this.track().id);
   }
 }
