@@ -5,6 +5,7 @@ export * from './spotify/spotify.artist.type';
 export * from './spotify/spotify.track.type';
 export * from './spotify/spotify.user.type';
 
+export * from './api.types';
 export * from './app-config.type';
 export * from './locale.type';
 export * from './loading-state.type';

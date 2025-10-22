@@ -1,4 +1,4 @@
-import { AppConfig } from '@types';
+import { AppConfig, SupportedLocaleEnum } from '@types';
 
 export const $appConfig: AppConfig = {
   api: {
@@ -25,15 +25,18 @@ export const $appConfig: AppConfig = {
     maxTopTracksAnalyze: 2000,
   },
   localization: {
-    defaultLocale: 'en-US',
-    supportedLocales: ['en-US', 'uk', 'ja'],
+    supportedLocales: [SupportedLocaleEnum.EnglishUS, SupportedLocaleEnum.Ukrainian, SupportedLocaleEnum.Japanese],
   },
   defaultUserSettings: {
     theme: 'dark',
-    locale: 'en-US',
+    locale: SupportedLocaleEnum.EnglishUS,
     saveToken: true,
     extendedHistory: {
       ignoredTracks: [],
     },
+  },
+  localeStorageKeys: {
+    languageLocal: 'lang-locale',
+    userToken: 'user-token',
   },
 };

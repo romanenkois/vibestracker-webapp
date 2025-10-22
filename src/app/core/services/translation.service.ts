@@ -2,7 +2,7 @@ import { inject, Injectable, Signal, signal, WritableSignal } from '@angular/cor
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { SupportedLocale, TranslationFile } from '@types';
+import { SupportedLocaleEnum, TranslationFile } from '@types';
 import { $appConfig } from '@environments';
 
 // This service was entirely vibecoded ^^
@@ -14,17 +14,17 @@ import { $appConfig } from '@environments';
 export class TranslationService {
   private readonly _http = inject(HttpClient);
 
-  private readonly currentLocale: WritableSignal<SupportedLocale> = signal($appConfig.localization.defaultLocale);
+  private readonly currentLocale: WritableSignal<SupportedLocaleEnum> = signal($appConfig.defaultUserSettings.locale);
   private readonly translations: WritableSignal<Record<string, string>> = signal({});
   private readonly isLoading: WritableSignal<boolean> = signal(false);
   private initialized = false;
 
   // Observable for components that need to react to language changes
-  private localeChange$ = new BehaviorSubject<SupportedLocale>(this.currentLocale());
+  private localeChange$ = new BehaviorSubject<SupportedLocaleEnum>(this.currentLocale());
 
-  public readonly supportedLocales: SupportedLocale[] = $appConfig.localization.supportedLocales;
+  public readonly supportedLocales: SupportedLocaleEnum[] = $appConfig.localization.supportedLocales;
 
-  getCurrentLocale(): Signal<SupportedLocale> {
+  getCurrentLocale(): Signal<SupportedLocaleEnum> {
     return this.currentLocale;
   }
 
@@ -86,7 +86,7 @@ export class TranslationService {
   /**
    * Set the current locale and load its translations
    */
-  async setLocale(locale: SupportedLocale): Promise<void> {
+  async setLocale(locale: SupportedLocaleEnum): Promise<void> {
     if (locale === this.currentLocale() && this.initialized) {
       return;
     }
@@ -109,10 +109,10 @@ export class TranslationService {
 
       console.warn('Falling back to English translations');
       try {
-        await this.loadTranslations('en-US');
-        this.currentLocale.set('en-US');
-        this.localeChange$.next('en-US');
-        this.saveToStorage('en-US');
+        await this.loadTranslations(SupportedLocaleEnum.EnglishUS);
+        this.currentLocale.set(SupportedLocaleEnum.EnglishUS);
+        this.localeChange$.next(SupportedLocaleEnum.EnglishUS);
+        this.saveToStorage(SupportedLocaleEnum.EnglishUS);
         this.initialized = true;
       } catch (fallbackError) {
         console.error('Failed to load English fallback translations:', fallbackError);
@@ -127,7 +127,7 @@ export class TranslationService {
   /**
    * Load translations for a specific locale
    */
-  private async loadTranslations(locale: SupportedLocale): Promise<void> {
+  private async loadTranslations(locale: SupportedLocaleEnum): Promise<void> {
     const translationFile = await this.getTranslationFile(locale);
     this.translations.set(translationFile.translations);
   }
@@ -135,7 +135,7 @@ export class TranslationService {
   /**
    * Get translation file for a locale
    */
-  private getTranslationFile(locale: SupportedLocale): Promise<TranslationFile> {
+  private getTranslationFile(locale: SupportedLocaleEnum): Promise<TranslationFile> {
     const filePath = this.getTranslationFilePath(locale);
 
     return this._http
@@ -145,7 +145,7 @@ export class TranslationService {
           console.error(`Failed to load translation file for ${locale}:`, error);
           // Fallback to English if the translation file fails to load
           if (locale !== 'en-US') {
-            return this._http.get<TranslationFile>(this.getTranslationFilePath('en-US'));
+            return this._http.get<TranslationFile>(this.getTranslationFilePath(SupportedLocaleEnum.EnglishUS));
           }
           throw error;
         }),
@@ -156,30 +156,23 @@ export class TranslationService {
   /**
    * Get the file path for a locale's translations
    */
-  private getTranslationFilePath(locale: SupportedLocale): string {
-    switch (locale) {
-      case 'en-US':
+  private getTranslationFilePath(locale: SupportedLocaleEnum): string {
+    if (locale) {
+      if (locale === SupportedLocaleEnum.EnglishUS) {
         return 'translations/source.json';
-      case 'uk':
-        return 'translations/locale.uk.json';
-      case 'ja':
-        return 'translations/locale.ja.json';
-      default:
-        return 'translations/source.json';
+      } else {
+        return `translations/locale.${locale}.json`;
+      }
+    } else {
+      return 'translations/source.json';
     }
   }
 
-  /**
-   * Save current locale to localStorage
-   */
-  private saveToStorage(locale: SupportedLocale): void {
-    localStorage.setItem('vibes-tracker-locale', locale);
+  private saveToStorage(locale: SupportedLocaleEnum): void {
+    localStorage.setItem($appConfig.localeStorageKeys.languageLocal, locale);
   }
 
-  /**
-   * Get display name for a locale (for UI purposes)
-   */
-  getLocaleDisplayName(locale: SupportedLocale): string {
+  public getLocaleDisplayName(locale: SupportedLocaleEnum): string {
     switch (locale) {
       case 'en-US':
         return 'English';

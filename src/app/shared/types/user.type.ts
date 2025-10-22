@@ -18,7 +18,6 @@ export type UserPrivate = {
       totalMsPlayed: number;
     };
   };
-  ignoredTracks: string[];
 };
 
 export type UserPublic = {

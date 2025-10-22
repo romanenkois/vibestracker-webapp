@@ -1,15 +1,6 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  HostListener,
-  inject,
-  input,
-  InputSignal,
-  signal,
-  WritableSignal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, inject, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { UserCommand } from '@commands';
+import { UserPreferencesCommand } from '@commands';
 import { TimeSimplePipe } from '@pipes';
 import { Track } from '@types';
 
@@ -27,14 +18,14 @@ export interface UserTrackStats {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardSimpleTrackComponent {
-  private userCommand: UserCommand = inject(UserCommand);
+  private readonly _userPreferencesCommand = inject(UserPreferencesCommand);
 
   track = input.required<Track>();
 
   index = input<number>();
   userTrackStats = input<UserTrackStats>();
 
-  showTrackMenu: WritableSignal<boolean> = signal<boolean>(false);
+  showTrackMenu = signal<boolean>(false);
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
@@ -44,7 +35,11 @@ export class CardSimpleTrackComponent {
     }
   }
 
-  ignoreTrack() {
-    this.userCommand.addIgnoredTrack(this.track().id);
+  protected ignoreTrack() {
+    this._userPreferencesCommand.addIgnoredTrack({ trackId: this.track().id }).subscribe();
+  }
+
+  protected ignoreArtist() {
+    this._userPreferencesCommand.addIgnoredArtist({ artistId: this.track().artists[0].id }).subscribe();
   }
 }

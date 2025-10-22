@@ -1,4 +1,5 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { $appConfig } from '@environments';
 import { UserSettingsStorage } from '@storage';
 import { LoadingStatusEnum, UserPrivate } from '@types';
 
@@ -21,9 +22,9 @@ export class UserStorage {
     // TODO: dangerously unsafe
     if (this.userSettings.getUserSettings().saveToken) {
       if (token === null) {
-        localStorage.removeItem('userToken');
+        localStorage.removeItem($appConfig.localeStorageKeys.userToken);
       } else {
-        localStorage.setItem('userToken', JSON.stringify(token));
+        localStorage.setItem($appConfig.localeStorageKeys.userToken, JSON.stringify(token));
       }
     }
   }

@@ -1,5 +1,5 @@
 import { Component, inject, signal, WritableSignal } from '@angular/core';
-import { AuthorizationCommand, ExtendedHistoryCommand, UserCommand } from '@commands';
+import { AuthorizationCommand, ExtendedHistoryCommand, UserCommand, UserPreferencesCommand } from '@commands';
 import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
 import { LanguageSelectorComponent, LoadingSpinner } from '@features';
 import { DeletingStatusEnum } from '@types';
@@ -13,7 +13,7 @@ import { DeletingStatusEnum } from '@types';
 export default class SettingsComponent {
   private readonly _authorizationCommand = inject(AuthorizationCommand);
   private readonly _extendedHistoryCommand = inject(ExtendedHistoryCommand);
-  private readonly _userCommand = inject(UserCommand);
+  private readonly _userPreferencesCommand = inject(UserPreferencesCommand);
 
   protected DeletingStatusEnum = DeletingStatusEnum;
 
@@ -25,7 +25,7 @@ export default class SettingsComponent {
     });
   }
   protected clearIgnoredTracks() {
-    this._userCommand.clearIgnoredTracks();
+    this._userPreferencesCommand.clearIgnoredTracks();
   }
   protected logOut() {
     this._authorizationCommand.logOut();

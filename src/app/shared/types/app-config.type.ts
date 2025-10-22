@@ -1,4 +1,4 @@
-import { SupportedLocale } from './locale.type';
+import { SupportedLocaleEnum } from './locale.type';
 import { UserSettings } from './user-settings.type';
 
 export type AppConfig = {
@@ -18,8 +18,11 @@ export type AppConfig = {
     maxTopTracksAnalyze: number;
   };
   localization: {
-    defaultLocale: SupportedLocale;
-    supportedLocales: SupportedLocale[];
+    supportedLocales: SupportedLocaleEnum[];
   };
   defaultUserSettings: UserSettings;
+  localeStorageKeys: {
+    languageLocal: string;
+    userToken: string;
+  };
 };

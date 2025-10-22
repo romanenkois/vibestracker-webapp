@@ -1,5 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { AuthorizationCommand } from '@commands';
+import { $appConfig } from '@environments';
 import { UserStorage, UserSettingsStorage } from '@storage';
 import { PreloadUserLoginStatusEnum } from '@types';
 
@@ -25,7 +26,7 @@ export class PreloadService {
       try {
         // we try to get token, at first from uptime time memory, then from local storage
         const _token = this._userSettings.getUserSettings().saveToken
-          ? JSON.parse(localStorage.getItem('userToken') || 'null')
+          ? JSON.parse(localStorage.getItem($appConfig.localeStorageKeys.userToken) || 'null')
           : null;
         if (_token) {
           token = _token;

@@ -93,80 +93,36 @@
 
 // #region TextPrettier
 
-.text-pretty-broken {
-  display: inline-block;
-  background: linear-gradient(
-    270deg,
-    var(--secondary-color),
-    var(--primary-dark-color),
-    var(--primary-light-color),
-    var(--primary-color),
-    var(--secondary-light-color),
-    var(--secondary-dark-color)
-  );
-  background-size: 600% 600%;
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: shift 20s ease infinite;
-  font-size: 2rem;
-  font-weight: bold;
-}
-
-.text-pretty-alternative {
-  position: relative;
-  display: inline-block;
-  font-size: 2rem;
-  font-weight: bold;
-  background: linear-gradient(
-    270deg,
-    var(--secondary-color),
-    var(--primary-dark-color),
-    var(--primary-light-color),
-    var(--primary-color),
-    var(--secondary-light-color),
-    var(--secondary-dark-color)
-  );
-  background-size: 600% 600%;
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: shift 20s ease infinite;
-}
-
-.text-pretty-alternative span {
-  background: inherit;
-  background-clip: inherit;
-  -webkit-background-clip: inherit;
-  -webkit-text-fill-color: inherit;
-  /* Key addition: prevent background repositioning */
-  background-attachment: inherit;
-}
-
 .text-pretty {
   position: relative;
-  z-index: 5;
+  display: inline-block;
+  font-size: 2rem;
+  font-weight: bold;
   background: linear-gradient(
     270deg,
-    var(--primary-dark-color),
-    var(--primary-light-color),
     var(--secondary-color),
-    var(--secondary-dark-color),
-    var(--primary-color)
+    var(--primary-light-color),
+    var(--primary-color),
+    var(--secondary-light-color),
+    var(--secondary-dark-color)
   );
   background-size: 600% 600%;
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: shift 5s ease infinite;
-}
-.text-pretty:hover {
+  animation: shift 20s ease infinite;
+
   transition: 0.2s;
-  animation-play-state: paused;
-  text-shadow:
-    0 0 15px rgba(255, 120, 180, 0.05),
-    0 0 5px rgba(255, 120, 180, 0.1);
+
+  &:hover {
+    animation-play-state: paused;
+    text-shadow:
+      0 0 15px rgba(255, 255, 255, 0.05),
+      0 0 5px rgba(255, 255, 255, 0.25);
+  }
 }
+
+// .text-primary {}
 
 @keyframes shift {
   0% {

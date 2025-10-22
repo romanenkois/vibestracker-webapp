@@ -42,48 +42,4 @@ export class UserCommand {
       });
     });
   }
-
-  public addIgnoredTrack(trackId: Track['id']) {
-    this._userStorage.userLoadingState.set(LoadingStatusEnum.Reloading);
-
-    this._http
-      .patch(`${$appConfig.api.BASE_API_URL}/user-ignore-track`, {
-        trackId,
-      })
-      .subscribe({
-        next: (response: any) => {
-          if (response.user) {
-            this._userStorage.setUser(response.user);
-            this._userStorage.userLoadingState.set(LoadingStatusEnum.Resolved);
-          } else {
-            console.error('Invalid response from add ignored track:', response);
-            this._userStorage.userLoadingState.set(LoadingStatusEnum.Resolved);
-          }
-        },
-        error: (error: any) => {
-          console.error('Error during add ignored track:', error);
-          this._userStorage.userLoadingState.set(LoadingStatusEnum.Resolved);
-        },
-      });
-  }
-
-  public clearIgnoredTracks() {
-    this._userStorage.userLoadingState.set(LoadingStatusEnum.Reloading);
-
-    this._http.delete(`${$appConfig.api.BASE_API_URL}/user-ignored-tracks`).subscribe({
-      next: (response: any) => {
-        if (response.user) {
-          this._userStorage.setUser(response.user);
-          this._userStorage.userLoadingState.set(LoadingStatusEnum.Resolved);
-        } else {
-          console.error('Invalid response from clear ignored tracks:', response);
-          this._userStorage.userLoadingState.set(LoadingStatusEnum.Resolved);
-        }
-      },
-      error: (error: any) => {
-        console.error('Error during clear ignored tracks:', error);
-        this._userStorage.userLoadingState.set(LoadingStatusEnum.Resolved);
-      },
-    });
-  }
 }

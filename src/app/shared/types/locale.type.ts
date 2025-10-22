@@ -1,4 +1,8 @@
-export type SupportedLocale = 'en-US' | 'uk' | 'ja';
+export enum SupportedLocaleEnum {
+  EnglishUS = 'en-US',
+  Ukrainian = 'uk',
+  Japanese = 'ja',
+}
 
 export interface TranslationFile {
   locale: string;

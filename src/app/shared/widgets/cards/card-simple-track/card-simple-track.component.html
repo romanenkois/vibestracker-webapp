@@ -17,7 +17,7 @@
     </div>
 
     <!-- TODO -->
-    <div class="absolute top-2 right-2">
+    <div class="absolute top-2 right-2 select-none">
       <div class="relative" (click)="$event.stopPropagation()">
         <div
           class="flex gap-[2px] p-2 w-max h-max bg-dark-light rounded-md cursor-pointer"
@@ -30,8 +30,18 @@
 
         @if (this.showTrackMenu()) {
           <div class="flex flex-col gap-2 p-2 w-max h-max bg-dark-light rounded-md absolute top-8 right-0 z-10">
-            <button class="text-left text-sm text-gray hover:text-white" (click)="this.ignoreTrack()">
+            <button
+              class="p-2 text-left text-sm text-gray rounded-md hover:text-white hover:bg-dark"
+              (click)="this.ignoreTrack()"
+            >
               <span>ignore this track</span>
+            </button>
+
+            <button
+              class="p-2 text-left text-sm text-gray rounded-md hover:text-white hover:bg-dark"
+              (click)="this.ignoreArtist()"
+            >
+              <span>ignore track artist</span>
             </button>
           </div>
         }
@@ -65,7 +75,7 @@
         <!-- TRACK NAME -->
         <div>
           <a class="w-min" routerLink="/track/{{ this.track().id }}">
-            <p class="font-bold truncate-1">{{ this.track().name }}</p>
+            <p class="font-bold truncate-1 hover:underline">{{ this.track().name }}</p>
           </a>
         </div>
 
@@ -75,11 +85,11 @@
             @for (artist of track().artists; track $index) {
               @if ($index < track().artists.length - 1) {
                 <a routerLink="/artist/{{ artist.id }}">
-                  <span>{{ artist.name }}, </span>
+                  <span class="hover:underline">{{ artist.name }}, </span>
                 </a>
               } @else {
                 <a routerLink="/artist/{{ artist.id }}">
-                  <span>{{ artist.name }} </span>
+                  <span class="hover:underline">{{ artist.name }} </span>
                 </a>
               }
             }
@@ -90,7 +100,7 @@
         <div>
           <p class="truncate-1 text-xs text-gray">
             <a routerLink="/album/{{ this.track().album.id }}">
-              <span>{{ this.track().album.name }}</span>
+              <span class="hover:underline">{{ this.track().album.name }}</span>
             </a>
           </p>
         </div>

@@ -1,6 +1,6 @@
-import { Component, HostListener, inject, Signal, signal, WritableSignal } from '@angular/core';
+import { Component, HostListener, inject, signal } from '@angular/core';
 import { ToastNotificationsService, TranslationService } from '@services';
-import { SupportedLocale } from '@types';
+import { SupportedLocaleEnum } from '@types';
 
 @Component({
   selector: 'app-language-selector',
@@ -9,13 +9,13 @@ import { SupportedLocale } from '@types';
   styleUrl: './language-selector.scss',
 })
 export class LanguageSelectorComponent {
-  private _translationService: TranslationService = inject(TranslationService);
-  private _toastNotificationsService: ToastNotificationsService = inject(ToastNotificationsService);
+  private readonly _translationService = inject(TranslationService);
+  private readonly _toastNotificationsService = inject(ToastNotificationsService);
 
-  protected isOpen: WritableSignal<boolean> = signal(false);
-  protected currentLocale: Signal<SupportedLocale> = this._translationService.getCurrentLocale();
-  protected supportedLocales: SupportedLocale[] = this._translationService.supportedLocales;
-  protected isLoading: WritableSignal<boolean> = signal(false);
+  protected currentLocale = this._translationService.getCurrentLocale();
+  protected supportedLocales = this._translationService.supportedLocales;
+  protected isOpen = signal<boolean>(false);
+  protected isLoading = signal<boolean>(false);
 
   @HostListener('document:click', ['$event'])
   listenToClickOutside(event: MouseEvent): void {
@@ -25,9 +25,10 @@ export class LanguageSelectorComponent {
     }
   }
 
-  async selectLanguage(locale: SupportedLocale): Promise<void> {
+  async selectLanguage(locale: SupportedLocaleEnum): Promise<void> {
     try {
       await this._translationService.setLocale(locale);
+
       this.isOpen.set(false);
       this._toastNotificationsService.sendNotification({
         type: 'success',
@@ -36,7 +37,7 @@ export class LanguageSelectorComponent {
     } catch (error) {
       this._toastNotificationsService.sendNotification({
         type: 'error',
-        message: `Failed to change language to ${this.getLocaleDisplayName(locale)}`,
+        message: `Failed to change language to ${this.getLocaleDisplayName(locale)}${error ? `,\n${error}` : ''}`,
       });
       console.error('Failed to change language:', error);
     }
@@ -46,7 +47,7 @@ export class LanguageSelectorComponent {
     return this.getLocaleDisplayName(this.currentLocale());
   }
 
-  protected getLocaleDisplayName(locale: SupportedLocale): string {
+  protected getLocaleDisplayName(locale: SupportedLocaleEnum): string {
     return this._translationService.getLocaleDisplayName(locale);
   }
 }
