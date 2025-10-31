@@ -1,6 +1,6 @@
-import { Component, inject, signal, WritableSignal } from '@angular/core';
-import { AuthorizationCommand, ExtendedHistoryCommand, UserCommand, UserPreferencesCommand } from '@commands';
-import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
+import { Component, inject, signal } from '@angular/core';
+import { AuthorizationCommand, ExtendedHistoryCommand, UserPreferencesCommand } from '@commands';
+import { TranslatePipe } from '@pipes';
 import { LanguageSelectorComponent, LoadingSpinner } from '@features';
 import { DeletingStatusEnum } from '@types';
 

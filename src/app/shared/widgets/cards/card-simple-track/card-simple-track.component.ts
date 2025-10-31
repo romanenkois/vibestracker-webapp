@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, HostListener, inject, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+
 import { UserPreferencesCommand } from '@commands';
 import { TimeSimplePipe } from '@pipes';
 import { Track } from '@types';
