@@ -1,17 +1,16 @@
-import { Component, computed, effect, inject, OnInit, Signal, signal, WritableSignal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, OnInit, signal } from '@angular/core';
 import { SpotifyItemsCommand } from '@commands';
 import { ExtendedHistoryService } from '@services';
 import { SpotifyItemsStorage, UserStorage } from '@storage';
-import { LoadingStatusEnum, Track, UserPrivate } from '@types';
+import { LoadingStatusEnum, Track } from '@types';
 import { CardSimpleTrackComponent } from '@widgets';
 
 @Component({
   selector: 'app-user-top-extended',
   imports: [CardSimpleTrackComponent],
   templateUrl: './user-top-extended.html',
-  styleUrl: './user-top-extended.scss',
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrls: ['./user-top-extended.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserTopExtended implements OnInit {
   private readonly extendedHistoryService: ExtendedHistoryService = inject(ExtendedHistoryService);
@@ -19,46 +18,19 @@ export class UserTopExtended implements OnInit {
   private readonly spotifyItemsCommand: SpotifyItemsCommand = inject(SpotifyItemsCommand);
   private readonly userStorage: UserStorage = inject(UserStorage);
 
-  private readonly initialTracksToShow = 50;
-  private readonly tracksNumberToLoad = 100;
-
-  protected listeningData: Signal<UserPrivate['listeningData']['expandedHistory'] | null> = computed(() => {
-    return this.userStorage.getUser()?.listeningData?.expandedHistory || null;
-  });
+  private readonly INITIAL_NUMBER_OF_ITEMS_TO_LOAD = 50;
+  private readonly TRACKS_NUMBER_TO_LOAD = 100;
 
   protected loadingState = LoadingStatusEnum.Idle;
-  protected tracksToShow = signal<number>(this.initialTracksToShow);
+  protected tracksToShow = signal<number>(this.INITIAL_NUMBER_OF_ITEMS_TO_LOAD);
 
-  protected startingDate: WritableSignal<Date> = signal(new Date(0));
-  protected endingDate: WritableSignal<Date> = signal(new Date());
+  startingDate = input.required<Date>();
+  endingDate = input.required<Date>();
 
-  private tracksIds: WritableSignal<string[]> = signal([]);
-  private tracksIdsToShow: Signal<string[]> = computed(() => {
+  private tracksIds = signal<string[]>([]);
+  private tracksIdsToShow = computed<string[]>(() => {
     return this.tracksIds().slice(0, this.tracksToShow());
   });
-
-  // computed(() => {
-  //   const tracksId = this.extendedHistoryService
-  //   .getTopTracksIds({
-  //     startingDate: this.startingDate(),
-  //     endingDate: this.endingDate(),
-  //   })
-  //     // .getTopTracks({
-  //     //   startingDate: this.startingDate(),
-  //     //   endingDate: this.endingDate(),
-  //     // })
-  //     // .slice(0, this.tracksToShow())
-  //     // .map((track: any) => track.id);
-
-  //   console.log("tracksId", tracksId);
-  //   return toSignal<string[]>(tracksId) || [];
-  // });
-
-  // protected topTracks = computed(() => {
-  //   const tracks = this.spotifyItemsStorage.getTracks([...this.tracksIdsToShow()]);
-
-  //   return tracks;
-  // });
 
   protected topTracks = computed<Track[]>(() => {
     return this.spotifyItemsStorage.getTracks([...this.tracksIdsToShow()]);
@@ -76,9 +48,6 @@ export class UserTopExtended implements OnInit {
   }
 
   ngOnInit() {
-    this.startingDate.set(this.listeningData()?.startingDate || new Date(0));
-    this.endingDate.set(this.listeningData()?.endingDate || new Date());
-
     this.loadingState = LoadingStatusEnum.Loading;
     this.extendedHistoryService
       .getTopTracksIds({
@@ -94,7 +63,7 @@ export class UserTopExtended implements OnInit {
 
   protected loadMoreItems() {
     this.loadingState = LoadingStatusEnum.Appending;
-    this.tracksToShow.set(this.tracksToShow() + this.tracksNumberToLoad);
+    this.tracksToShow.set(this.tracksToShow() + this.TRACKS_NUMBER_TO_LOAD);
   }
 
   protected getTrackTimeListenedTotal(id: Track['id']): number {
@@ -104,6 +73,7 @@ export class UserTopExtended implements OnInit {
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected getTrackTimesPlayedTotal(id: Track['id']): number {
     return 0;
     // return (

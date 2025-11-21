@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,45 +5,49 @@ import {
   inject,
   OnInit,
   signal,
-  Signal,
-  WritableSignal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { UserStorage } from '@storage';
 import { LoadingStatusEnum, UserPrivate } from '@types';
 import { ExtendedHistoryCommand } from '@commands';
 import { LoadingSpinner } from '@features';
-import { TimeSimplePipe } from '@pipes';
 import { UserTopExtended } from './user-top-extended/user-top-extended';
+import { GeneralStatsComponent } from "./general-stats/general-stats";
+import { ExtendedHistoryFilter } from "./extended-history-filter/extended-history-filter";
 @Component({
   selector: 'app-extended-history',
-  imports: [RouterLink, DatePipe, UserTopExtended, LoadingSpinner, TimeSimplePipe],
+  imports: [RouterLink, UserTopExtended, LoadingSpinner, GeneralStatsComponent, ExtendedHistoryFilter],
   templateUrl: './extended-history.component.html',
   styleUrl: './extended-history.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class ExtendedHistoryComponent implements OnInit {
-  private readonly userStorage: UserStorage = inject(UserStorage);
-  private readonly extendedDataCommand: ExtendedHistoryCommand = inject(ExtendedHistoryCommand);
+  private readonly userStorage = inject(UserStorage);
+  private readonly extendedDataCommand = inject(ExtendedHistoryCommand);
 
-  protected listeningDataRecord: Signal<UserPrivate['listeningData']['expandedHistory'] | null> = computed(() => {
+  protected listeningDataRecord = computed<UserPrivate['listeningData']['expandedHistory'] | null>(() => {
     const listeningData = this.userStorage.getUser()?.listeningData?.expandedHistory;
     return listeningData ? listeningData : null;
   });
-
-  protected userExtendedDataLoaded: Signal<boolean> = computed(() => {
-    return this.userStorage.userExtendedDataLoaded();
-  });
+  protected userExtendedDataLoaded = computed<boolean>(() =>
+    this.userStorage.userExtendedDataLoaded());
   protected loadingState = signal(LoadingStatusEnum.Idle);
+
+  protected startingDate = signal<Date>(new Date(0));
+  protected endingDate = signal<Date>(new Date());
 
   ngOnInit() {
     if (!this.userExtendedDataLoaded()) {
-      const startingDate: Date = new Date(
-        this.userStorage.getUser()?.listeningData?.expandedHistory?.startingDate || 0,
+      const startingDate = new Date(
+        this.listeningDataRecord()?.startingDate || new Date(0),
+      )
+      const endingDate = new Date(
+        this.listeningDataRecord()?.endingDate || new Date(),
       );
-      const endingDate: Date = new Date(
-        this.userStorage.getUser()?.listeningData?.expandedHistory?.endingDate || Date.now(),
-      );
+
+      this.startingDate.set(startingDate);
+      this.endingDate.set(endingDate);
+
       this.extendedDataCommand.loadExtendedHistory({ startingDate, endingDate }).subscribe((status) => {
         this.loadingState.set(status);
       });
