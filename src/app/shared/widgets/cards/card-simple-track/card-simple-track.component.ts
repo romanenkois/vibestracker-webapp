@@ -6,7 +6,7 @@ import { TimeSimplePipe } from '@pipes';
 import { Track } from '@types';
 
 export interface UserTrackStats {
-  timeListened?: number;
+  msPlayed?: number;
   timesPlayed?: number;
 }
 

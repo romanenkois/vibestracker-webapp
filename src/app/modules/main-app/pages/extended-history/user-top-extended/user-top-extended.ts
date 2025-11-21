@@ -1,9 +1,17 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal } from '@angular/core';
+
 import { SpotifyItemsCommand } from '@commands';
 import { ExtendedHistoryService } from '@services';
-import { SpotifyItemsStorage, UserStorage } from '@storage';
-import { LoadingStatusEnum, Track } from '@types';
+import { SpotifyItemsStorage } from '@storage';
+import { LoadingStatusEnum, LoadingStatusSimpleEnum, Track, TracksAnalysisUserExtendedHistory } from '@types';
 import { CardSimpleTrackComponent } from '@widgets';
+
+interface DisplayedAnalysisItem {
+  index: number;
+  track: Track | null;
+  msPlayed: number;
+  timesPlayed: number;
+}
 
 @Component({
   selector: 'app-user-top-extended',
@@ -12,73 +20,87 @@ import { CardSimpleTrackComponent } from '@widgets';
   styleUrls: ['./user-top-extended.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserTopExtended implements OnInit {
-  private readonly extendedHistoryService: ExtendedHistoryService = inject(ExtendedHistoryService);
-  private readonly spotifyItemsStorage: SpotifyItemsStorage = inject(SpotifyItemsStorage);
-  private readonly spotifyItemsCommand: SpotifyItemsCommand = inject(SpotifyItemsCommand);
-  private readonly userStorage: UserStorage = inject(UserStorage);
+export class UserTopExtended {
+  private readonly _extendedHistoryService = inject(ExtendedHistoryService);
+  private readonly _spotifyItemsStorage = inject(SpotifyItemsStorage);
+  private readonly _spotifyItemsCommand = inject(SpotifyItemsCommand);
 
   private readonly INITIAL_NUMBER_OF_ITEMS_TO_LOAD = 50;
   private readonly TRACKS_NUMBER_TO_LOAD = 100;
 
-  protected loadingState = LoadingStatusEnum.Idle;
-  protected tracksToShow = signal<number>(this.INITIAL_NUMBER_OF_ITEMS_TO_LOAD);
-
   startingDate = input.required<Date>();
   endingDate = input.required<Date>();
 
-  private tracksIds = signal<string[]>([]);
-  private tracksIdsToShow = computed<string[]>(() => {
-    return this.tracksIds().slice(0, this.tracksToShow());
-  });
+  protected loadingState = LoadingStatusEnum.Idle;
+  private tracksToShow = signal<number>(this.INITIAL_NUMBER_OF_ITEMS_TO_LOAD);
 
-  protected topTracks = computed<Track[]>(() => {
-    return this.spotifyItemsStorage.getTracks([...this.tracksIdsToShow()]);
+  private userTopTracksAnalysis = signal<TracksAnalysisUserExtendedHistory | null>(null);
+  private spotifyTracks = signal<Track[]>([]);
+  protected displayedAnalysis = computed<DisplayedAnalysisItem[]>(() => {
+    if (this.loadingState !== LoadingStatusEnum.Resolved) {
+      return [];
+    }
+
+    const analysis = this.userTopTracksAnalysis();
+    const tracks = this.spotifyTracks();
+
+    const finalRes: DisplayedAnalysisItem[] = [];
+
+    for (let i = 0; i < this.tracksToShow(); i++) {
+      finalRes.push({
+        index: analysis?.tracks[i].index || 0,
+        track: tracks.find((t) => t.id === analysis?.tracks[i].trackId) || null,
+        msPlayed: analysis?.tracks[i].msPlayed || 0,
+        timesPlayed: analysis?.tracks[i].timesPlayed || 0,
+      });
+    }
+
+    return finalRes;
   });
 
   constructor() {
     effect(() => {
-      const tracks = this.spotifyItemsStorage.getTracks([...this.tracksIdsToShow()]);
-      if (tracks.length !== this.tracksIdsToShow().length) {
-        this.spotifyItemsCommand.loadTracks(this.tracksIdsToShow()).subscribe((status) => {
-          this.loadingState = status;
-        });
-      }
+      this.loadUserTopTracksAnalysis({ startingDate: this.startingDate(), endingDate: this.endingDate() });
     });
   }
 
-  ngOnInit() {
+  protected loadUserTopTracksAnalysis(params: { startingDate: Date; endingDate: Date }) {
+    this.userTopTracksAnalysis.set(null);
+
     this.loadingState = LoadingStatusEnum.Loading;
-    this.extendedHistoryService
-      .getTopTracksIds({
-        startingDate: this.startingDate(),
-        endingDate: this.endingDate(),
+    this._extendedHistoryService
+      .getUserTopTracksAnalysis({
+        startingDate: params.startingDate,
+        endingDate: params.endingDate,
       })
-      .subscribe((tracksIds: string[]) => {
-        this.tracksIds.set(tracksIds);
-        this.loadingState = LoadingStatusEnum.Resolved;
-        // this.loadingState.set('resolved');
+      .subscribe((analysis) => {
+        if (analysis.data) {
+          this.userTopTracksAnalysis.set(analysis.data);
+          this.loadingState = LoadingStatusEnum.Finalizing;
+          this._loadSpotifyTracks();
+        }
+        if (analysis.status === LoadingStatusSimpleEnum.Error) {
+          this.loadingState = LoadingStatusEnum.Error;
+        }
       });
+  }
+
+  private _loadSpotifyTracks() {
+    const trackIds: string[] = this.userTopTracksAnalysis()?.tracks.map((track) => track.trackId).slice(0, this.tracksToShow()) || [];
+
+    this._spotifyItemsCommand.loadTracks(trackIds).subscribe((status) => {
+      if (status === LoadingStatusEnum.Resolved) {
+        const tracks: Track[] = this._spotifyItemsStorage.getTracks(trackIds);
+        this.spotifyTracks.set(tracks);
+        this.loadingState = LoadingStatusEnum.Resolved;
+      } else if (status === LoadingStatusEnum.Error) {
+        this.loadingState = LoadingStatusEnum.Error;
+      }
+    });
   }
 
   protected loadMoreItems() {
     this.loadingState = LoadingStatusEnum.Appending;
     this.tracksToShow.set(this.tracksToShow() + this.TRACKS_NUMBER_TO_LOAD);
-  }
-
-  protected getTrackTimeListenedTotal(id: Track['id']): number {
-    return (
-      this.extendedHistoryService.topTracks().find((track: { id: string; ms_played: number }) => track.id === id)
-        ?.ms_played || 0
-    );
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  protected getTrackTimesPlayedTotal(id: Track['id']): number {
-    return 0;
-    // return (
-    //   this.extendedHistoryService.topTracks().find((track: { id: string; times_played: number }) => track.id === id)
-    //     ?.times_played || 0
-    // );
   }
 }

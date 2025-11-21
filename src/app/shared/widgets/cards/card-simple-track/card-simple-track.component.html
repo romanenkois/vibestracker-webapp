@@ -1,13 +1,15 @@
+<!-- eslint-disable @angular-eslint/template/interactive-supports-focus -->
+<!-- eslint-disable @angular-eslint/template/click-events-have-key-events -->
 <div
-  class="w-full h-full flex items-center gap-3 box-border p-2 rounded-md bg-dark shadow-sm hover:shadow-md transition-all duration-200 ease-in-out relative"
+  class="relative box-border flex h-full w-full items-center gap-3 rounded-md bg-dark p-2 shadow-sm transition-all duration-200 ease-in-out hover:shadow-md"
 >
   @if (this.track() && this.track().type) {
     <!-- IMAGE -->
     <div class="flex-1">
-      <div class="w-full h-full aspect-square block">
+      <div class="block aspect-square h-full w-full">
         <a routerLink="/track/{{ this.track().id }}">
           <img
-            class="w-full h-full overflow-hidden object-cover rounded-sm"
+            class="h-full w-full overflow-hidden rounded-sm object-cover"
             loading="lazy"
             alt="{{ this.track().name || '' }} cover"
             [src]="this.track().album.images.length > 0 ? this.track().album.images[0].url : ''"
@@ -17,28 +19,28 @@
     </div>
 
     <!-- TODO -->
-    <div class="absolute top-2 right-2 select-none">
+    <div class="absolute right-2 top-2 select-none">
       <div class="relative" (click)="$event.stopPropagation()">
         <div
-          class="flex gap-[2px] p-2 w-max h-max bg-dark-light rounded-md cursor-pointer"
+          class="flex h-max w-max cursor-pointer gap-[2px] rounded-md bg-dark-light p-2"
           (click)="this.showTrackMenu.set(!this.showTrackMenu())"
         >
-          <div class="w-[4px] h-[4px] rounded-full bg-gray"></div>
-          <div class="w-[4px] h-[4px] rounded-full bg-gray"></div>
-          <div class="w-[4px] h-[4px] rounded-full bg-gray"></div>
+          <div class="h-[4px] w-[4px] rounded-full bg-gray"></div>
+          <div class="h-[4px] w-[4px] rounded-full bg-gray"></div>
+          <div class="h-[4px] w-[4px] rounded-full bg-gray"></div>
         </div>
 
         @if (this.showTrackMenu()) {
-          <div class="flex flex-col gap-2 p-2 w-max h-max bg-dark-light rounded-md absolute top-8 right-0 z-10">
+          <div class="absolute right-0 top-8 z-10 flex h-max w-max flex-col gap-2 rounded-md bg-dark-light p-2">
             <button
-              class="p-2 text-left text-sm text-gray rounded-md hover:text-white hover:bg-dark"
+              class="rounded-md p-2 text-left text-sm text-gray hover:bg-dark hover:text-white"
               (click)="this.ignoreTrack()"
             >
               <span>ignore this track</span>
             </button>
 
             <button
-              class="p-2 text-left text-sm text-gray rounded-md hover:text-white hover:bg-dark"
+              class="rounded-md p-2 text-left text-sm text-gray hover:bg-dark hover:text-white"
               (click)="this.ignoreArtist()"
             >
               <span>ignore track artist</span>
@@ -49,21 +51,21 @@
     </div>
 
     <!-- TRACK DATA -->
-    <div class="flex-1 overflow-hidden relative">
+    <div class="relative flex-1 overflow-hidden">
       <!-- INDEX AND STUFF -->
       <div>
         <div>
-          <p class="font-black text-gray flex flex-col sm:flex-row items-center justify-start gap-1">
-            @if ((this.userTrackStats()?.timeListened ?? 0) > 0) {
-              <span class="text-base w-full sm:w-max">{{ this.index() }}#</span>
-              <span class="text-base w-full sm:w-max">
+          <p class="flex flex-col items-center justify-start gap-1 font-black text-gray sm:flex-row">
+            @if ((this.userTrackStats()?.msPlayed ?? 0) > 0) {
+              <span class="w-full text-base sm:w-max">{{ this.index() }}#</span>
+              <span class="w-full text-base sm:w-max">
                 <span class="hidden sm:inline"> - </span>
                 <span>
-                  {{ this.userTrackStats()?.timeListened ?? 0 | timeSimple }}
+                  {{ this.userTrackStats()?.msPlayed ?? 0 | timeSimple }}
                 </span>
               </span>
             } @else {
-              <span class="text-xl w-full">
+              <span class="w-full text-xl">
                 <span> {{ this.index() }}# </span>
               </span>
             }
@@ -75,7 +77,7 @@
         <!-- TRACK NAME -->
         <div>
           <a class="w-min" routerLink="/track/{{ this.track().id }}">
-            <p class="font-bold truncate-1 hover:underline">{{ this.track().name }}</p>
+            <p class="truncate-1 font-bold hover:underline">{{ this.track().name }}</p>
           </a>
         </div>
 
