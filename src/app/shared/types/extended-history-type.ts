@@ -1,5 +1,5 @@
-import { AnalysisTypeEnum, ItemsSelectionEnum } from "./shared.type";
-import { Track } from "./spotify";
+import { AnalysisTypeEnum, ItemsSelectionEnum } from './shared.type';
+import { Track } from './spotify';
 
 export interface AnalysisUserExtendedHistory<T1 extends AnalysisTypeEnum, T2 extends ItemsSelectionEnum> {
   id: string;
@@ -14,6 +14,10 @@ export interface AnalysisUserExtendedHistory<T1 extends AnalysisTypeEnum, T2 ext
 
 export interface TracksAnalysisUserExtendedHistory
   extends AnalysisUserExtendedHistory<AnalysisTypeEnum.ExtenedHistory, ItemsSelectionEnum.Tracks> {
+  totalMsPlayed: number;
+  totalTracksPlayed: number;
+  totalUniqueTracksPlayed: number;
+
   tracks: {
     index: number;
     trackId: Track['id'];

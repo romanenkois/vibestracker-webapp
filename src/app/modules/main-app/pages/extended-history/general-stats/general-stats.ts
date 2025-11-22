@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input, InputSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
+
 import { TimeSimplePipe } from '@pipes';
 import { UserPrivate } from '@types';
 
@@ -9,8 +10,8 @@ import { UserPrivate } from '@types';
   imports: [DatePipe, TimeSimplePipe, RouterLink],
   templateUrl: './general-stats.html',
   styleUrl: './general-stats.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GeneralStatsComponent {
-  listeningStats: InputSignal<UserPrivate['listeningData']['expandedHistory'] | null> = input.required();
+  listeningStats = input.required<UserPrivate['listeningData']['expandedHistory'] | null>();
 }

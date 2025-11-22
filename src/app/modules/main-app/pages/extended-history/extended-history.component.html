@@ -1,32 +1,10 @@
-@if (this.loadingState() !== 'nothing-to-load') {
+@if (this.listeningDataRecord()) {
   <div>
     <app-general-stats [listeningStats]="this.listeningDataRecord()" />
 
-    <div>
-      <!-- @if (
-        this.loadingState() === 'all-resolved' || this.loadingState() === 'resolved' || this.loadingState() === 'idle'
-      ) { -->
-        <app-extended-history-filter />
+    <!-- <app-extended-history-filter [userTopTracksAnalysis]="this.userTopTracksAnalysis()" /> -->
 
-        <app-user-top-extended [startingDate]="this.startingDate()" [endingDate]="this.endingDate()" />
-      <!-- } @else if (this.loadingState() === 'loading') {
-        <div class="align-center flex w-full justify-center">
-          <div class="flex flex-row items-center justify-center gap-2">
-            <p>loading your extended history...</p>
-            <div class="h-[32px] w-[32px]">
-              <app-loading-spinner />
-            </div>
-          </div>
-        </div>
-      } @else if (this.loadingState() === 'error') {
-        <div class="align-center flex w-full justify-center">
-          <p class="text-red">An error occurred while loading your extended history.</p>
-        </div>
-      } @else {
-        {{ this.loadingState() }}
-      }
-        -->
-    </div>
+    <app-user-top-extended [userTopTracksAnalysis]="this.userTopTracksAnalysis()" />
   </div>
 } @else {
   <div class="flex h-[50vh] w-full flex-col items-center justify-center gap-4 p-4">

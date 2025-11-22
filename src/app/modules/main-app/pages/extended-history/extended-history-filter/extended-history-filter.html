@@ -1,1 +1,30 @@
-<!-- <p>extended-history-filter works!</p> -->
+<div class="flex flex-col items-center justify-between gap-4 p-2 sm:px-8 sm:py-4 md:flex-row">
+  <div>
+    <p class="text-gray">
+      <span>Displaying data from</span>
+      <span class="text-xl font-black text-pure-white">
+        {{ this.userTopTracksAnalysis()?.startingDate | date: 'dd.MM.yyyy' }}
+      </span>
+      <span>to</span>
+      <span class="text-xl font-black text-pure-white">
+        {{ this.userTopTracksAnalysis()?.endingDate | date: 'dd.MM.yyyy' }}
+      </span>
+    </p>
+    <p class="text-gray">
+      <span>Total listening time:&nbsp;</span>
+      <span class="text-xl font-black text-pure-white">
+        {{ this.userTopTracksAnalysis()?.totalMsPlayed || 0 | timeSimple }}
+      </span>
+    </p>
+    <p class="text-gray">
+      <span>Number of records:</span>
+      <span class="text-xl font-black text-pure-white"> {{ this.userTopTracksAnalysis()?.totalTracksPlayed }} </span>
+    </p>
+    <p class="text-gray">
+      <span>Number of unique tracks:</span>
+      <span class="text-xl font-black text-pure-white">
+        {{ this.userTopTracksAnalysis()?.totalUniqueTracksPlayed || 0 }}
+      </span>
+    </p>
+  </div>
+</div>

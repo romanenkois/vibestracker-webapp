@@ -16,7 +16,7 @@
     } }
   </div>
   <div class="align-center mt-4 flex w-full justify-center">
-    @if (this.loadingState === 'idle' || this.loadingState === 'resolved') {
+    @if ((this.loadingState === 'idle' && this.userTopTracksAnalysis()) || this.loadingState === 'resolved') {
     <button class="w-full p-4" (click)="this.loadMoreItems()">
       <p class="font-3xl">load more</p>
     </button>
@@ -24,7 +24,7 @@
     <p class="font-3xl p-4">loading analysis...</p>
     } @else if (this.loadingState === 'all-resolved') {
     <p class="font-3xl p-4">all available data is loaded</p>
-    } @else {
+    } @else if (this.loadingState === 'error') {
     <p class="font-3xl p-4">error loading data</p>
     }
   </div>
