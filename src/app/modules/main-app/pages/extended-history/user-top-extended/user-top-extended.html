@@ -2,10 +2,10 @@
   <div
     class="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4 sm:grid-cols-[repeat(auto-fill,minmax(260px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(320px,1fr))]"
   >
-    @for (track of this.displayedAnalysis(); track $index) { @if (track) {
+    @for (track of this.displayedAnalysis(); track $index) { @if (track.track) {
     <div class="h-full w-full">
       <app-card-simple-track
-        [track]="track.track!"
+        [track]="track.track"
         [index]="$index + 1"
         [userTrackStats]="{
           msPlayed: track.msPlayed,
@@ -21,7 +21,7 @@
       <p class="font-3xl">load more</p>
     </button>
     } @else if ( this.loadingState === 'loading' || this.loadingState === 'appending' ) {
-    <p class="font-3xl p-4">loading...</p>
+    <p class="font-3xl p-4">loading analysis...</p>
     } @else if (this.loadingState === 'all-resolved') {
     <p class="font-3xl p-4">all available data is loaded</p>
     } @else {

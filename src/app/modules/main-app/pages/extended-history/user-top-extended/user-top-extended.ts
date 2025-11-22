@@ -35,17 +35,20 @@ export class UserTopExtended {
   private tracksToShow = signal<number>(this.INITIAL_NUMBER_OF_ITEMS_TO_LOAD);
 
   private userTopTracksAnalysis = signal<TracksAnalysisUserExtendedHistory | null>(null);
-  private spotifyTracks = signal<Track[]>([]);
+  private trackIds = computed<string[]>(() =>
+    this.userTopTracksAnalysis()
+      ? this.userTopTracksAnalysis()!.tracks.map((track) => track.trackId).slice(0, this.tracksToShow())
+      : []
+  );
+  private spotifyTracks = computed<Track[]>(()=> this._spotifyItemsStorage.getTracks(this.trackIds()));
   protected displayedAnalysis = computed<DisplayedAnalysisItem[]>(() => {
-    if (this.loadingState !== LoadingStatusEnum.Resolved) {
+    const analysis = this.userTopTracksAnalysis();
+    const tracks = this.spotifyTracks();
+    if (!analysis || !tracks.length) {
       return [];
     }
 
-    const analysis = this.userTopTracksAnalysis();
-    const tracks = this.spotifyTracks();
-
     const finalRes: DisplayedAnalysisItem[] = [];
-
     for (let i = 0; i < this.tracksToShow(); i++) {
       finalRes.push({
         index: analysis?.tracks[i].index || 0,
@@ -54,12 +57,21 @@ export class UserTopExtended {
         timesPlayed: analysis?.tracks[i].timesPlayed || 0,
       });
     }
+    console.log(finalRes);
+    this.loadingState = LoadingStatusEnum.Resolved;
 
     return finalRes;
   });
 
   constructor() {
     effect(() => {
+      const analysis = this.userTopTracksAnalysis();
+      if (
+        analysis?.startingDate.getTime() === this.startingDate().getTime() &&
+        analysis?.endingDate.getTime() === this.endingDate().getTime()
+      ) {
+        return;
+      }
       this.loadUserTopTracksAnalysis({ startingDate: this.startingDate(), endingDate: this.endingDate() });
     });
   }
@@ -86,12 +98,14 @@ export class UserTopExtended {
   }
 
   private _loadSpotifyTracks() {
-    const trackIds: string[] = this.userTopTracksAnalysis()?.tracks.map((track) => track.trackId).slice(0, this.tracksToShow()) || [];
+    const trackIds: string[] =
+      this.userTopTracksAnalysis()
+        ?.tracks.map((track) => track.trackId)
+        .slice(0, this.tracksToShow()) || [];
 
     this._spotifyItemsCommand.loadTracks(trackIds).subscribe((status) => {
+      console.log(status);
       if (status === LoadingStatusEnum.Resolved) {
-        const tracks: Track[] = this._spotifyItemsStorage.getTracks(trackIds);
-        this.spotifyTracks.set(tracks);
         this.loadingState = LoadingStatusEnum.Resolved;
       } else if (status === LoadingStatusEnum.Error) {
         this.loadingState = LoadingStatusEnum.Error;
@@ -102,5 +116,6 @@ export class UserTopExtended {
   protected loadMoreItems() {
     this.loadingState = LoadingStatusEnum.Appending;
     this.tracksToShow.set(this.tracksToShow() + this.TRACKS_NUMBER_TO_LOAD);
+    this._loadSpotifyTracks();
   }
 }

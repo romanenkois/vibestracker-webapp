@@ -3,13 +3,13 @@
     <app-general-stats [listeningStats]="this.listeningDataRecord()" />
 
     <div>
-      @if (
+      <!-- @if (
         this.loadingState() === 'all-resolved' || this.loadingState() === 'resolved' || this.loadingState() === 'idle'
-      ) {
+      ) { -->
         <app-extended-history-filter />
 
         <app-user-top-extended [startingDate]="this.startingDate()" [endingDate]="this.endingDate()" />
-      } @else if (this.loadingState() === 'loading') {
+      <!-- } @else if (this.loadingState() === 'loading') {
         <div class="align-center flex w-full justify-center">
           <div class="flex flex-row items-center justify-center gap-2">
             <p>loading your extended history...</p>
@@ -25,6 +25,7 @@
       } @else {
         {{ this.loadingState() }}
       }
+        -->
     </div>
   </div>
 } @else {

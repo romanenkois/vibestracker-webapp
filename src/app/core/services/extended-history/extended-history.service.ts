@@ -100,8 +100,15 @@ export class ExtendedHistoryService {
         .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe((response) => {
           if (response.status === LoadingStatusEnum.Resolved && response.data) {
-            this._userExtendedDataStorage.setUserTopTracksAnalysis({ data: response.data.data });
-            observer.next({ status: LoadingStatusSimpleEnum.Resolved, data: response.data.data });
+            const analysisData: TracksAnalysisUserExtendedHistory = {
+              ...response.data.data,
+              startingDate: new Date(response.data.data.startingDate),
+              endingDate: new Date(response.data.data.endingDate),
+              analysisDate: new Date(response.data.data.analysisDate),
+            };
+
+            this._userExtendedDataStorage.setUserTopTracksAnalysis({ data: analysisData });
+            observer.next({ status: LoadingStatusSimpleEnum.Resolved, data: analysisData });
             observer.complete();
           } else if (response.status === LoadingStatusEnum.Error) {
             observer.next({ status: LoadingStatusSimpleEnum.Error });
