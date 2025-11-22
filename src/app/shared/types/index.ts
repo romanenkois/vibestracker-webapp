@@ -7,6 +7,7 @@ export * from './spotify/spotify.user.type';
 
 export * from './api.types';
 export * from './app-config.type';
+export * from './extended-history-type';
 export * from './locale.type';
 export * from './loading-state.type';
 export * from './shared.type';

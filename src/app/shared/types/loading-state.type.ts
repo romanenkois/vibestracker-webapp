@@ -2,6 +2,7 @@ export enum LoadingStatusEnum {
   Idle = 'idle',
   NothingToLoad = 'nothing-to-load', // used, when we know that there is nothing to load, before we even try
   Loading = 'loading',
+  Finalizing = 'finalizing', // used, when the main loading is done, but some final operations are being made
   Appending = 'appending', // used, when we have loaded something, and now loading more
   Reloading = 'reloading', // used when we must reload new data
   Resolved = 'resolved', // used when the loading is finished, but could be loaded again
@@ -10,7 +11,12 @@ export enum LoadingStatusEnum {
   Error = 'error',
 }
 
-// export type LoadingState = LoadingStateEnum;
+export enum LoadingStatusSimpleEnum {
+  Idle = 'idle',
+  Loading = 'loading',
+  Resolved = 'resolved',
+  Error = 'error',
+}
 
 export enum UploadingStatusEnum {
   Idle = 'idle',

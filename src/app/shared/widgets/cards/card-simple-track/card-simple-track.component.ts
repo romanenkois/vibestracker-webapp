@@ -2,18 +2,18 @@ import { ChangeDetectionStrategy, Component, HostListener, inject, input, signal
 import { RouterLink } from '@angular/router';
 
 import { UserPreferencesCommand } from '@commands';
-import { TimeSimplePipe } from '@pipes';
+import { TimeSimplePipe, TranslatePipe } from '@pipes';
 import { Track } from '@types';
 
 export interface UserTrackStats {
-  timeListened?: number;
+  msPlayed?: number;
   timesPlayed?: number;
 }
 
 @Component({
   selector: 'app-card-simple-track',
   standalone: true,
-  imports: [RouterLink, TimeSimplePipe],
+  imports: [RouterLink, TimeSimplePipe, TranslatePipe],
   templateUrl: './card-simple-track.component.html',
   styleUrl: './card-simple-track.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,7 +22,6 @@ export class CardSimpleTrackComponent {
   private readonly _userPreferencesCommand = inject(UserPreferencesCommand);
 
   track = input.required<Track>();
-
   index = input<number>();
   userTrackStats = input<UserTrackStats>();
 

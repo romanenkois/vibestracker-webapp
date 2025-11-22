@@ -1,0 +1,34 @@
+<div class="flex flex-col items-center justify-between gap-4 p-2 sm:px-8 sm:py-4 md:flex-row">
+  <div>
+    <p class="text-gray">
+      <span>Uploaded data from</span>
+      <span class="text-xl font-black text-pure-white">
+        {{ this.listeningStats()?.startingDate | date: 'dd.MM.yyyy' }}
+      </span>
+      <span>to</span>
+      <span class="text-xl font-black text-pure-white">
+        {{ this.listeningStats()?.endingDate | date: 'dd.MM.yyyy' }}
+      </span>
+    </p>
+    <p class="text-gray">
+      <span>Total listening time:&nbsp;</span>
+      <span class="text-xl font-black text-pure-white">
+        {{ this.listeningStats()?.totalMsPlayed || 0 | timeSimple }}
+      </span>
+    </p>
+    <p class="text-gray">
+      <span>Number of records:</span>
+      <span class="text-xl font-black text-pure-white"> {{ this.listeningStats()?.totalRecordsNumber || 0 }} </span>
+    </p>
+    <p class="text-gray">
+      <span>Number of unique tracks:</span>
+      <span class="text-xl font-black text-pure-white"> {{ this.listeningStats()?.uniqueTracksNumber || 0 }} </span>
+    </p>
+  </div>
+
+  <a
+    routerLink="/extended-history/upload"
+    class="w-full rounded-sm bg-primary px-2 py-2 text-center text-lg font-black hover:bg-primary-light sm:w-max sm:px-8 sm:text-base"
+    >Upload more</a
+  >
+</div>

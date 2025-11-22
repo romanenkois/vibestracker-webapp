@@ -37,6 +37,8 @@
 
     "@@alert_emptyExtendedHistory-title": "Empty extended history",
     "@@alert_emptyExtendedHistory-message": "The extended history file you provided had no valid recordsto upload. Make sure you upload the correct file.",
-    "@@alert_emptyExtendedHistory-buttonMessage": "OK"
+    "@@alert_emptyExtendedHistory-buttonMessage": "OK",
+
+    "@@card-track__times-played-toolip": "Number indicates times played a track through selected period"
   }
 }

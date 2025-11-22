@@ -2,29 +2,29 @@
   <div
     class="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4 sm:grid-cols-[repeat(auto-fill,minmax(260px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(320px,1fr))]"
   >
-    @for (track of this.topTracks(); track $index) {
-    <div class="w-full h-full">
+    @for (track of this.displayedAnalysis(); track $index) { @if (track.track) {
+    <div class="h-full w-full">
       <app-card-simple-track
-        [track]="track"
+        [track]="track.track"
         [index]="$index + 1"
         [userTrackStats]="{
-          timeListened: this.getTrackTimeListenedTotal(track.id),
-          timesPlayed: this.getTrackTimesPlayedTotal(track.id)
+          msPlayed: track.msPlayed,
+          timesPlayed: track.timesPlayed
         }"
       />
     </div>
-    }
+    } }
   </div>
-  <div class="w-full flex justify-center align-center mt-4">
-    @if (this.loadingState === 'idle' || this.loadingState === 'resolved') {
+  <div class="align-center mt-4 flex w-full justify-center">
+    @if ((this.loadingState === 'idle' && this.userTopTracksAnalysis()) || this.loadingState === 'resolved') {
     <button class="w-full p-4" (click)="this.loadMoreItems()">
       <p class="font-3xl">load more</p>
     </button>
     } @else if ( this.loadingState === 'loading' || this.loadingState === 'appending' ) {
-    <p class="font-3xl p-4">loading...</p>
+    <p class="font-3xl p-4">loading analysis...</p>
     } @else if (this.loadingState === 'all-resolved') {
     <p class="font-3xl p-4">all available data is loaded</p>
-    } @else {
+    } @else if (this.loadingState === 'error') {
     <p class="font-3xl p-4">error loading data</p>
     }
   </div>

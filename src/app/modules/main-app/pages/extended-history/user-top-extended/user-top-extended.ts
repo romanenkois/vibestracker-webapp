@@ -1,114 +1,90 @@
-import { Component, computed, effect, inject, OnInit, Signal, signal, WritableSignal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal } from '@angular/core';
+
 import { SpotifyItemsCommand } from '@commands';
-import { ExtendedHistoryService } from '@services';
-import { SpotifyItemsStorage, UserStorage } from '@storage';
-import { LoadingStatusEnum, Track, UserPrivate } from '@types';
+import { SpotifyItemsStorage } from '@storage';
+import { LoadingStatusEnum, Track, TracksAnalysisUserExtendedHistory } from '@types';
 import { CardSimpleTrackComponent } from '@widgets';
+
+interface DisplayedAnalysisItem {
+  index: number;
+  track: Track | null;
+  msPlayed: number;
+  timesPlayed: number;
+}
 
 @Component({
   selector: 'app-user-top-extended',
   imports: [CardSimpleTrackComponent],
   templateUrl: './user-top-extended.html',
-  styleUrl: './user-top-extended.scss',
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrls: ['./user-top-extended.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserTopExtended implements OnInit {
-  private readonly extendedHistoryService: ExtendedHistoryService = inject(ExtendedHistoryService);
-  private readonly spotifyItemsStorage: SpotifyItemsStorage = inject(SpotifyItemsStorage);
-  private readonly spotifyItemsCommand: SpotifyItemsCommand = inject(SpotifyItemsCommand);
-  private readonly userStorage: UserStorage = inject(UserStorage);
+export class UserTopExtended {
+  private readonly _spotifyItemsStorage = inject(SpotifyItemsStorage);
+  private readonly _spotifyItemsCommand = inject(SpotifyItemsCommand);
 
-  private readonly initialTracksToShow = 50;
-  private readonly tracksNumberToLoad = 100;
+  private readonly INITIAL_NUMBER_OF_ITEMS_TO_LOAD = 100;
+  private readonly TRACKS_NUMBER_TO_LOAD = 100;
 
-  protected listeningData: Signal<UserPrivate['listeningData']['expandedHistory'] | null> = computed(() => {
-    return this.userStorage.getUser()?.listeningData?.expandedHistory || null;
-  });
+  userTopTracksAnalysis = input.required<TracksAnalysisUserExtendedHistory | null>();
 
   protected loadingState = LoadingStatusEnum.Idle;
-  protected tracksToShow = signal<number>(this.initialTracksToShow);
+  private tracksToShow = signal<number>(this.INITIAL_NUMBER_OF_ITEMS_TO_LOAD);
 
-  protected startingDate: WritableSignal<Date> = signal(new Date(0));
-  protected endingDate: WritableSignal<Date> = signal(new Date());
+  private trackIds = computed<string[]>(() =>
+    this.userTopTracksAnalysis()
+      ? this.userTopTracksAnalysis()!
+          .tracks.map((track) => track.trackId)
+          .slice(0, this.tracksToShow())
+      : []
+  );
+  private spotifyTracks = computed<Track[]>(() => this._spotifyItemsStorage.getTracks(this.trackIds()));
+  protected displayedAnalysis = computed<DisplayedAnalysisItem[]>(() => {
+    const analysis = this.userTopTracksAnalysis();
+    const tracks = this.spotifyTracks();
+    if (!analysis || !tracks.length) {
+      this.loadingState = LoadingStatusEnum.ResolvedEmpty;
+      return [];
+    }
 
-  private tracksIds: WritableSignal<string[]> = signal([]);
-  private tracksIdsToShow: Signal<string[]> = computed(() => {
-    return this.tracksIds().slice(0, this.tracksToShow());
-  });
+    const finalRes: DisplayedAnalysisItem[] = [];
+    for (let i = 0; i < this.tracksToShow(); i++) {
+      finalRes.push({
+        index: analysis?.tracks[i].index || 0,
+        track: tracks.find((t) => t.id === analysis?.tracks[i].trackId) || null,
+        msPlayed: analysis?.tracks[i].msPlayed || 0,
+        timesPlayed: analysis?.tracks[i].timesPlayed || 0,
+      });
+    }
+    this.loadingState = LoadingStatusEnum.Resolved;
 
-  // computed(() => {
-  //   const tracksId = this.extendedHistoryService
-  //   .getTopTracksIds({
-  //     startingDate: this.startingDate(),
-  //     endingDate: this.endingDate(),
-  //   })
-  //     // .getTopTracks({
-  //     //   startingDate: this.startingDate(),
-  //     //   endingDate: this.endingDate(),
-  //     // })
-  //     // .slice(0, this.tracksToShow())
-  //     // .map((track: any) => track.id);
-
-  //   console.log("tracksId", tracksId);
-  //   return toSignal<string[]>(tracksId) || [];
-  // });
-
-  // protected topTracks = computed(() => {
-  //   const tracks = this.spotifyItemsStorage.getTracks([...this.tracksIdsToShow()]);
-
-  //   return tracks;
-  // });
-
-  protected topTracks = computed<Track[]>(() => {
-    return this.spotifyItemsStorage.getTracks([...this.tracksIdsToShow()]);
+    return finalRes;
   });
 
   constructor() {
     effect(() => {
-      const tracks = this.spotifyItemsStorage.getTracks([...this.tracksIdsToShow()]);
-      if (tracks.length !== this.tracksIdsToShow().length) {
-        this.spotifyItemsCommand.loadTracks(this.tracksIdsToShow()).subscribe((status) => {
-          this.loadingState = status;
-        });
+      this._loadSpotifyTracks();
+    });
+  }
+
+  private _loadSpotifyTracks() {
+    this.loadingState = LoadingStatusEnum.Loading;
+
+    const trackIds: string[] =
+      this.userTopTracksAnalysis()
+        ?.tracks.map((track) => track.trackId)
+        .slice(0, this.tracksToShow()) || [];
+
+    this._spotifyItemsCommand.loadTracks(trackIds).subscribe((status) => {
+      if (status === LoadingStatusEnum.Error) {
+        this.loadingState = LoadingStatusEnum.Error;
       }
     });
   }
 
-  ngOnInit() {
-    this.startingDate.set(this.listeningData()?.startingDate || new Date(0));
-    this.endingDate.set(this.listeningData()?.endingDate || new Date());
-
-    this.loadingState = LoadingStatusEnum.Loading;
-    this.extendedHistoryService
-      .getTopTracksIds({
-        startingDate: this.startingDate(),
-        endingDate: this.endingDate(),
-      })
-      .subscribe((tracksIds: string[]) => {
-        this.tracksIds.set(tracksIds);
-        this.loadingState = LoadingStatusEnum.Resolved;
-        // this.loadingState.set('resolved');
-      });
-  }
-
   protected loadMoreItems() {
     this.loadingState = LoadingStatusEnum.Appending;
-    this.tracksToShow.set(this.tracksToShow() + this.tracksNumberToLoad);
-  }
-
-  protected getTrackTimeListenedTotal(id: Track['id']): number {
-    return (
-      this.extendedHistoryService.topTracks().find((track: { id: string; ms_played: number }) => track.id === id)
-        ?.ms_played || 0
-    );
-  }
-
-  protected getTrackTimesPlayedTotal(id: Track['id']): number {
-    return 0;
-    // return (
-    //   this.extendedHistoryService.topTracks().find((track: { id: string; times_played: number }) => track.id === id)
-    //     ?.times_played || 0
-    // );
+    this.tracksToShow.set(this.tracksToShow() + this.TRACKS_NUMBER_TO_LOAD);
+    this._loadSpotifyTracks();
   }
 }

@@ -1,23 +1,27 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
-import { UserExtendedDataStorage } from '@storage';
-import { ExtendedStreamingHistory } from '@types';
-import { runInWorker } from '@utils';
+import { DestroyRef, Injectable, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
 import { Observable } from 'rxjs';
+
+import { UserExtendedDataStorage } from '@storage';
+import { ExtendedStreamingHistory, LoadingStatusSimpleEnum, TracksAnalysisUserExtendedHistory } from '@types';
+import { runInWorker } from '@utils';
+
+import { $appConfig } from '@environments';
+
+import { ApiService, LoadingStatusEnum } from '../api.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ExtendedHistoryService {
-  // private readonly userStorage: UserStorage = inject(UserStorage);
-  private readonly userExtendedDataStorage: UserExtendedDataStorage = inject(UserExtendedDataStorage);
-
-  public userExtendedData = computed(() => {
-    return this.userExtendedDataStorage.getUserExtendedData();
-  });
+  private readonly _destroyRef = inject(DestroyRef);
+  private readonly _apiService = inject(ApiService);
+  private readonly _userExtendedDataStorage = inject(UserExtendedDataStorage);
 
   public topTracks = signal<{ id: string; ms_played: number }[]>([]);
 
-  private getTopTracks = (params: {
+  private _getTopTracks = (params: {
     data: ExtendedStreamingHistory[];
     startingDate?: Date;
     endingDate?: Date;
@@ -47,7 +51,7 @@ export class ExtendedHistoryService {
           }
           return acc;
         },
-        [] as { id: string; ms_played: number; ts: Date }[],
+        [] as { id: string; ms_played: number; ts: Date }[]
       )
       .sort((a: { id: string; ms_played: number }, b: { id: string; ms_played: number }) => b.ms_played - a.ms_played);
 
@@ -57,9 +61,9 @@ export class ExtendedHistoryService {
     return filteredUserExtendedData;
   };
 
-  public getTopTracksIds(params: { startingDate?: Date; endingDate?: Date }): Observable<string[]> {
+  public getTopTracksIds(params: { startingDate: Date; endingDate: Date }): Observable<string[]> {
     return new Observable((observer) => {
-      runInWorker(this.getTopTracks, { data: this.userExtendedDataStorage.getUserExtendedData(), ...params })
+      runInWorker(this._getTopTracks, { data: this._userExtendedDataStorage.getUserExtendedData(), ...params })
         .then((topTracks) => {
           this.topTracks.set(topTracks);
           const topTrackIds = topTracks.map((track) => track.id);
@@ -68,6 +72,48 @@ export class ExtendedHistoryService {
         })
         .catch((error) => {
           observer.error(error);
+        });
+    });
+  }
+
+  public getUserTopTracksAnalysis(params: {
+    startingDate: Date;
+    endingDate: Date;
+  }): Observable<{ status: LoadingStatusSimpleEnum; data?: TracksAnalysisUserExtendedHistory }> {
+    return new Observable((observer) => {
+      const loadedAnalysis = this._userExtendedDataStorage.getUserTopTracksAnalysis(params);
+      if (loadedAnalysis) {
+        observer.next({ status: LoadingStatusSimpleEnum.Resolved, data: loadedAnalysis });
+        observer.complete();
+        return;
+      }
+
+      observer.next({ status: LoadingStatusSimpleEnum.Loading });
+      const queryParams: Record<string, string> = {
+        startingDate: params.startingDate.toISOString(),
+        endingDate: params.endingDate.toISOString(),
+      };
+      this._apiService
+        .loadSinglePieceOfData<{
+          data: TracksAnalysisUserExtendedHistory;
+        }>(`${$appConfig.api.BASE_API_URL}/analysis-extended-history`, queryParams)
+        .pipe(takeUntilDestroyed(this._destroyRef))
+        .subscribe((response) => {
+          if (response.status === LoadingStatusEnum.Resolved && response.data) {
+            const analysisData: TracksAnalysisUserExtendedHistory = {
+              ...response.data.data,
+              startingDate: new Date(response.data.data.startingDate),
+              endingDate: new Date(response.data.data.endingDate),
+              analysisDate: new Date(response.data.data.analysisDate),
+            };
+
+            this._userExtendedDataStorage.setUserTopTracksAnalysis({ data: analysisData });
+            observer.next({ status: LoadingStatusSimpleEnum.Resolved, data: analysisData });
+            observer.complete();
+          } else if (response.status === LoadingStatusEnum.Error) {
+            observer.next({ status: LoadingStatusSimpleEnum.Error });
+            observer.complete();
+          }
         });
     });
   }
