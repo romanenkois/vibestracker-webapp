@@ -39,14 +39,6 @@ export default class ExtendedHistoryComponent implements OnInit {
   protected startingDate = signal<Date>(new Date(0));
   protected endingDate = signal<Date>(new Date());
 
-  // constructor() {
-  //   // effect(() => {
-  //   //   const startDate = this.startingDate();
-  //   //   const endDate = this.endingDate();
-
-  //   //   this.loadUserTopTracksAnalysis({ startingDate: startDate, endingDate: endDate });
-  //   // });
-  // }
 
   ngOnInit() {
     const startingDate = new Date(this.listeningDataRecord()?.startingDate || new Date(0));
