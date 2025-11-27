@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, effect, inject, signal } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { ExtendedHistoryService } from '@services';
 import { UserStorage } from '@storage';
@@ -20,7 +20,6 @@ export default class ExtendedHistoryComponent implements OnInit {
   private readonly _userStorage = inject(UserStorage);
   private readonly _extendedHistoryService = inject(ExtendedHistoryService);
   private readonly _activeRoute = inject(ActivatedRoute);
-  private readonly _router = inject(Router);
 
   protected listeningDataRecord = computed<UserPrivate['listeningData']['expandedHistory'] | null>(() => {
     const listeningData = this._userStorage.getUser()?.listeningData?.expandedHistory;

@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { Component, effect, inject, input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -10,7 +9,7 @@ import { TracksAnalysisUserExtendedHistory } from '@types';
 
 @Component({
   selector: 'app-extended-history-filter',
-  imports: [DatePipe, TimeSimplePipe, DatePickerModule, FormsModule],
+  imports: [ TimeSimplePipe, DatePickerModule, FormsModule],
   templateUrl: './extended-history-filter.html',
   styleUrl: './extended-history-filter.scss',
 })

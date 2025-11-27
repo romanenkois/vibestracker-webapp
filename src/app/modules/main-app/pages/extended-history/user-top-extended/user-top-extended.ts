@@ -48,12 +48,13 @@ export class UserTopExtended {
     }
 
     const finalRes: DisplayedAnalysisItem[] = [];
-    for (let i = 0; i < this.tracksToShow(); i++) {
+    const itemsToShow = Math.min(this.tracksToShow(), analysis.tracks.length);
+    for (let i = 0; i < itemsToShow; i++) {
       finalRes.push({
-        index: analysis?.tracks[i].index || 0,
-        track: tracks.find((t) => t.id === analysis?.tracks[i].trackId) || null,
-        msPlayed: analysis?.tracks[i].msPlayed || 0,
-        timesPlayed: analysis?.tracks[i].timesPlayed || 0,
+        index: analysis.tracks[i].index,
+        track: tracks.find((t) => t.id === analysis.tracks[i].trackId) || null,
+        msPlayed: analysis.tracks[i].msPlayed,
+        timesPlayed: analysis.tracks[i].timesPlayed,
       });
     }
     this.loadingState = LoadingStatusEnum.Resolved;
