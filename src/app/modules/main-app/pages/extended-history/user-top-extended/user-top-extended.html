@@ -16,7 +16,8 @@
     } }
   </div>
   <div class="align-center mt-4 flex w-full justify-center">
-    @if ((this.loadingState === 'idle' && this.userTopTracksAnalysis()) || this.loadingState === 'resolved') {
+    @if (((this.loadingState === 'idle' && this.userTopTracksAnalysis()) || this.loadingState === 'resolved') &&
+    (this.userTopTracksAnalysis()?.tracks?.length || 0) > this.trackIds().length) {
     <button class="w-full p-4" (click)="this.loadMoreItems()">
       <p class="font-3xl">load more</p>
     </button>

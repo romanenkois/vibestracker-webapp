@@ -31,7 +31,7 @@ export class UserTopExtended {
   protected loadingState = LoadingStatusEnum.Idle;
   private tracksToShow = signal<number>(this.INITIAL_NUMBER_OF_ITEMS_TO_LOAD);
 
-  private trackIds = computed<string[]>(() =>
+  protected trackIds = computed<string[]>(() =>
     this.userTopTracksAnalysis()
       ? this.userTopTracksAnalysis()!
           .tracks.map((track) => track.trackId)
