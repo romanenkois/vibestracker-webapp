@@ -1,13 +1,17 @@
-import { APP_INITIALIZER, ApplicationConfig, inject, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
-import { routes } from './app.routes';
-
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { APP_INITIALIZER, ApplicationConfig, inject, provideZoneChangeDetection } from '@angular/core';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideRouter } from '@angular/router';
+
+import Aura from '@primeuix/themes/aura';
+import { providePrimeNG } from 'primeng/config';
+import { $appConfig } from 'src/environments/environments.production';
 
 import { PreloadService, TranslationService } from '@services';
-import { AuthorizationInterceptor } from './interceptor';
-import { $appConfig } from 'src/environments/environments.production';
 import { SupportedLocaleEnum } from '@types';
+
+import { routes } from './app.routes';
+import { AuthorizationInterceptor } from './interceptor';
 
 export function appPreloadInitializer(preloadService: PreloadService) {
   return () => preloadService;
@@ -54,8 +58,14 @@ export const appConfig: ApplicationConfig = {
             handle: (request) => next(request),
           });
         },
-      ]),
+      ])
     ),
+    provideAnimationsAsync(),
+    providePrimeNG({
+      theme: {
+        preset: Aura,
+      },
+    }),
 
     PreloadService,
     TranslationService,

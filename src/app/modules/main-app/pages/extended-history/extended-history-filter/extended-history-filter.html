@@ -1,26 +1,39 @@
 <div class="flex flex-col items-center justify-between gap-4 p-2 sm:px-8 sm:py-4 md:flex-row">
   <div>
-    <div>
+    <div class="flex gap-2 items-center">
       <p class="text-gray">
         <span><span class="text-white">CURRENTLY</span> Displaying data from</span>
 
-        @if (this.userChangesDates()) { // } @else {
-        <span class="text-xl font-black text-pure-white">
+        <!-- <span class="text-xl font-black text-pure-white">
           {{ this.userTopTracksAnalysis()?.startingDate | date: 'dd.MM.yyyy' }}
         </span>
-        }
-
         <span>to</span>
-
-        @if (this.userChangesDates()) { // } @else {
-
         <span class="text-xl font-black text-pure-white">
           {{ this.userTopTracksAnalysis()?.endingDate | date: 'dd.MM.yyyy' }}
-        </span>
-        }
+        </span> -->
       </p>
 
-      <button (click)="this.userChangesDates.set(!this.userChangesDates())">change dates</button>
+      <!-- <div class="date-picker-button">
+        <button
+          (click)="pop.toggle()"
+          class="w-full rounded-sm bg-gray px-2 py-2 text-center text-lg font-black sm:w-max sm:px-8 sm:text-base"
+        >
+          change dates
+        </button> -->
+
+      <p-datepicker
+        #pop
+        [inline]="false"
+        [showIcon]="false"
+        [ngModel]="rangeDates()"
+        (ngModelChange)="rangeDates.set($event)"
+        selectionMode="range"
+        [readonlyInput]="true"
+        [minDate]="this.minDate()"
+        [maxDate]="this.maxDate()"
+        [defaultDate]="this.maxDate()"
+      />
+      <!-- </div> -->
     </div>
 
     <p class="text-gray">
