@@ -1,15 +1,28 @@
 <div class="flex flex-col items-center justify-between gap-4 p-2 sm:px-8 sm:py-4 md:flex-row">
   <div>
-    <p class="text-gray">
-      <span>Displaying data from</span>
-      <span class="text-xl font-black text-pure-white">
-        {{ this.userTopTracksAnalysis()?.startingDate | date: 'dd.MM.yyyy' }}
-      </span>
-      <span>to</span>
-      <span class="text-xl font-black text-pure-white">
-        {{ this.userTopTracksAnalysis()?.endingDate | date: 'dd.MM.yyyy' }}
-      </span>
-    </p>
+    <div>
+      <p class="text-gray">
+        <span><span class="text-white">CURRENTLY</span> Displaying data from</span>
+
+        @if (this.userChangesDates()) { // } @else {
+        <span class="text-xl font-black text-pure-white">
+          {{ this.userTopTracksAnalysis()?.startingDate | date: 'dd.MM.yyyy' }}
+        </span>
+        }
+
+        <span>to</span>
+
+        @if (this.userChangesDates()) { // } @else {
+
+        <span class="text-xl font-black text-pure-white">
+          {{ this.userTopTracksAnalysis()?.endingDate | date: 'dd.MM.yyyy' }}
+        </span>
+        }
+      </p>
+
+      <button (click)="this.userChangesDates.set(!this.userChangesDates())">change dates</button>
+    </div>
+
     <p class="text-gray">
       <span>Total listening time:&nbsp;</span>
       <span class="text-xl font-black text-pure-white">
@@ -26,5 +39,14 @@
         {{ this.userTopTracksAnalysis()?.totalUniqueTracksPlayed || 0 }}
       </span>
     </p>
+  </div>
+
+  <div>
+    <button
+      (click)="this.resetFilter()"
+      class="w-full rounded-sm bg-gray px-2 py-2 text-center text-lg font-black sm:w-max sm:px-8 sm:text-base"
+    >
+      Reset filter
+    </button>
   </div>
 </div>

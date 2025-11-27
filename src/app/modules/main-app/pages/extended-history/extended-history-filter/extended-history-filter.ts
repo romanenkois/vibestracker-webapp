@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { Component, input, signal } from '@angular/core';
 
 import { TimeSimplePipe } from '@pipes';
 import { TracksAnalysisUserExtendedHistory } from '@types';
@@ -12,4 +12,10 @@ import { TracksAnalysisUserExtendedHistory } from '@types';
 })
 export class ExtendedHistoryFilter {
   userTopTracksAnalysis = input.required<TracksAnalysisUserExtendedHistory | null>();
+
+  userChangesDates = signal<boolean>(false);
+
+  protected resetFilter() {
+//
+  }
 }
