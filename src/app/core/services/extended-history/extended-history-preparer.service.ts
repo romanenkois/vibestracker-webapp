@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
+
 import { Observable } from 'rxjs';
+
 import JSZip from 'jszip';
 
 import {
@@ -13,7 +15,7 @@ import {
 })
 export class ExtendedHistoryPreparerService {
   public FullyProcessFile(
-    zipFile: File,
+    zipFile: File
   ): Observable<{ status: ExtendedHistoryPreparingStateEnum; data?: ExtendedStreamingHistoryPrepared[] }> {
     return new Observable<{
       status: ExtendedHistoryPreparingStateEnum;
@@ -65,20 +67,23 @@ export class ExtendedHistoryPreparerService {
         })
 
         .catch((error) => {
+          console.error('Error processing extended streaming history file:', error);
           observer.next(error);
           observer.complete();
         });
 
-      return () => {}; // Cleanup function
+      return;
+
+      // return () => {}; // Cleanup function
     });
   }
 
   // #region Private methods
 
   // unzips archive, and take sonly streaming history files
-  private async extractStreamingHistory(zipFile: File): Promise<any[]> {
+  private async extractStreamingHistory(zipFile: File): Promise<unknown[]> {
     const zip = await JSZip.loadAsync(zipFile);
-    const jsonFiles: any[] = [];
+    const jsonFiles: unknown[] = [];
 
     for (const fileName of Object.keys(zip.files)) {
       // console.log(fileName);
@@ -101,7 +106,7 @@ export class ExtendedHistoryPreparerService {
   }
 
   // just merges all the json files into one
-  private async mergeJsonFiles(jsonFiles: any[]): Promise<ExtendedStreamingHistoryDTO[]> {
+  private async mergeJsonFiles(jsonFiles: any[]): Promise<unknown[]> {
     const mergedData = jsonFiles.reduce((acc, file) => {
       if (Array.isArray(file)) {
         return acc.concat(file);
@@ -114,7 +119,8 @@ export class ExtendedHistoryPreparerService {
   }
 
   // filters the data in different ways
-  private async filterData(data: ExtendedStreamingHistoryDTO[]): Promise<ExtendedStreamingHistoryDTO[]> {
+  private async filterData(data: any[]): Promise<ExtendedStreamingHistoryDTO[]> {
+    // data = data as ExtendedStreamingHistoryDTO[];
     // Define minimum timestamp (January 1, 2008)
     const minTimestamp = new Date('2008-01-01T00:00:00Z').getTime();
     // Get current timestamp for future date validation

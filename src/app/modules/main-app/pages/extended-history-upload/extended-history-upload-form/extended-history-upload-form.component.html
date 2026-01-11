@@ -1,8 +1,9 @@
-<div class="p-6 max-w mx-auto flex flex-col gap-6 justify-center items-center">
-  <div class="w-full h-full min-h-[500px] flex justify-center items-center">
-    @if (this.processingStatus() == 'idle' || this.processingStatus() == 'error') {
-      <form class="w-full flex flex-col gap-6">
-        <div class="rounded-md w-full p-8 bg-dark cursor-pointer">
+<div class="max-w mx-auto flex flex-col items-center justify-center gap-6 p-6">
+  <div class="flex h-full min-h-[500px] w-full items-center justify-center">
+    {{ this.processingStatus() }}
+    @if (this.processingStatus() === 'idle' || this.processingStatus() === 'error') {
+      <form class="flex w-full flex-col gap-6">
+        <div class="w-full cursor-pointer rounded-md bg-dark p-8">
           <div class="flex flex-col items-center justify-center gap-4">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -22,24 +23,24 @@
               <p class="text-lg font-black">Drop your ZIP file here</p>
               <p class="text-sm">or</p>
             </div>
-            <label class="relative cursor-pointer bg-primary font-black py-2 px-4 rounded-sm">
+            <label class="relative cursor-pointer rounded-sm bg-primary px-4 py-2 font-black">
               Select a file
               <input
                 type="file"
                 id="file"
                 (change)="this.onFileSelected($event)"
                 accept=".zip"
-                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                class="absolute inset-0 h-full w-full cursor-pointer opacity-0"
               />
             </label>
           </div>
         </div>
       </form>
     } @else {
-      <div class="w-full h-full bg-dark shadow rounded-md p-4">
+      <div class="h-full w-full rounded-md bg-dark p-4 shadow">
         <div class="flex items-center gap-3">
           <div class="flex-shrink-0">
-            <div class="'h-8 w-8 rounded-full flex items-center justify-center bg-pure-white text-primary'">
+            <div class="'h-8 text-primary' flex w-8 items-center justify-center rounded-full bg-pure-white">
               @switch (this.processingStatus()) {
                 @case ('all-prepared') {
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -72,20 +73,20 @@
 
                 @default {
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 animate-spin" viewBox="0 0 24 24" fill="none">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
                     <path
                       class="opacity-75"
                       fill="currentColor"
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
+                    />
                   </svg>
                 }
               }
             </div>
           </div>
-          <div class="flex-1 min-w-0">
+          <div class="min-w-0 flex-1">
             @if (this.processingStatus() !== 'all-prepared') {
-              <p class="text-sm w-full text-gray truncate">
+              <p class="w-full truncate text-sm text-gray">
                 {{ this.processingStatus() }}
               </p>
             } @else if (this.canUpload()) {

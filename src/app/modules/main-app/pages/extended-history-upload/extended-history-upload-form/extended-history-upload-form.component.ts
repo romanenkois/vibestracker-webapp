@@ -1,10 +1,10 @@
-import { Component, HostListener, inject, signal, WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, HostListener, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { ExtendedHistoryCommand } from '@commands';
 import { ExtendedHistoryPreparerService, ScreenNotificationService, ToastNotificationsService } from '@services';
 import { ExtendedHistoryPreparingStateEnum, ExtendedStreamingHistoryPrepared, UploadingStatusEnum } from '@types';
-import { ExtendedHistoryCommand } from '@commands';
 
 @Component({
   selector: 'app-extended-history-upload-form',
@@ -14,20 +14,20 @@ import { ExtendedHistoryCommand } from '@commands';
   styleUrls: ['./extended-history-upload-form.component.scss'],
 })
 export class ExtendedHistoryUploadFormComponent {
-  private _router: Router = inject(Router);
-  private _extendedHistoryPreparerService: ExtendedHistoryPreparerService = inject(ExtendedHistoryPreparerService);
-  private _extendedHistoryCommand: ExtendedHistoryCommand = inject(ExtendedHistoryCommand);
-  private _screenNotificationService: ScreenNotificationService = inject(ScreenNotificationService);
-  private _toastNotificationsService: ToastNotificationsService = inject(ToastNotificationsService);
+  private readonly _router = inject(Router);
+  private readonly _extendedHistoryPreparerService = inject(ExtendedHistoryPreparerService);
+  private readonly _extendedHistoryCommand = inject(ExtendedHistoryCommand);
+  private readonly _screenNotificationService = inject(ScreenNotificationService);
+  private readonly _toastNotificationsService = inject(ToastNotificationsService);
 
   protected processingStatus = signal(ExtendedHistoryPreparingStateEnum.Idle);
   protected uploadingStatus = signal(UploadingStatusEnum.Idle);
 
-  protected startingDate: WritableSignal<string | null> = signal(null);
-  protected endingDate: WritableSignal<string | null> = signal(null);
+  protected startingDate = signal<string | null>(null);
+  protected endingDate = signal<string | null>(null);
 
-  protected canUpload: WritableSignal<boolean> = signal(false);
-  private history: WritableSignal<ExtendedStreamingHistoryPrepared[]> = signal([]);
+  protected canUpload = signal<boolean>(false);
+  private history = signal<ExtendedStreamingHistoryPrepared[]>([]);
 
   @HostListener('dragover', ['$event'])
   onDragOver(event: DragEvent) {
@@ -64,6 +64,8 @@ export class ExtendedHistoryUploadFormComponent {
     try {
       this._extendedHistoryPreparerService.FullyProcessFile(file).subscribe((response) => {
         this.processingStatus.set(response.status);
+        console.log('Processing status:', response);
+
         if (response.data && response.data.length > 0 && response.status === 'all-prepared') {
           this.canUpload.set(true);
           this.history.set(response.data);
@@ -73,6 +75,7 @@ export class ExtendedHistoryUploadFormComponent {
         }
       });
     } catch (error) {
+      console.log('Error processing file:', error);
       this.processingStatus.set(ExtendedHistoryPreparingStateEnum.Error);
     }
   }
