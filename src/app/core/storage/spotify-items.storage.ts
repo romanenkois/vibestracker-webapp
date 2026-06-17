@@ -1,4 +1,5 @@
-import { Injectable, signal, WritableSignal } from '@angular/core';
+import { Injectable, WritableSignal, signal } from '@angular/core';
+
 import { Album, Artist, Track } from '@types';
 
 @Injectable({
@@ -16,9 +17,7 @@ export class SpotifyItemsStorage {
   public appendTracks(newTracks: Track[]): void {
     const currentTracks = this.tracks();
     const existingTrackIds = new Set(currentTracks.map((track) => track.id));
-    const newTracksFiltered = newTracks.filter(
-      (track) => !existingTrackIds.has(track.id)
-    );
+    const newTracksFiltered = newTracks.filter((track) => !existingTrackIds.has(track.id));
     this.tracks.set([...currentTracks, ...newTracksFiltered]);
   }
 
@@ -26,6 +25,9 @@ export class SpotifyItemsStorage {
 
   public getArtist(id: Artist['id']): Artist | null {
     return this.artists().find((artist) => artist.id === id) || null;
+  }
+  public getArtists(ids: Artist['id'][]): Artist[] {
+    return this.artists().filter((artist) => ids.includes(artist.id));
   }
   public appendArtists(newArtists: Artist[]): void {
     const currentArtists = this.artists();
@@ -37,6 +39,9 @@ export class SpotifyItemsStorage {
 
   public getAlbum(id: Album['id']): Album | null {
     return this.albums().find((album) => album.id === id) || null;
+  }
+  public getAlbums(ids: Album['id'][]): Album[] {
+    return this.albums().filter((album) => ids.includes(album.id));
   }
   public appendAlbums(newAlbums: Album[]): void {
     const currentAlbums = this.albums();

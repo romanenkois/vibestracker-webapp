@@ -3,12 +3,12 @@
     <app-general-stats [listeningStats]="this.listeningDataRecord()" />
 
     <app-extended-history-filter
-      [userTopTracksAnalysis]="this.userTopTracksAnalysis()"
+      [userTopTracksAnalysis]="this.userExtendedAnalysis()"
       [minDate]="this.userStartingDate()"
       [maxDate]="this.userEndingDate()"
     />
 
-    <app-user-top-extended [userTopTracksAnalysis]="this.userTopTracksAnalysis()" />
+    <app-user-top-extended [userExtendedAnalysis]="this.userExtendedAnalysis()" [analysisType]="this.analyzedItemsType()" />
   </div>
 } @else {
   <div class="flex h-[50vh] w-full flex-col items-center justify-center gap-4 p-4">

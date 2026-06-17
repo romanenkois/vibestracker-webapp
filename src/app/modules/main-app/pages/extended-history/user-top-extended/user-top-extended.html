@@ -2,14 +2,14 @@
   <div
     class="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4 sm:grid-cols-[repeat(auto-fill,minmax(260px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(320px,1fr))]"
   >
-    @for (track of this.displayedAnalysis(); track $index) { @if (track.track) {
+    @for (analisisItem of this.displayedAnalysis(); track $index) { @if (analisisItem.track; as _track) {
     <div class="h-full w-full">
       <app-card-simple-track
-        [track]="track.track"
+        [track]="_track.track"
         [index]="$index + 1"
         [userTrackStats]="{
-          msPlayed: track.msPlayed,
-          timesPlayed: track.timesPlayed
+          msPlayed: _track.msPlayed,
+          timesPlayed: _track.timesPlayed
         }"
       />
     </div>
@@ -17,7 +17,7 @@
   </div>
   <div class="align-center mt-4 flex w-full justify-center">
     @if (((this.loadingState === 'idle' && this.userTopTracksAnalysis()) || this.loadingState === 'resolved') &&
-    (this.userTopTracksAnalysis()?.tracks?.length || 0) > this.trackIds().length) {
+    (this.totalItemsNumberInAnalysis() || 0) > this.curentlyDisplayedItemsIdsNumber()) {
     <button class="w-full p-4" (click)="this.loadMoreItems()">
       <p class="font-3xl">load more</p>
     </button>

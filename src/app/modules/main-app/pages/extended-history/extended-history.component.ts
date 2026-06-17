@@ -5,10 +5,10 @@ import { ExtendedHistoryService } from '@services';
 import { UserStorage } from '@storage';
 import {
   AnalysisTypeEnum,
+  AnalysisUserExtendedHistoryUnionType,
   ItemsSelectionEnum,
   LoadingStatusEnum,
   LoadingStatusSimpleEnum,
-  TracksAnalysisUserExtendedHistory,
   UserPrivate,
 } from '@types';
 
@@ -32,7 +32,7 @@ export default class ExtendedHistoryComponent implements OnInit {
     const listeningData = this._userStorage.getUser()?.listeningData?.expandedHistory;
     return listeningData ? listeningData : null;
   });
-  protected userTopTracksAnalysis = signal<TracksAnalysisUserExtendedHistory | null>(null);
+  protected userExtendedAnalysis = signal<AnalysisUserExtendedHistoryUnionType | null>(null);
   protected loadingState = LoadingStatusEnum.Idle;
 
   protected userStartingDate = computed<Date>(() => {
@@ -99,7 +99,7 @@ export default class ExtendedHistoryComponent implements OnInit {
     analysisType: AnalysisTypeEnum;
     analyzedItemsType: ItemsSelectionEnum;
   }) {
-    this.userTopTracksAnalysis.set(null);
+    this.userExtendedAnalysis.set(null);
 
     this.loadingState = LoadingStatusEnum.Loading;
     this._extendedHistoryService
@@ -111,7 +111,7 @@ export default class ExtendedHistoryComponent implements OnInit {
       })
       .subscribe((analysis) => {
         if (analysis.data) {
-          this.userTopTracksAnalysis.set(analysis.data);
+          this.userExtendedAnalysis.set(analysis.data);
           this.loadingState = LoadingStatusEnum.Finalizing;
         }
         if (analysis.status === LoadingStatusSimpleEnum.Error) {

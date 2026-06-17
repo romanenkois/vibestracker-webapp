@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { DatePickerModule } from 'primeng/datepicker';
 
 import { TimeSimplePipe } from '@pipes';
-import { TracksAnalysisUserExtendedHistory } from '@types';
+import { AnalysisUserExtendedHistoryUnionType } from '@types';
 
 @Component({
   selector: 'app-extended-history-filter',
@@ -16,7 +16,7 @@ import { TracksAnalysisUserExtendedHistory } from '@types';
 export class ExtendedHistoryFilter {
   private readonly _router = inject(Router);
 
-  userTopTracksAnalysis = input.required<TracksAnalysisUserExtendedHistory | null>();
+  userTopTracksAnalysis = input.required<AnalysisUserExtendedHistoryUnionType | null>();
   minDate = input.required<Date>();
   maxDate = input.required<Date>();
 
