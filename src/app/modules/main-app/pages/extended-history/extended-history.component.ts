@@ -60,17 +60,30 @@ export default class ExtendedHistoryComponent implements OnInit {
 
       const startingDate = startingDateParam ? new Date(startingDateParam) : this.userStartingDate();
       const endingDate = endingDateParam ? new Date(endingDateParam) : this.userEndingDate();
+      const analyzedItemsType = this._parseItemsType(params['items-type']);
 
       this.startingDate.set(startingDate);
       this.endingDate.set(endingDate);
+      this.analyzedItemsType.set(analyzedItemsType);
 
       this.loadUserTopTracksAnalysis({
         startingDate,
         endingDate,
         analysisType: this.analysisType(),
-        analyzedItemsType: this.analyzedItemsType(),
+        analyzedItemsType,
       });
     });
+  }
+
+  private _parseItemsType(value: unknown): ItemsSelectionEnum {
+    if (
+      value === ItemsSelectionEnum.Tracks ||
+      value === ItemsSelectionEnum.Albums ||
+      value === ItemsSelectionEnum.Artists
+    ) {
+      return value;
+    }
+    return ItemsSelectionEnum.Tracks;
   }
 
   protected loadUserTopTracksAnalysis(params: {
