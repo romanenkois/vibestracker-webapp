@@ -4,7 +4,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
 
 import { UserExtendedDataStorage } from '@storage';
-import { ExtendedStreamingHistory, LoadingStatusSimpleEnum, TracksAnalysisUserExtendedHistory } from '@types';
+import {
+  AnalysisTypeEnum,
+  ExtendedStreamingHistory,
+  ItemsSelectionEnum,
+  LoadingStatusSimpleEnum,
+  TracksAnalysisUserExtendedHistory,
+} from '@types';
 import { runInWorker } from '@utils';
 
 import { $appConfig } from '@environments';
@@ -79,6 +85,8 @@ export class ExtendedHistoryService {
   public getUserTopTracksAnalysis(params: {
     startingDate: Date;
     endingDate: Date;
+    analysisType: AnalysisTypeEnum;
+    analyzedItemsType: ItemsSelectionEnum;
   }): Observable<{ status: LoadingStatusSimpleEnum; data?: TracksAnalysisUserExtendedHistory }> {
     return new Observable((observer) => {
       const loadedAnalysis = this._userExtendedDataStorage.getUserTopTracksAnalysis(params);
@@ -92,7 +100,10 @@ export class ExtendedHistoryService {
       const queryParams: Record<string, string> = {
         startingDate: params.startingDate.toISOString(),
         endingDate: params.endingDate.toISOString(),
+        analysisType: params.analysisType,
+        analysisItemsType: params.analyzedItemsType,
       };
+
       this._apiService
         .loadSinglePieceOfData<{
           data: TracksAnalysisUserExtendedHistory;

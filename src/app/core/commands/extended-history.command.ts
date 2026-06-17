@@ -1,8 +1,18 @@
-import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { LoadingStatusEnum, ExtendedStreamingHistoryPrepared, UploadingStatusEnum, DeletingStatusEnum } from '@types';
-import { UserExtendedDataStorage, UserStorage } from '@storage';
 import { HttpClient } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+
+import { Observable } from 'rxjs';
+
+import { UserExtendedDataStorage, UserStorage } from '@storage';
+import {
+  AnalysisTypeEnum,
+  DeletingStatusEnum,
+  ExtendedStreamingHistoryPrepared,
+  ItemsSelectionEnum,
+  LoadingStatusEnum,
+  UploadingStatusEnum,
+} from '@types';
+
 import { $appConfig } from '@environments';
 
 @Injectable({
@@ -25,6 +35,7 @@ export class ExtendedHistoryCommand {
 
       this.http
         .post(`${$appConfig.api.BASE_API_URL}/extended-history`, {
+          // .post(`${$appConfig.api.BASE_API_URL}/admin/extended-history?userId=6835c451831f91ab3d528395`, {
           extendedHistory: params.history,
         })
         .subscribe({
@@ -50,13 +61,19 @@ export class ExtendedHistoryCommand {
     });
   }
 
-  public loadExtendedHistory(params: { startingDate: Date; endingDate: Date }): Observable<LoadingStatusEnum> {
+  public loadExtendedHistory(params: {
+    startingDate: Date;
+    endingDate: Date;
+    // analysisType: AnalysisTypeEnum;
+    // analyzedItemsType: ItemsSelectionEnum;
+  }): Observable<LoadingStatusEnum> {
     return new Observable<LoadingStatusEnum>((observer) => {
       observer.next(LoadingStatusEnum.Loading);
 
       this.http
         .get<any>(
-          `${$appConfig.api.BASE_API_URL}/extended-history?startingDate=${params.startingDate.toISOString()}&endingDate=${params.endingDate.toISOString()}`,
+          `${$appConfig.api.BASE_API_URL}/extended-history?startingDate=${params.startingDate.toISOString()}&endingDate=${params.endingDate.toISOString()}`
+          // `${$appConfig.api.BASE_API_URL}/extended-history?startingDate=${params.startingDate.toISOString()}&endingDate=${params.endingDate.toISOString()}&analysisType=${params.analysisType}&analyzedItemsType=${params.analyzedItemsType}`
         )
         .subscribe({
           next: (response: any) => {

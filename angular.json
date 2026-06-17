@@ -55,11 +55,16 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "allowedCommonJsDependencies": ["jszip"],
+            "allowedCommonJsDependencies": [
+              "jszip"
+            ],
             "outputPath": "dist/vibestracker-webapp",
             "index": "src/main/index.html",
             "browser": "src/main/main.ts",
-            "polyfills": ["zone.js", "@angular/localize/init"],
+            "polyfills": [
+              "zone.js",
+              "@angular/localize/init"
+            ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -72,9 +77,14 @@
                 "input": "src/translations/*"
               }
             ],
-            "styles": ["src/main/styles.scss"],
+            "styles": [
+              "src/main/styles.scss"
+            ],
             "stylePreprocessorOptions": {
-              "includePaths": ["src/styles", "node_modules"]
+              "includePaths": [
+                "src/styles",
+                "node_modules"
+              ]
             },
             "scripts": [],
             "preserveSymlinks": true,
@@ -112,14 +122,18 @@
               "extractLicenses": false,
               "sourceMap": true,
               "outputPath": "dist/ja/",
-              "localize": ["ja"]
+              "localize": [
+                "ja"
+              ]
             },
             "uk": {
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
               "outputPath": "dist/uk/",
-              "localize": ["uk"]
+              "localize": [
+                "uk"
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -148,13 +162,48 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
+        },
+        "storybook": {
+          "builder": "@storybook/angular:start-storybook",
+          "options": {
+            "configDir": ".storybook",
+            "browserTarget": "vibestracker-webapp:build",
+            "compodoc": true,
+            "compodocArgs": [
+              "-e",
+              "json",
+              "-d",
+              "."
+            ],
+            "port": 6006
+          }
+        },
+        "build-storybook": {
+          "builder": "@storybook/angular:build-storybook",
+          "options": {
+            "configDir": ".storybook",
+            "browserTarget": "vibestracker-webapp:build",
+            "compodoc": true,
+            "compodocArgs": [
+              "-e",
+              "json",
+              "-d",
+              "."
+            ],
+            "outputDir": "storybook-static"
           }
         }
       }
     }
   },
   "cli": {
-    "schematicCollections": ["angular-eslint"]
+    "schematicCollections": [
+      "angular-eslint"
+    ]
   }
 }

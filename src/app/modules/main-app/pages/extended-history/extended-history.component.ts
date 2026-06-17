@@ -3,7 +3,14 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { ExtendedHistoryService } from '@services';
 import { UserStorage } from '@storage';
-import { LoadingStatusEnum, LoadingStatusSimpleEnum, TracksAnalysisUserExtendedHistory, UserPrivate } from '@types';
+import {
+  AnalysisTypeEnum,
+  ItemsSelectionEnum,
+  LoadingStatusEnum,
+  LoadingStatusSimpleEnum,
+  TracksAnalysisUserExtendedHistory,
+  UserPrivate,
+} from '@types';
 
 import { ExtendedHistoryFilter } from './extended-history-filter/extended-history-filter';
 import { GeneralStatsComponent } from './general-stats/general-stats';
@@ -38,7 +45,8 @@ export default class ExtendedHistoryComponent implements OnInit {
   });
   protected startingDate = signal<Date>(new Date(0));
   protected endingDate = signal<Date>(new Date());
-
+  protected analysisType = signal<AnalysisTypeEnum>(AnalysisTypeEnum.ExtenedHistory);
+  protected analyzedItemsType = signal<ItemsSelectionEnum>(ItemsSelectionEnum.Tracks);
 
   ngOnInit() {
     const startingDate = new Date(this.listeningDataRecord()?.startingDate || new Date(0));
@@ -47,7 +55,12 @@ export default class ExtendedHistoryComponent implements OnInit {
     this.startingDate.set(startingDate);
     this.endingDate.set(endingDate);
 
-    this.loadUserTopTracksAnalysis({ startingDate, endingDate });
+    this.loadUserTopTracksAnalysis({
+      startingDate,
+      endingDate,
+      analysisType: this.analysisType(),
+      analyzedItemsType: this.analyzedItemsType(),
+    });
 
     this._activeRoute.queryParams.subscribe((params) => {
       const startingDateParam = params['start-date'];
@@ -60,17 +73,32 @@ export default class ExtendedHistoryComponent implements OnInit {
         this.startingDate.set(startingDate);
         this.endingDate.set(endingDate);
 
-        this.loadUserTopTracksAnalysis({ startingDate, endingDate });
+        this.loadUserTopTracksAnalysis({
+          startingDate,
+          endingDate,
+          analysisType: this.analysisType(),
+          analyzedItemsType: this.analyzedItemsType(),
+        });
       } else {
         this.startingDate.set(this.userStartingDate());
         this.endingDate.set(this.userEndingDate());
 
-        this.loadUserTopTracksAnalysis({ startingDate, endingDate });
+        this.loadUserTopTracksAnalysis({
+          startingDate: this.userStartingDate(),
+          endingDate: this.userEndingDate(),
+          analysisType: this.analysisType(),
+          analyzedItemsType: this.analyzedItemsType(),
+        });
       }
     });
   }
 
-  protected loadUserTopTracksAnalysis(params: { startingDate: Date; endingDate: Date }) {
+  protected loadUserTopTracksAnalysis(params: {
+    startingDate: Date;
+    endingDate: Date;
+    analysisType: AnalysisTypeEnum;
+    analyzedItemsType: ItemsSelectionEnum;
+  }) {
     this.userTopTracksAnalysis.set(null);
 
     this.loadingState = LoadingStatusEnum.Loading;
@@ -78,6 +106,8 @@ export default class ExtendedHistoryComponent implements OnInit {
       .getUserTopTracksAnalysis({
         startingDate: params.startingDate,
         endingDate: params.endingDate,
+        analysisType: params.analysisType,
+        analyzedItemsType: params.analyzedItemsType,
       })
       .subscribe((analysis) => {
         if (analysis.data) {

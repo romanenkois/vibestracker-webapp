@@ -157,10 +157,10 @@ export class ExtendedHistoryPreparerService {
         'shuffle' in item && // shuffle can be null by design
         'skipped' in item && // skipped can be null by design
         // we skip the tracks, that were skipped too early
-        item.ms_played > 20000 &&
+        // item.ms_played > 1 &&
         // we skip the absurdly long records
         // 1 hour is the most we tolerate
-        item.ms_played < 3600000 &&
+        // item.ms_played < 3600000 &&
         // check if timestamp is before Jan 1, 2008
         // it's the spotify release date
         itemTimestamp > minTimestamp &&
