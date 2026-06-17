@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { ExtendedHistoryService } from '@services';
@@ -27,6 +28,7 @@ export default class ExtendedHistoryComponent implements OnInit {
   private readonly _userStorage = inject(UserStorage);
   private readonly _extendedHistoryService = inject(ExtendedHistoryService);
   private readonly _activeRoute = inject(ActivatedRoute);
+  private readonly _destroyRef = inject(DestroyRef);
 
   protected listeningDataRecord = computed<UserPrivate['listeningData']['expandedHistory'] | null>(() => {
     const listeningData = this._userStorage.getUser()?.listeningData?.expandedHistory;
@@ -46,50 +48,28 @@ export default class ExtendedHistoryComponent implements OnInit {
   protected startingDate = signal<Date>(new Date(0));
   protected endingDate = signal<Date>(new Date());
   protected analysisType = signal<AnalysisTypeEnum>(AnalysisTypeEnum.ExtenedHistory);
-  protected analyzedItemsType = signal<ItemsSelectionEnum>(ItemsSelectionEnum.Tracks);
+  protected analyzedItemsType = signal<ItemsSelectionEnum>(ItemsSelectionEnum.Albums);
 
   ngOnInit() {
-    const startingDate = new Date(this.listeningDataRecord()?.startingDate || new Date(0));
-    const endingDate = new Date(this.listeningDataRecord()?.endingDate || new Date());
-
-    this.startingDate.set(startingDate);
-    this.endingDate.set(endingDate);
-
-    this.loadUserTopTracksAnalysis({
-      startingDate,
-      endingDate,
-      analysisType: this.analysisType(),
-      analyzedItemsType: this.analyzedItemsType(),
-    });
-
-    this._activeRoute.queryParams.subscribe((params) => {
+    // `queryParams` emits the current value synchronously on subscribe, so this
+    // single subscription covers both the initial load and later filter changes
+    // without firing a duplicate request.
+    this._activeRoute.queryParams.pipe(takeUntilDestroyed(this._destroyRef)).subscribe((params) => {
       const startingDateParam = params['start-date'];
       const endingDateParam = params['end-date'];
 
-      if (startingDateParam && endingDateParam) {
-        const startingDate = new Date(startingDateParam);
-        const endingDate = new Date(endingDateParam);
+      const startingDate = startingDateParam ? new Date(startingDateParam) : this.userStartingDate();
+      const endingDate = endingDateParam ? new Date(endingDateParam) : this.userEndingDate();
 
-        this.startingDate.set(startingDate);
-        this.endingDate.set(endingDate);
+      this.startingDate.set(startingDate);
+      this.endingDate.set(endingDate);
 
-        this.loadUserTopTracksAnalysis({
-          startingDate,
-          endingDate,
-          analysisType: this.analysisType(),
-          analyzedItemsType: this.analyzedItemsType(),
-        });
-      } else {
-        this.startingDate.set(this.userStartingDate());
-        this.endingDate.set(this.userEndingDate());
-
-        this.loadUserTopTracksAnalysis({
-          startingDate: this.userStartingDate(),
-          endingDate: this.userEndingDate(),
-          analysisType: this.analysisType(),
-          analyzedItemsType: this.analyzedItemsType(),
-        });
-      }
+      this.loadUserTopTracksAnalysis({
+        startingDate,
+        endingDate,
+        analysisType: this.analysisType(),
+        analyzedItemsType: this.analyzedItemsType(),
+      });
     });
   }
 

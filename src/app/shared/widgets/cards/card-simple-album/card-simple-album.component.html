@@ -20,7 +20,22 @@
     <div class="flex-1 overflow-hidden">
       <div>
         <div>
-          <p class="text-xl font-black text-gray">{{ this.index() }}#</p>
+          <p class="flex flex-col items-center justify-start gap-1 font-black text-gray sm:flex-row">
+            @if ((this.userAlbumStats()?.msPlayed ?? 0) > 0 || (this.userAlbumStats()?.timesPlayed ?? 0) > 0) {
+              <span class="w-full text-base sm:w-max">{{ this.index() }}#</span>
+              <span class="w-full text-base sm:w-max">
+                <span class="hidden sm:inline"> - </span>
+                <span>
+                  {{ this.userAlbumStats()?.msPlayed ?? 0 | timeSimple }}
+                </span>
+                <span [title]="'@@card-track__times-played-toolip' | translate"> ({{ this.userAlbumStats()?.timesPlayed ?? 0 }}) </span>
+              </span>
+            } @else {
+              <span class="w-full text-xl">
+                <span> {{ this.index() }}# </span>
+              </span>
+            }
+          </p>
         </div>
       </div>
       <div>

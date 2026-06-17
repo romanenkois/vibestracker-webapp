@@ -2,30 +2,53 @@
   <div
     class="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4 sm:grid-cols-[repeat(auto-fill,minmax(260px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(320px,1fr))]"
   >
-    @for (analisisItem of this.displayedAnalysis(); track $index) { @if (analisisItem.track; as _track) {
+    @for (analysisItem of this.displayedAnalysis(); track $index) { @switch (this.analyzedItemsType()) { @case
+    ('tracks') { @if (analysisItem.track; as track) {
     <div class="h-full w-full">
       <app-card-simple-track
-        [track]="_track.track"
-        [index]="$index + 1"
+        [track]="track"
+        [index]="analysisItem.index + 1"
         [userTrackStats]="{
-          msPlayed: _track.msPlayed,
-          timesPlayed: _track.timesPlayed
+                  msPlayed: analysisItem.msPlayed,
+                  timesPlayed: analysisItem.timesPlayed
+                }"
+      />
+    </div>
+    } } @case ('albums') { @if (analysisItem.album; as album) {
+    <div class="h-full w-full">
+      <app-card-simple-album
+        [album]="album"
+        [index]="analysisItem.index + 1"
+        [userAlbumStats]="{
+          msPlayed: analysisItem.msPlayed,
+          timesPlayed: analysisItem.timesPlayed
         }"
       />
     </div>
-    } }
+    } } @case ('artists') { @if (analysisItem.artist; as artist) {
+    <div class="h-full w-full">
+      <app-card-simple-artist
+        [artist]="artist"
+        [index]="analysisItem.index + 1"
+        [userArtistStats]="{
+          msPlayed: analysisItem.msPlayed,
+          timesPlayed: analysisItem.timesPlayed
+        }"
+      />
+    </div>
+    } } } }
   </div>
   <div class="align-center mt-4 flex w-full justify-center">
-    @if (((this.loadingState === 'idle' && this.userTopTracksAnalysis()) || this.loadingState === 'resolved') &&
-    (this.totalItemsNumberInAnalysis() || 0) > this.curentlyDisplayedItemsIdsNumber()) {
+    @if ( ((this.loadingState() === 'idle' && this.userExtendedAnalysis()) || this.loadingState() === 'resolved') &&
+    this.totalItemsNumber() > this.displayedItemsCount() ) {
     <button class="w-full p-4" (click)="this.loadMoreItems()">
       <p class="font-3xl">load more</p>
     </button>
-    } @else if ( this.loadingState === 'loading' || this.loadingState === 'appending' ) {
+    } @else if (this.loadingState() === 'loading' || this.loadingState() === 'appending') {
     <p class="font-3xl p-4">loading analysis...</p>
-    } @else if (this.loadingState === 'all-resolved') {
+    } @else if (this.loadingState() === 'all-resolved') {
     <p class="font-3xl p-4">all available data is loaded</p>
-    } @else if (this.loadingState === 'error') {
+    } @else if (this.loadingState() === 'error') {
     <p class="font-3xl p-4">error loading data</p>
     }
   </div>

@@ -8,7 +8,10 @@
       [maxDate]="this.userEndingDate()"
     />
 
-    <app-user-top-extended [userExtendedAnalysis]="this.userExtendedAnalysis()" [analysisType]="this.analyzedItemsType()" />
+    <app-user-top-extended
+      [userExtendedAnalysis]="this.userExtendedAnalysis()"
+      [analyzedItemsType]="this.analyzedItemsType()"
+    />
   </div>
 } @else {
   <div class="flex h-[50vh] w-full flex-col items-center justify-center gap-4 p-4">
