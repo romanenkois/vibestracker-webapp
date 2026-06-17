@@ -22,8 +22,8 @@ export interface TracksAnalysisUserExtendedHistory extends AnalysisUserExtendedH
   ItemsSelectionEnum.Tracks
 > {
   totalMsPlayed: number;
-  totalTracksPlayed: number;
-  totalUniqueTracksPlayed: number;
+  totalItemsPlayed: number;
+  totalUniqueItemsPlayed: number;
 
   tracks: {
     index: number;

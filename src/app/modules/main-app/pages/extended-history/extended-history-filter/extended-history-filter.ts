@@ -11,7 +11,7 @@ import { AnalysisUserExtendedHistoryUnionType } from '@types';
   selector: 'app-extended-history-filter',
   imports: [ TimeSimplePipe, DatePickerModule, FormsModule],
   templateUrl: './extended-history-filter.html',
-  styleUrl: './extended-history-filter.scss',
+  styleUrls: ['./extended-history-filter.scss'],
 })
 export class ExtendedHistoryFilter {
   private readonly _router = inject(Router);

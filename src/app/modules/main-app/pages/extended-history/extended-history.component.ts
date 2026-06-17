@@ -48,7 +48,7 @@ export default class ExtendedHistoryComponent implements OnInit {
   protected startingDate = signal<Date>(new Date(0));
   protected endingDate = signal<Date>(new Date());
   protected analysisType = signal<AnalysisTypeEnum>(AnalysisTypeEnum.ExtenedHistory);
-  protected analyzedItemsType = signal<ItemsSelectionEnum>(ItemsSelectionEnum.Albums);
+  protected analyzedItemsType = signal<ItemsSelectionEnum>(ItemsSelectionEnum.Tracks);
 
   ngOnInit() {
     // `queryParams` emits the current value synchronously on subscribe, so this
